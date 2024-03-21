@@ -1,11 +1,12 @@
-import { UserDepartment, UserRole } from "../enums";
+import { BaseType } from '.';
+import { UserDepartment, UserRole } from '../enums';
 
-export interface UserType {
-    id: string;
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    role: UserRole;
-    department: UserDepartment;
+export interface UserType extends BaseType {
+  id: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
+  department: UserDepartment;
 }

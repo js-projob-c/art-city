@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16.2
+    restart: on-failure
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: art-city
+      POSTGRES_USER: postgresuser
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_PORT: 5432
+    volumes:
+      - art-city:/var/lib/postgresql/data
+volumes:
+  art-city:

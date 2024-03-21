@@ -1,8 +1,8 @@
 {
   "name": "art-city",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Art City Advertising Company Limited",
+  "author": "Jasper",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -17,7 +17,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "migration:generate": "npm run build && typeorm-ts-node-esm migration:generate -d dist/server/src/external/database/migration.configuration.js src/external/database/migrations/$npm_config_name",
+    "migration:run": "npm run build && typeorm-ts-node-esm migration:run -d dist/server/src/external/database/migration.configuration.js",
+    "migration:revert": "npm run build && typeorm-ts-node-esm migration:revert -d dist/server/src/external/database/migration.configuration.js"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -27,6 +30,8 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-fastify": "^10.3.4",
     "@nestjs/typeorm": "^10.0.2",
+    "lodash": "^4.17.21",
+    "pg": "^8.11.3",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20"

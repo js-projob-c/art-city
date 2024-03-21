@@ -25,6 +25,10 @@
       "@art-city/common": [
         "../libs/common/src/index.ts"
       ]
-    }
+    },
   },
+  "include": [
+    "../server/**/*.ts",
+    "../libs/**/*.ts",
+  ]
 }
