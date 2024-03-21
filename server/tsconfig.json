@@ -21,6 +21,9 @@
     "paths": {
       "@art-city/common/*": [
         "../libs/common/src/*"
+      ],
+      "@art-city/common": [
+        "../libs/common/src/index.ts"
       ]
     }
   },
