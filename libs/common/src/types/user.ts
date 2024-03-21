@@ -1,6 +1,6 @@
 import { UserDepartment, UserRole } from "../enums";
 
-export interface User {
+export interface UserType {
     id: string;
     email: string;
     password: string;
