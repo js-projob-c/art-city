@@ -4,7 +4,7 @@ export * from './customer';
 export * from './user-customer';
 export * from './leave';
 export * from './attendance';
-export * from './purchase-counterparty';
+export * from './purchase-counterpart';
 export * from './project';
 export * from './purchase';
 export * from './reimburse';

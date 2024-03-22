@@ -11,7 +11,7 @@ import {
 
 import { UserEntity } from './user.entity';
 
-@Entity()
+@Entity({ name: 'attendance' })
 export class AttendanceEntity implements IAttendance {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -19,19 +19,19 @@ export class AttendanceEntity implements IAttendance {
   userId: string;
 
   @JoinColumn({ name: 'userId' })
-  @ManyToOne(() => UserEntity, (user) => user.attendance)
+  @ManyToOne(() => UserEntity, (user) => user.attendances)
   user: IUser;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   signInAt: string;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   signOutAt?: string | undefined;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   workHourFrom: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   workHourTo: string;
 
   @Column({ type: 'varchar', nullable: true })

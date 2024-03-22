@@ -7,15 +7,15 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'system' })
 export class SystemEntity implements ISystem {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   workHourFrom: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   workHourTo: string;
 
   @CreateDateColumn()

@@ -11,7 +11,7 @@ import {
 
 import { UserEntity } from './user.entity';
 
-@Entity()
+@Entity({ name: 'user-detail' })
 export class UserDetailEntity implements IUserDetail {
   @PrimaryGeneratedColumn('uuid')
   id: string;

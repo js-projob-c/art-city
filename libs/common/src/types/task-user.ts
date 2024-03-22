@@ -1,6 +1,5 @@
-import { IEntity } from '.';
 
-export interface ITaskUser extends IEntity {
+export interface ITaskUser {
   id: string;
   taskId: string;
   userId: string;

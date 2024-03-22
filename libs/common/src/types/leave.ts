@@ -1,4 +1,5 @@
 import { IEntity } from '.';
+import { LeaveStatus } from '../enums';
 
 export interface ILeave extends IEntity {
   id: string;
@@ -6,10 +7,10 @@ export interface ILeave extends IEntity {
   from: string;
   to: string;
   days: number;
-  status: string;
+  status: LeaveStatus;
   applyReason: string;
   approvedBy?: string;
   rejectedBy?: string;
-  approvedAt: string;
-  rejectedAt: string;
+  approvedAt?: string;
+  rejectedAt?: string;
 }

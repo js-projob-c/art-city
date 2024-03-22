@@ -1,16 +1,18 @@
 version: '3.9'
 services:
   postgres:
-    image: postgres:16.2
+    image: postgres
     restart: on-failure
     ports:
-      - 5432:5432
+      - 54321:5432
     environment:
-      POSTGRES_DB: art-city
+      POSTGRES_DB: art_city
       POSTGRES_USER: postgresuser
       POSTGRES_PASSWORD: postgrespassword
       POSTGRES_PORT: 5432
+      DATABASE_SCHEMA_NAME: art_city
     volumes:
       - art-city:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
 volumes:
   art-city:

@@ -1,9 +1,19 @@
 import { UserDepartment, UserRole } from '@art-city/common/enums';
-import { IAttendance, IUser, IUserDetail } from '@art-city/common/types';
+import {
+  IAttendance,
+  ILeave,
+  IProject,
+  IReimburse,
+  ITask,
+  IUser,
+  IUserDetail,
+} from '@art-city/common/types';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -11,9 +21,13 @@ import {
 } from 'typeorm';
 
 import { AttendanceEntity } from './attendance.entity';
+import { LeaveEntity } from './leave.entity';
+import { ProjectEntity } from './project.entity';
+import { ReimburseEntity } from './reimburse.entity';
+import { TaskEntity } from './task.entity';
 import { UserDetailEntity } from './user-detail.entity';
 
-@Entity()
+@Entity({ name: 'user' })
 export class UserEntity implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -46,5 +60,18 @@ export class UserEntity implements IUser {
   detail: IUserDetail;
 
   @OneToMany(() => AttendanceEntity, (attendance) => attendance.user)
-  attendance: IAttendance;
+  attendances: IAttendance[];
+
+  @OneToMany(() => LeaveEntity, (leave) => leave.user)
+  leaves: ILeave[];
+
+  @OneToMany(() => ProjectEntity, (project) => project.owner)
+  projects: IProject[];
+
+  @OneToMany(() => ReimburseEntity, (reimburse) => reimburse.user)
+  reimburses: IReimburse[];
+
+  @ManyToMany(() => TaskEntity, (task) => task.users)
+  @JoinTable()
+  tasks: ITask[];
 }
