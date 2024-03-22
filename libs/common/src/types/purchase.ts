@@ -10,7 +10,7 @@ export interface IPurchaseItem {
 
 export interface IPurchase extends IEntity {
   id: string;
-  counterpartId: string;
+  externalPartyId: string;
   description: string;
   items: IPurchaseItem[];
   status: PurchaseStatus;

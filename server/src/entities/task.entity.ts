@@ -26,7 +26,7 @@ export class TaskEntity implements ITask {
   project: IProject;
 
   @Column({ type: 'varchar' })
-  title: string;
+  name: string;
 
   @Column({ type: 'varchar' })
   description: string;

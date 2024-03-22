@@ -26,7 +26,7 @@ export class ProjectEntity implements IProject {
   owner: IUser;
 
   @Column({ type: 'varchar' })
-  title: string;
+  name: string;
 
   @Column({ type: 'varchar' })
   description: string;

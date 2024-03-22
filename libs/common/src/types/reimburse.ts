@@ -1,5 +1,5 @@
-import { IEntity } from '.';
 import { ReimburseStatus, ReimburseType } from '../enums';
+import { IEntity } from '.';
 
 export interface IReimburse extends IEntity {
   id: string;

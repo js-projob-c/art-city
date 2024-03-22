@@ -1,7 +1,7 @@
 import { PurchaseStatus } from '@art-city/common/enums';
 import {
+  IExternalParty,
   IPurchase,
-  IPurchaseCounterpart,
   IPurchaseItem,
 } from '@art-city/common/types';
 import {
@@ -14,21 +14,21 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { PurchaseCounterpartEntity } from './purchase-counterpart.entity';
+import { ExternalPartyEntity } from './external-party.entity';
 
 @Entity({ name: 'purchase' })
 export class PurchaseEntity implements IPurchase {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  counterpartId: string;
+  externalPartyId: string;
 
   @OneToOne(
-    () => PurchaseCounterpartEntity,
-    (counterpart) => counterpart.purchase,
+    () => ExternalPartyEntity,
+    (externalParty) => externalParty.purchase,
   )
-  @JoinColumn({ name: 'counterpartId' })
-  counterpart: IPurchaseCounterpart;
+  @JoinColumn({ name: 'externalPartyId' })
+  externalParty: IExternalParty;
 
   @Column({ type: 'varchar' })
   description: string;

@@ -1,10 +1,10 @@
-import { IEntity } from '.';
 import { TaskStatus, TaskVisibleTo } from '../enums';
+import { IEntity } from '.';
 
 export interface ITask extends IEntity {
   id: string;
   projectId: string;
-  title: string;
+  name: string;
   description: string;
   visibleTo: TaskVisibleTo;
   status: TaskStatus;

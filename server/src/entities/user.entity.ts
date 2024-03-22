@@ -2,8 +2,10 @@ import { UserDepartment, UserRole } from '@art-city/common/enums';
 import {
   IAttendance,
   ILeave,
+  IPayroll,
   IProject,
   IReimburse,
+  ISchedule,
   ITask,
   IUser,
   IUserDetail,
@@ -22,8 +24,10 @@ import {
 
 import { AttendanceEntity } from './attendance.entity';
 import { LeaveEntity } from './leave.entity';
+import { PayrollEntity } from './payroll.entity';
 import { ProjectEntity } from './project.entity';
 import { ReimburseEntity } from './reimburse.entity';
+import { ScheduleEntity } from './schedule.entity';
 import { TaskEntity } from './task.entity';
 import { UserDetailEntity } from './user-detail.entity';
 
@@ -70,6 +74,12 @@ export class UserEntity implements IUser {
 
   @OneToMany(() => ReimburseEntity, (reimburse) => reimburse.user)
   reimburses: IReimburse[];
+
+  @OneToMany(() => ScheduleEntity, (schedule) => schedule.user)
+  schedules: ISchedule[];
+
+  @OneToMany(() => PayrollEntity, (payroll) => payroll.user)
+  payrolls: IPayroll[];
 
   @ManyToMany(() => TaskEntity, (task) => task.users)
   @JoinTable()
