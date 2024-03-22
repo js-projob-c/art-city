@@ -1,6 +1,6 @@
-import { BaseType } from '.';
+import { IEntity } from '.';
 
-export interface PurchaseCounterpartyType extends BaseType {
+export interface IPurchaseCounterparty extends IEntity {
   id: string;
   company: string;
   contactPerson: string;

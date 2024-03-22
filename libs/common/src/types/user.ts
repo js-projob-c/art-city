@@ -1,7 +1,7 @@
-import { BaseType } from '.';
+import { IEntity } from '.';
 import { UserDepartment, UserRole } from '../enums';
 
-export interface UserType extends BaseType {
+export interface IUser extends IEntity {
   id: string;
   email: string;
   password: string;

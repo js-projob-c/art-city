@@ -1,4 +1,4 @@
-export interface BaseType {
+export interface IEntity {
   createdAt: Date;
   updatedAt: Date;
 }

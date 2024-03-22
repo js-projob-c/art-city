@@ -1,7 +1,7 @@
-import { BaseType } from '.';
+import { IEntity } from '.';
 import { ProjectStatus } from '../enums';
 
-export interface ProjectType extends BaseType {
+export interface IProject extends IEntity {
   id: string;
   ownerId: string;
   title: string;

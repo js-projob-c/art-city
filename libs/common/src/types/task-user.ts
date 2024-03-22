@@ -1,6 +1,6 @@
-import { BaseType } from '.';
+import { IEntity } from '.';
 
-export interface TaskUserType extends BaseType {
+export interface ITaskUser extends IEntity {
   id: string;
   taskId: string;
   userId: string;

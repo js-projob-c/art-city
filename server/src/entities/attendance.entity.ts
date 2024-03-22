@@ -1,4 +1,4 @@
-import { AttendanceType, UserType } from '@art-city/common/types';
+import { IAttendance, IUser } from '@art-city/common/types';
 import {
   Column,
   CreateDateColumn,
@@ -12,7 +12,7 @@ import {
 import { UserEntity } from './user.entity';
 
 @Entity()
-export class AttendanceEntity implements AttendanceType {
+export class AttendanceEntity implements IAttendance {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -20,7 +20,7 @@ export class AttendanceEntity implements AttendanceType {
 
   @JoinColumn({ name: 'userId' })
   @ManyToOne(() => UserEntity, (user) => user.attendance)
-  user: UserType;
+  user: IUser;
 
   @Column({ type: 'datetime' })
   signInAt: string;

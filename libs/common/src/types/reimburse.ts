@@ -1,7 +1,7 @@
-import { BaseType } from '.';
-import { ReimburseStatus } from '../enums';
+import { IEntity } from '.';
+import { ReimburseStatus, ReimburseType } from '../enums';
 
-export interface ReimburseType extends BaseType {
+export interface IReimburse extends IEntity {
   id: string;
   userId: string;
   date: string;

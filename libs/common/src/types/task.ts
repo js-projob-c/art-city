@@ -1,7 +1,7 @@
-import { BaseType } from '.';
+import { IEntity } from '.';
 import { TaskStatus, TaskVisibleTo } from '../enums';
 
-export interface TaskType extends BaseType {
+export interface ITask extends IEntity {
   id: string;
   projectId: string;
   title: string;

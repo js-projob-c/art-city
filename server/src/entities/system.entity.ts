@@ -1,4 +1,4 @@
-import { IBank } from '@art-city/common/types';
+import { ISystem } from '@art-city/common/types';
 import {
   Column,
   CreateDateColumn,
@@ -8,18 +8,15 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class BankEntity implements IBank {
+export class SystemEntity implements ISystem {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar' })
-  name: string;
+  @Column({ type: 'datetime' })
+  workHourFrom: string;
 
-  @Column({ type: 'varchar' })
-  bank: string;
-
-  @Column({ type: 'varchar' })
-  account: string;
+  @Column({ type: 'datetime' })
+  workHourTo: string;
 
   @CreateDateColumn()
   createdAt: Date;

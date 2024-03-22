@@ -1,4 +1,4 @@
-import { UserDetailType, UserType } from '@art-city/common/types';
+import { IUser, IUserDetail } from '@art-city/common/types';
 import {
   Column,
   CreateDateColumn,
@@ -12,7 +12,7 @@ import {
 import { UserEntity } from './user.entity';
 
 @Entity()
-export class UserDetailEntity implements UserDetailType {
+export class UserDetailEntity implements IUserDetail {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -20,7 +20,7 @@ export class UserDetailEntity implements UserDetailType {
 
   @JoinColumn({ name: 'userId' })
   @OneToOne(() => UserEntity, (user) => user.detail)
-  user: UserType;
+  user: IUser;
 
   @Column({ type: 'numeric' })
   monthlySalary: number;

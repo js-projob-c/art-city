@@ -1,6 +1,6 @@
-import { BaseType } from '.';
+import { IEntity } from '.';
 
-export interface UserDetailType extends BaseType {
+export interface IUserDetail extends IEntity {
   id: string;
   userId: string;
   monthlySalary: number;

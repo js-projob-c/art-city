@@ -1,6 +1,6 @@
-import { BaseType } from '.';
+import { IEntity } from '.';
 
-export interface AttendanceType extends BaseType {
+export interface IAttendance extends IEntity {
   id: string;
   userId: string;
   signInAt: string;

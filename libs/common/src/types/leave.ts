@@ -1,6 +1,6 @@
-import { BaseType } from '.';
+import { IEntity } from '.';
 
-export interface LeaveType extends BaseType {
+export interface ILeave extends IEntity {
   id: string;
   userId: string;
   from: string;

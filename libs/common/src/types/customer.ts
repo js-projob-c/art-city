@@ -1,7 +1,7 @@
-import { CustomerSource } from '../enums/customer';
-import { BaseType } from './';
+import { CustomerSource, CustomerType } from '../enums/customer';
+import { IEntity } from './';
 
-export interface CustomerType extends BaseType {
+export interface ICustomer extends IEntity {
   id: string;
   firstName: string;
   lastName: string;

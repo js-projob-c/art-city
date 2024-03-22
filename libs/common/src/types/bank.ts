@@ -1,6 +1,6 @@
-import { BaseType } from '.';
+import { IEntity } from '.';
 
-export interface BankType extends BaseType {
+export interface IBank extends IEntity {
   id: string;
   name: string;
   bank: string;

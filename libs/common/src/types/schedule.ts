@@ -1,6 +1,6 @@
-import { BaseType } from '.';
+import { IEntity } from '.';
 
-export interface ScheduleType extends BaseType {
+export interface ISchedule extends IEntity {
   id: string;
   userId: string;
   date: string;

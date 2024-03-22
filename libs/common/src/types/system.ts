@@ -1,6 +1,6 @@
-import { BaseType } from '.';
+import { IEntity } from '.';
 
-export interface SystemType extends BaseType {
+export interface ISystem extends IEntity {
   id: string;
   workHourFrom: string;
   workHourTo: string;
