@@ -1,5 +1,9 @@
 import { UserDepartment, UserRole } from '@art-city/common/enums';
-import { UserDetailType, UserType } from '@art-city/common/types';
+import {
+  AttendanceType,
+  UserDetailType,
+  UserType,
+} from '@art-city/common/types';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,8 +11,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 import { UserDetailEntity } from './user-detail.entity';
+import { AttendanceEntity } from './attendance.entity';
 
 @Entity()
 export class UserEntity implements UserType {
@@ -41,4 +47,7 @@ export class UserEntity implements UserType {
 
   @OneToOne(() => UserDetailEntity, (userDetail) => userDetail.user)
   detail: UserDetailType;
+
+  @OneToMany(() => AttendanceEntity, (attendance) => attendance.user)
+  attendance: AttendanceType;
 }
