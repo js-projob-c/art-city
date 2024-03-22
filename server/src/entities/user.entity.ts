@@ -5,16 +5,17 @@ import {
   UserType,
 } from '@art-city/common/types';
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  OneToOne,
+  Entity,
   OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { UserDetailEntity } from './user-detail.entity';
+
 import { AttendanceEntity } from './attendance.entity';
+import { UserDetailEntity } from './user-detail.entity';
 
 @Entity()
 export class UserEntity implements UserType {

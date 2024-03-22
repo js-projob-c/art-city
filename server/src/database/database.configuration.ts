@@ -1,6 +1,7 @@
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Injectable } from '@nestjs/common';
+
 import { DatabaseVariables } from './database.variables';
 
 @Injectable()

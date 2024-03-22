@@ -1,10 +1,10 @@
 import { BankType } from '@art-city/common/types';
 import {
+  Column,
+  CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
   UpdateDateColumn,
-  Column,
 } from 'typeorm';
 
 @Entity()

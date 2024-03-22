@@ -1,13 +1,14 @@
 import { AttendanceType, UserType } from '@art-city/common/types';
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
+  Entity,
   JoinColumn,
   ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
+
 import { UserEntity } from './user.entity';
 
 @Entity()

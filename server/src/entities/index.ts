@@ -1,6 +1,6 @@
 import { AttendanceEntity } from './attendance.entity';
 import { BankEntity } from './bank.entity';
-import { UserDetailEntity } from './user-detail.entity';
 import { UserEntity } from './user.entity';
+import { UserDetailEntity } from './user-detail.entity';
 
-export { UserEntity, UserDetailEntity, AttendanceEntity, BankEntity };
+export { AttendanceEntity, BankEntity, UserDetailEntity, UserEntity };
