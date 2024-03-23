@@ -1,5 +1,5 @@
-import { IEntity } from '.';
 import { PurchaseStatus } from '../enums';
+import { IEntity } from '.';
 
 export interface IPurchaseItem {
   id: string;

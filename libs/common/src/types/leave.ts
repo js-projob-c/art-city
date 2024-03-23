@@ -1,5 +1,5 @@
-import { IEntity } from '.';
 import { LeaveStatus } from '../enums';
+import { IEntity } from '.';
 
 export interface ILeave extends IEntity {
   id: string;

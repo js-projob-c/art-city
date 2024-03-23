@@ -1,5 +1,5 @@
-import { IEntity } from '.';
 import { UserDepartment, UserRole } from '../enums';
+import { IEntity } from '.';
 
 export interface IUser extends IEntity {
   id: string;
