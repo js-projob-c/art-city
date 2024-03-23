@@ -1,3 +1,4 @@
+import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ISchedule, IUser } from '@art-city/common/types';
 import {
   Column,
@@ -10,7 +11,7 @@ import {
 
 import { UserEntity } from './user.entity';
 
-@Entity({ name: 'schedule' })
+@Entity({ name: DB_TABLE_NAMES.schedule })
 export class ScheduleEntity implements ISchedule {
   @PrimaryGeneratedColumn('uuid')
   id: string;

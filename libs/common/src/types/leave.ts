@@ -8,9 +8,7 @@ export interface ILeave extends IEntity {
   to: string;
   days: number;
   status: LeaveStatus;
-  applyReason: string;
-  approvedBy?: string;
-  rejectedBy?: string;
-  approvedAt?: string;
-  rejectedAt?: string;
+  reason: string;
+  reviewerId?: string;
+  reviewedAt?: string;
 }

@@ -1,3 +1,4 @@
+import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { PayrollType } from '@art-city/common/enums';
 import { IPayroll, IUser } from '@art-city/common/types';
 import {
@@ -12,7 +13,7 @@ import {
 
 import { UserEntity } from './user.entity';
 
-@Entity({ name: 'payroll' })
+@Entity({ name: DB_TABLE_NAMES.payroll })
 export class PayrollEntity implements IPayroll {
   @PrimaryGeneratedColumn('uuid')
   id: string;

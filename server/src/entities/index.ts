@@ -9,6 +9,7 @@ import { ProjectEntity } from './project.entity';
 import { PurchaseEntity } from './purchase.entity';
 import { ReimburseEntity } from './reimburse.entity';
 import { ScheduleEntity } from './schedule.entity';
+import { ShiftApplicationEntity } from './shift-application.entity';
 import { SystemEntity } from './system.entity';
 import { TaskEntity } from './task.entity';
 import { UserEntity } from './user.entity';
@@ -26,6 +27,7 @@ export {
   PurchaseEntity,
   ReimburseEntity,
   ScheduleEntity,
+  ShiftApplicationEntity,
   SystemEntity,
   TaskEntity,
   UserDetailEntity,

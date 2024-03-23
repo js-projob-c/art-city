@@ -1,3 +1,4 @@
+import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { IExternalParty, IPurchase } from '@art-city/common/types';
 import { IExternalProject } from '@art-city/common/types/external-project';
 import {
@@ -12,7 +13,7 @@ import {
 import { ExternalProjectEntity } from './external-project.entity';
 import { PurchaseEntity } from './purchase.entity';
 
-@Entity({ name: 'purchase-counterpart' })
+@Entity({ name: DB_TABLE_NAMES.externalParty })
 export class ExternalPartyEntity implements IExternalParty {
   @PrimaryGeneratedColumn('uuid')
   id: string;

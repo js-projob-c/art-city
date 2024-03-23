@@ -1,3 +1,4 @@
+import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ReimburseStatus, ReimburseType } from '@art-city/common/enums';
 import { IReimburse, IUser } from '@art-city/common/types';
 import {
@@ -12,7 +13,7 @@ import {
 
 import { UserEntity } from './user.entity';
 
-@Entity({ name: 'reimburse' })
+@Entity({ name: DB_TABLE_NAMES.reimburse })
 export class ReimburseEntity implements IReimburse {
   @PrimaryGeneratedColumn('uuid')
   id: string;

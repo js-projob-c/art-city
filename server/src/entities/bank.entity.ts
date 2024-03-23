@@ -1,3 +1,4 @@
+import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { IBank } from '@art-city/common/types';
 import {
   Column,
@@ -7,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'bank' })
+@Entity({ name: DB_TABLE_NAMES.bank })
 export class BankEntity implements IBank {
   @PrimaryGeneratedColumn('uuid')
   id: string;

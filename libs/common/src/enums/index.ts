@@ -5,5 +5,6 @@ export * from './payroll';
 export * from './project';
 export * from './purchase';
 export * from './reimburse';
+export * from './shift-application';
 export * from './task';
 export * from './user';

@@ -10,6 +10,7 @@ export * from './project';
 export * from './purchase';
 export * from './reimburse';
 export * from './schedule';
+export * from './shift-application';
 export * from './system';
 export * from './task';
 export * from './user';

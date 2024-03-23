@@ -1,6 +1,7 @@
 export enum CustomerType {
   EXISTING = 'EXISTING',
   POTENTIAL = 'POTENTIAL',
+  INACTIVE = 'INACTIVE',
 }
 
 export enum CustomerSource {

@@ -1,14 +1,18 @@
+import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { CustomerSource, CustomerType } from '@art-city/common/enums';
-import { ICustomer } from '@art-city/common/types';
+import { ICustomer, IUser } from '@art-city/common/types';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'customer' })
+import { UserEntity } from './user.entity';
+
+@Entity({ name: DB_TABLE_NAMES.customer })
 export class CustomerEntity implements ICustomer {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -36,4 +40,7 @@ export class CustomerEntity implements ICustomer {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToMany(() => UserEntity, (user) => user.customers)
+  users: IUser[];
 }

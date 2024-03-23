@@ -1,3 +1,4 @@
+import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { PurchaseStatus } from '@art-city/common/enums';
 import {
   IExternalParty,
@@ -16,7 +17,7 @@ import {
 
 import { ExternalPartyEntity } from './external-party.entity';
 
-@Entity({ name: 'purchase' })
+@Entity({ name: DB_TABLE_NAMES.purchase })
 export class PurchaseEntity implements IPurchase {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -25,7 +26,7 @@ export class PurchaseEntity implements IPurchase {
 
   @OneToOne(
     () => ExternalPartyEntity,
-    (externalParty) => externalParty.purchase,
+    (externalParty) => externalParty.purchases,
   )
   @JoinColumn({ name: 'externalPartyId' })
   externalParty: IExternalParty;

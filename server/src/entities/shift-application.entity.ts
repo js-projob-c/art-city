@@ -1,6 +1,6 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
-import { LeaveStatus } from '@art-city/common/enums';
-import { ILeave, IUser } from '@art-city/common/types';
+import { ShiftApplicationStatus } from '@art-city/common/enums';
+import { IShiftApplication, IUser } from '@art-city/common/types';
 import {
   Column,
   CreateDateColumn,
@@ -14,8 +14,8 @@ import {
 
 import { UserEntity } from './user.entity';
 
-@Entity({ name: DB_TABLE_NAMES.leave })
-export class LeaveEntity implements ILeave {
+@Entity({ name: DB_TABLE_NAMES.shiftApplication })
+export class ShiftApplicationEntity implements IShiftApplication {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -26,19 +26,19 @@ export class LeaveEntity implements ILeave {
   user: IUser;
 
   @Column({ type: 'timestamp' })
-  from: string;
+  fromDate: string;
 
   @Column({ type: 'timestamp' })
-  to: string;
+  toDate: string;
 
   @Column({ type: 'int2' })
   days: number;
 
-  @Column({ type: 'enum', enum: LeaveStatus })
-  status: LeaveStatus;
+  @Column({ type: 'varchar', nullable: true })
+  reason?: string | undefined;
 
-  @Column({ type: 'varchar' })
-  reason: string;
+  @Column({ type: 'enum', enum: ShiftApplicationStatus })
+  status: ShiftApplicationStatus;
 
   reviewerId?: string | undefined;
 

@@ -1,6 +1,8 @@
+import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { UserDepartment, UserRole } from '@art-city/common/enums';
 import {
   IAttendance,
+  ICustomer,
   ILeave,
   IPayroll,
   IProject,
@@ -23,6 +25,7 @@ import {
 } from 'typeorm';
 
 import { AttendanceEntity } from './attendance.entity';
+import { CustomerEntity } from './customer.entity';
 import { LeaveEntity } from './leave.entity';
 import { PayrollEntity } from './payroll.entity';
 import { ProjectEntity } from './project.entity';
@@ -31,7 +34,7 @@ import { ScheduleEntity } from './schedule.entity';
 import { TaskEntity } from './task.entity';
 import { UserDetailEntity } from './user-detail.entity';
 
-@Entity({ name: 'user' })
+@Entity({ name: DB_TABLE_NAMES.user })
 export class UserEntity implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -81,7 +84,11 @@ export class UserEntity implements IUser {
   @OneToMany(() => PayrollEntity, (payroll) => payroll.user)
   payrolls: IPayroll[];
 
+  @ManyToMany(() => CustomerEntity, (customer) => customer.users)
+  @JoinTable({ name: DB_TABLE_NAMES.userCustomer })
+  customers: ICustomer[];
+
   @ManyToMany(() => TaskEntity, (task) => task.users)
-  @JoinTable()
+  @JoinTable({ name: DB_TABLE_NAMES.userTask })
   tasks: ITask[];
 }

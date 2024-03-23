@@ -1,3 +1,4 @@
+import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { IUser, IUserDetail } from '@art-city/common/types';
 import {
   Column,
@@ -11,7 +12,7 @@ import {
 
 import { UserEntity } from './user.entity';
 
-@Entity({ name: 'user-detail' })
+@Entity({ name: DB_TABLE_NAMES.userDetail })
 export class UserDetailEntity implements IUserDetail {
   @PrimaryGeneratedColumn('uuid')
   id: string;

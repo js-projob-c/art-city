@@ -1,3 +1,4 @@
+import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ExternalProjectStatus } from '@art-city/common/enums/external-project';
 import { IExternalParty } from '@art-city/common/types';
 import { IExternalProject } from '@art-city/common/types/external-project';
@@ -13,7 +14,7 @@ import {
 
 import { ExternalPartyEntity } from './external-party.entity';
 
-@Entity({ name: 'project' })
+@Entity({ name: DB_TABLE_NAMES.externalProject })
 export class ExternalProjectEntity implements IExternalProject {
   @PrimaryGeneratedColumn('uuid')
   id: string;

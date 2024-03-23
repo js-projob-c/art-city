@@ -1,3 +1,4 @@
+import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { TaskStatus, TaskVisibleTo } from '@art-city/common/enums';
 import { IProject, ITask, IUser } from '@art-city/common/types';
 import {
@@ -14,7 +15,7 @@ import {
 import { ProjectEntity } from './project.entity';
 import { UserEntity } from './user.entity';
 
-@Entity({ name: 'task' })
+@Entity({ name: DB_TABLE_NAMES.task })
 export class TaskEntity implements ITask {
   @PrimaryGeneratedColumn('uuid')
   id: string;

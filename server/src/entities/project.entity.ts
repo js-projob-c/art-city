@@ -1,3 +1,4 @@
+import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ProjectStatus } from '@art-city/common/enums';
 import { IProject, ITask, IUser } from '@art-city/common/types';
 import {
@@ -14,7 +15,7 @@ import {
 import { TaskEntity } from './task.entity';
 import { UserEntity } from './user.entity';
 
-@Entity({ name: 'project' })
+@Entity({ name: DB_TABLE_NAMES.project })
 export class ProjectEntity implements IProject {
   @PrimaryGeneratedColumn('uuid')
   id: string;
