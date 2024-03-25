@@ -4,6 +4,7 @@ import { ILeave, IUser } from '@art-city/common/types';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -54,4 +55,7 @@ export class LeaveEntity implements ILeave {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date | undefined;
 }

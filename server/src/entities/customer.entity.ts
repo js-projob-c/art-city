@@ -4,6 +4,7 @@ import { ICustomer, IUser } from '@art-city/common/types';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToMany,
   PrimaryGeneratedColumn,
@@ -40,6 +41,9 @@ export class CustomerEntity implements ICustomer {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date | undefined;
 
   @ManyToMany(() => UserEntity, (user) => user.customers)
   users: IUser[];

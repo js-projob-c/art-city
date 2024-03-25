@@ -5,6 +5,7 @@ import { IExternalProject } from '@art-city/common/types/external-project';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -39,4 +40,7 @@ export class ExternalProjectEntity implements IExternalProject {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date | undefined;
 }

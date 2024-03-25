@@ -15,6 +15,7 @@ import {
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
@@ -62,6 +63,9 @@ export class UserEntity implements IUser {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date | undefined;
 
   @OneToOne(() => UserDetailEntity, (userDetail) => userDetail.user)
   detail: IUserDetail;

@@ -14,6 +14,7 @@ async function bootstrap() {
     { bufferLogs: true },
   );
   app.useLogger(app.get(Logger));
+  app.setGlobalPrefix('api');
   await app.listen(8080);
 }
 bootstrap();

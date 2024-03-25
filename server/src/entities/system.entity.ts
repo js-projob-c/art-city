@@ -3,6 +3,7 @@ import { ISystem } from '@art-city/common/types';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -24,4 +25,7 @@ export class SystemEntity implements ISystem {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date | undefined;
 }

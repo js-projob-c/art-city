@@ -4,6 +4,7 @@ import { IExternalProject } from '@art-city/common/types/external-project';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -38,6 +39,9 @@ export class ExternalPartyEntity implements IExternalParty {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date | undefined;
 
   @ManyToOne(() => PurchaseEntity, (purchase) => purchase.externalParty)
   purchases: IPurchase[];

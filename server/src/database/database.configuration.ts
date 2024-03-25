@@ -18,8 +18,8 @@ export class DatabaseConfiguration {
       database: this.database,
       schema: this.schema,
       logging: this.logging,
-      migrationsTableName: 'migration',
-      migrations: ['dist/server/external/database/migrations/*.js'],
+      migrationsTableName: this.migrationTableName,
+      migrations: ['dist/server/src/external/database/migrations/*.js'],
       autoLoadEntities: true,
       synchronize: false,
       migrationsRun: true,
@@ -66,5 +66,9 @@ export class DatabaseConfiguration {
     return this.configService.getOrThrow('DATABASE_SCHEMA_NAME', {
       infer: true,
     });
+  }
+
+  get migrationTableName(): string {
+    return 'migration';
   }
 }

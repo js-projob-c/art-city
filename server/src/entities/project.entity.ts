@@ -4,6 +4,7 @@ import { IProject, ITask, IUser } from '@art-city/common/types';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -41,6 +42,9 @@ export class ProjectEntity implements IProject {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date | undefined;
 
   @OneToMany(() => TaskEntity, (task) => task.project)
   tasks: ITask[];
