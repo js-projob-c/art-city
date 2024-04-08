@@ -19,12 +19,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@art-city/common/*": [
-        "../libs/common/src/*"
-      ],
-      "@art-city/common": [
-        "../libs/common/src/index.ts"
-      ]
+      "@art-city/common/*": ["../libs/common/src/*"],
+      "@art-city/common": ["../libs/common/src/index.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
