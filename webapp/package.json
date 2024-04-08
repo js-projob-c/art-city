@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint-fix": "eslint \"{src,apps,libs,test}/**/*.{tsx,ts}\" --fix"
   },
   "dependencies": {
     "next": "14.1.4",
@@ -20,6 +21,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.1.4",
+    "eslint-plugin-simple-import-sort": "^12.0.0",
     "typescript": "^5"
   }
 }

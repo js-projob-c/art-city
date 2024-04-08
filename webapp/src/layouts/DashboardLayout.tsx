@@ -1,6 +1,8 @@
-import DashboardSideBar from '@/components/DashboardSideBar';
-import React, { ReactNode } from 'react';
-import styles from "./DashboardLayout.module.scss"
+import React, { ReactNode } from "react";
+
+import DashboardSideBar from "@/components/DashboardSideBar";
+
+import styles from "./DashboardLayout.module.scss";
 
 interface IProps {
   children: ReactNode;
@@ -9,10 +11,8 @@ interface IProps {
 const DashboardLayout: React.FC<IProps> = ({ children }: IProps) => {
   return (
     <div className={styles.root}>
-      <DashboardSideBar/>     
-      <main>
-        {children}
-      </main>
+      <DashboardSideBar />
+      <main>{children}</main>
     </div>
   );
 };

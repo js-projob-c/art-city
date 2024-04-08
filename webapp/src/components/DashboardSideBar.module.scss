@@ -7,10 +7,10 @@
   min-height: 100vh;
   width: 20%;
   min-width: 220px;
-  background-color: #dfba63; /* Add a background color */
+  background-color: #eae6de; /* Add a background color */
 }
 
-.top{
+.top {
   display: inherit;
   justify-content: inherit;
   align-items: inherit;
@@ -19,25 +19,22 @@
   width: 100%;
   z-index: 2;
   font-family: var(--font-mono);
+
   .logo {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 90%;
+    height: auto;
   }
   .items {
-    /* Add styles for the items */
   }
 }
 
 .bottom {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(25%, auto));
-  max-width: 100%;
-  width: var(--max-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   .signOut {
-    /* Add styles for the signout button */
   }
 }
-
-
-

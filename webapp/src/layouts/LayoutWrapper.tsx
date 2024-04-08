@@ -1,9 +1,10 @@
-import DashboardLayout from './DashboardLayout';
-import { ReactNode } from 'react';
-import { headers } from 'next/headers';
-import DefaultLayout from './DefaultLayout';
-import AuthLayout from './AuthLayout';
 import { ReadonlyHeaders } from 'next/dist/server/web/spec-extension/adapters/headers';
+import { headers } from 'next/headers';
+import { ReactNode } from 'react';
+
+import AuthLayout from './AuthLayout';
+import DashboardLayout from './DashboardLayout';
+import DefaultLayout from './DefaultLayout';
 
 const layouts = {
   auth: AuthLayout,
