@@ -5,3 +5,23 @@
   height: auto;
   width: 100%;
 }
+
+.main {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(195, 209, 195);
+  width: 100%;
+
+  .header {
+    height: 80px;
+    width: 100%;
+    background-color: rgb(178, 178, 232);
+  }
+
+  .content {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(195, 209, 195);
+    width: 100%;
+  }
+}
