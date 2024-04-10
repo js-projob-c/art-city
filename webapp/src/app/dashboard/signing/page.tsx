@@ -1,13 +1,15 @@
-import React from 'react';
+import { Button, Flex } from "@mantine/core";
+import React from "react";
 
-interface IProps {
-}
+interface IProps {}
 
 const SigningPage: React.FC<IProps> = () => {
   return (
-    <div>
-      Signing Page
-    </div>
+    <>
+      <Flex w={"100%"} justify="flex-end">
+        <Button variant="outline">簽到</Button>
+      </Flex>
+    </>
   );
 };
 

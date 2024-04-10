@@ -4,24 +4,35 @@
   min-height: 100vh;
   height: auto;
   width: 100%;
-}
 
-.main {
-  display: flex;
-  flex-direction: column;
-  background-color: rgb(195, 209, 195);
-  width: 100%;
-
-  .header {
-    height: 80px;
-    width: 100%;
-    background-color: rgb(178, 178, 232);
+  .sidebar {
+    &.closed {
+      z-index: -1;
+    }
   }
 
-  .content {
+  .main {
     display: flex;
-    flex-direction: row;
-    background-color: rgb(195, 209, 195);
+    flex-direction: column;
     width: 100%;
+    flex-grow: 1;
+    transition: margin 0.3s ease-in;
+
+    &.closed {
+      margin-left: calc(-1 * var(--side-navbar-width));
+      transition: margin 0.3s ease-in;
+    }
+
+    .header {
+      height: 80px;
+      width: 100%;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100%;
+    }
   }
 }

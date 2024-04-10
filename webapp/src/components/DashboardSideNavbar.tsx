@@ -5,7 +5,6 @@ import Image, { StaticImageData } from "next/image";
 import React from "react";
 
 import { SideNavbarConfigType } from "@/configs/dashboardSideNavbar";
-import { useApp } from "@/contexts/AppContext";
 
 import styles from "./DashboardSideNavbar.module.scss";
 
@@ -20,8 +19,6 @@ const DashboardSideNavbar: React.FC<IProps> = ({
   navConfig,
   logoSrc,
 }) => {
-  const { isNavbarToggled } = useApp();
-
   const renderNavLinks = (items: SideNavbarConfigType[]) => {
     return items.map((item, i) => {
       const isParent = !!(item.children && item.children?.length > 0);
@@ -47,7 +44,7 @@ const DashboardSideNavbar: React.FC<IProps> = ({
   };
 
   return (
-    <div className={`${styles.root} ${isNavbarToggled ? styles.opened : ""}`}>
+    <div className={`${styles.root}`}>
       <div className={styles.top}>
         <div className={styles.logo}>
           <Image src={logoSrc} alt="logo" className={styles.logo} />

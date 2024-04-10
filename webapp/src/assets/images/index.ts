@@ -1,5 +1,7 @@
-import logo from "./logo.png";
+import logoRec from "./logo_rectangle.png";
+import logoSquare from "./logo_square.png";
 
 export const IMAGES = {
-  logo,
+  logoSquare,
+  logoRec,
 };

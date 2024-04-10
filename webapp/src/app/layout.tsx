@@ -1,4 +1,4 @@
-import "./globals.scss";
+import "../globals.scss";
 
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import type { Metadata } from "next";

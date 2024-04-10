@@ -1,13 +1,30 @@
+import { UserRole } from "@art-city/common/enums";
+
 export type SideNavbarConfigType = {
   href: string;
   label: string;
   children?: SideNavbarConfigType[];
+  roles?: UserRole[];
 };
 
 export const dashboardSideNavbarConfig: SideNavbarConfigType[] = [
   {
     href: "/dashboard",
     label: "主頁",
+  },
+  {
+    href: "",
+    label: "員工管理",
+    children: [
+      {
+        href: "/dashboard/signing",
+        label: "簽到/簽出",
+      },
+      {
+        href: "/dashboard/schedule",
+        label: "排班",
+      },
+    ],
   },
   {
     href: "",
