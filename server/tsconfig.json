@@ -18,17 +18,11 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true,
+    "esModuleInterop": true,
     "paths": {
-      "@art-city/common/*": [
-        "../libs/common/src/*"
-      ],
-      "@art-city/common": [
-        "../libs/common/src/index.ts"
-      ]
-    },
+      "@art-city/common/*": ["../libs/common/src/*"],
+      "@art-city/common": ["../libs/common/src/index.ts"]
+    }
   },
-  "include": [
-    "../server/**/*.ts",
-    "../libs/**/*.ts",
-  ]
+  "include": ["../server/**/*.ts", "../libs/**/*.ts"]
 }

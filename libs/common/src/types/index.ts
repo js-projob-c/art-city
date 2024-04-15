@@ -4,6 +4,7 @@ export * from './bank';
 export * from './base';
 export * from './customer';
 export * from './external-party';
+export * from './jwt';
 export * from './leave';
 export * from './payroll';
 export * from './project';
