@@ -1,11 +1,23 @@
 import { errorCodes } from '@art-city/common/constants';
 import { UserDepartment, UserRole } from '@art-city/common/enums';
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { UserRepository } from 'src/database/repositories';
+import { TokenUser } from 'src/decorators';
+import { UserEntity } from 'src/entities';
 
 import { AuthService } from './auth.service';
+import { LoginRequestDto } from './dto/LoginRequest.dto';
 import { RegisterRequestDto } from './dto/RegisterRequest.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -13,7 +25,7 @@ export class AuthController {
     private readonly userRepo: UserRepository,
   ) {}
 
-  @Post('/register')
+  @Post('register')
   async register(@Body() dto: RegisterRequestDto) {
     const user = await this.userRepo.findOne({
       where: {
@@ -21,7 +33,7 @@ export class AuthController {
       },
     });
     if (user) {
-      throw new BadRequestException(errorCodes.REGISTER_EMAIL_EXISTED);
+      throw new BadRequestException(errorCodes.auth.EMAIL_EXISTED);
     }
 
     const hashedPassword = await this.authService.hashPassword(dto.password);
@@ -38,6 +50,13 @@ export class AuthController {
     );
   }
 
-  @Post('/login')
-  async login() {}
+  @UseGuards(LocalAuthGuard)
+  @ApiBody({
+    type: LoginRequestDto,
+  })
+  @Post('login')
+  async login(@TokenUser() user: UserEntity) {
+    const token = await this.authService.signUserToken(user);
+    return token;
+  }
 }

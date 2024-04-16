@@ -5,7 +5,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
+import { HealthModule } from './health/health.module';
 import { LoggerModule } from './logger/logger.module';
+import { SwaggerModule } from './swagger/swagger.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -15,6 +17,8 @@ import { UserModule } from './user/user.module';
     LoggerModule,
     UserModule,
     AuthModule,
+    SwaggerModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

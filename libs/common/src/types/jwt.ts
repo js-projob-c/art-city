@@ -1,6 +1,7 @@
 export interface IJwtCustomPayload {
+  email: string;
   role: string;
-  email?: string;
+  department: string;
 }
 
 export interface IJwtPayload extends IJwtCustomPayload {

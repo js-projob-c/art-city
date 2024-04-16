@@ -4,7 +4,9 @@ import { DatabaseModule } from 'src/database/database.module';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JwtConfiguration } from './jwt.configuration';
+import { JwtConfiguration } from './guards/jwt.configuration';
+import { JwtStrategy } from './guards/jwt.strategy';
+import { LocalStrategy } from './guards/local.strategy';
 
 @Module({
   imports: [
@@ -18,6 +20,6 @@ import { JwtConfiguration } from './jwt.configuration';
     DatabaseModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
 })
 export class AuthModule {}

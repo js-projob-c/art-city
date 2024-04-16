@@ -26,7 +26,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     user: {
       payload: Partial<IUser>;
     },
-    info,
+    // info,
   ) {
     // You can throw an exception based on either "info" or "err" arguments
     if (err || !user?.payload) {

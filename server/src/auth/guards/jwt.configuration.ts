@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import { JwtVariables } from './jwt.variables';
 
@@ -19,13 +18,13 @@ export class JwtConfiguration {
   }
 
   get jwtSecret(): string | undefined {
-    return this.configService.get('JWT_SECRET', {
+    return this.configService.getOrThrow('JWT_SECRET', {
       infer: true,
     });
   }
 
   get jwtIssuer(): string | undefined {
-    return this.configService.get('JWT_ISSUER', {
+    return this.configService.getOrThrow('JWT_ISSUER', {
       infer: true,
     });
   }

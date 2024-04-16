@@ -5,7 +5,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DatabaseVariables } from './database.variables';
 
 @Injectable()
-export class DatabaseConfiguration {
+export class DatabaseConfig {
   constructor(private configService: ConfigService<DatabaseVariables>) {}
 
   public getTypeOrmConfig(): TypeOrmModuleOptions {
