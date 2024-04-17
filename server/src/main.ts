@@ -1,3 +1,4 @@
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -20,6 +21,22 @@ async function bootstrap() {
   const logger = app.get(Logger);
   app.useLogger(logger);
   app.setGlobalPrefix(apiPrefix);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      exceptionFactory(errors) {
+        const result = errors.reduce((acc, error) => {
+          return {
+            ...acc,
+            [error.property]: Object.entries(error.constraints ?? {}).map(
+              ([key, value]) => ({ contraint: key, message: value }),
+            ),
+          };
+        }, {});
+        return new BadRequestException(result);
+      },
+    }),
+  );
 
   const configService = app.get(ConfigService);
   const environment = configService.get('NODE_ENV', { infer: true });
