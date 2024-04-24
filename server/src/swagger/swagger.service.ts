@@ -30,6 +30,8 @@ export class SwaggerService {
       .setDescription('Art City Advertising Company Limited')
       .setVersion('1.0.0')
       .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
+      .addSecurityRequirements('bearer')
+      .setExternalDoc('Postman Collection', '/openapi-json')
       .build();
 
     const options: SwaggerDocumentOptions & SwaggerCustomOptions = {

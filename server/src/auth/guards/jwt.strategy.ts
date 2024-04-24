@@ -23,22 +23,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   logger = new Logger(JwtStrategy.name);
 
   async validate(jwtPayload: IJwtPayload) {
-    // this.logger.log('JWT validate');
-
     const user = await this.userRepo.findOneBy({
       id: jwtPayload?.sub,
     });
 
-    // if (jwtPayload.role === JwtAccountType.ADMIN) {
-    //   const admin = await this.adminsService.findOne({ id: jwtPayload.sub });
-    //   if (admin)
-    //     user = admin ? { ...admin, account_type: JwtAccountType.ADMIN } : admin;
-    // } else {
-    //   user = await this.membersService.findOne({
-    //     id: jwtPayload.sub,
-    //   });
-    //   checkMembershipStatus(user?.membership_status);
-    // }
     if (!user) {
       throw new UnauthorizedException();
     }
