@@ -1,12 +1,12 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import * as Entities from '../entities';
 import { DatabaseConfig } from './database.config';
 import { DatabaseService } from './database.service';
 import * as Repositories from './repositories';
-import { UserRepository } from './repositories/user.repository';
 
+@Global()
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -17,6 +17,6 @@ import { UserRepository } from './repositories/user.repository';
     TypeOrmModule.forFeature(Object.values(Entities)),
   ],
   providers: [DatabaseService, ...Object.values(Repositories)],
-  exports: [UserRepository, ...Object.values(Repositories)],
+  exports: [...Object.values(Repositories)],
 })
 export class DatabaseModule {}

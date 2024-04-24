@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './health/health.module';
 import { LoggerModule } from './logger/logger.module';
+import { SeederModule } from './seeder/seeder.module';
 import { SwaggerModule } from './swagger/swagger.module';
 import { UserModule } from './user/user.module';
 
@@ -19,6 +20,7 @@ import { UserModule } from './user/user.module';
     AuthModule,
     SwaggerModule,
     HealthModule,
+    SeederModule,
   ],
   controllers: [AppController],
   providers: [AppService],
