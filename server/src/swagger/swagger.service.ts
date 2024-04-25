@@ -31,7 +31,7 @@ export class SwaggerService {
       .setVersion('1.0.0')
       .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
       .addSecurityRequirements('bearer')
-      .setExternalDoc('Postman Collection', '/openapi-json')
+      .setExternalDoc('Postman Collection JSON', '/swagger-json')
       .build();
 
     const options: SwaggerDocumentOptions & SwaggerCustomOptions = {

@@ -9,6 +9,7 @@ import { HealthModule } from './health/health.module';
 import { LoggerModule } from './logger/logger.module';
 import { SeederModule } from './seeder/seeder.module';
 import { SwaggerModule } from './swagger/swagger.module';
+import { SystemModule } from './system/system.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -21,6 +22,7 @@ import { UserModule } from './user/user.module';
     SwaggerModule,
     HealthModule,
     SeederModule,
+    SystemModule,
   ],
   controllers: [AppController],
   providers: [AppService],

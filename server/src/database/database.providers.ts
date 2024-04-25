@@ -13,37 +13,37 @@ export const repositoriesProviders = [
   {
     provide: DB_TABLE_NAMES.attendance,
     useFactory: (dataSource: DataSource) =>
-      dataSource.getRepository(AttendanceEntity),
+      dataSource.manager.getRepository(AttendanceEntity),
     inject: [DataSource],
   },
   {
     provide: DB_TABLE_NAMES.bank,
     useFactory: (dataSource: DataSource) =>
-      dataSource.getRepository(BankEntity),
+      dataSource.manager.getRepository(BankEntity),
     inject: [DataSource],
   },
   {
     provide: DB_TABLE_NAMES.customer,
     useFactory: (dataSource: DataSource) =>
-      dataSource.getRepository(CustomerEntity),
+      dataSource.manager.getRepository(CustomerEntity),
     inject: [DataSource],
   },
   {
     provide: DB_TABLE_NAMES.externalParty,
     useFactory: (dataSource: DataSource) =>
-      dataSource.getRepository(ExternalPartyEntity),
+      dataSource.manager.getRepository(ExternalPartyEntity),
     inject: [DataSource],
   },
   {
     provide: DB_TABLE_NAMES.externalProject,
     useFactory: (dataSource: DataSource) =>
-      dataSource.getRepository(ExternalProjectEntity),
+      dataSource.manager.getRepository(ExternalProjectEntity),
     inject: [DataSource],
   },
   {
     provide: DB_TABLE_NAMES.user,
     useFactory: (dataSource: DataSource) =>
-      dataSource.getRepository(UserEntity),
+      dataSource.manager.getRepository(UserEntity),
     inject: [DataSource],
   },
 ];

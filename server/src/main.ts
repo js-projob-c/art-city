@@ -1,6 +1,10 @@
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  ClassSerializerInterceptor,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -8,6 +12,7 @@ import {
 import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
+import { ResponseTransformInterceptor } from './interceptors/response.interceptor';
 import { SwaggerService } from './swagger/swagger.service';
 
 const apiPrefix = 'api';
@@ -36,6 +41,10 @@ async function bootstrap() {
         return new BadRequestException(result);
       },
     }),
+  );
+  app.useGlobalInterceptors(
+    new ClassSerializerInterceptor(app.get(Reflector)),
+    new ResponseTransformInterceptor(),
   );
 
   const configService = app.get(ConfigService);

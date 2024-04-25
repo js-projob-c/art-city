@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from 'src/entities';
+import { SystemEntity } from 'src/entities';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class UserRepository extends Repository<UserEntity> {
+export class SystemRepository extends Repository<SystemEntity> {
   constructor(
-    @InjectRepository(UserEntity)
-    protected repository: Repository<UserEntity>,
+    @InjectRepository(SystemEntity)
+    protected readonly repository: Repository<SystemEntity>,
   ) {
     super(repository.target, repository.manager, repository.queryRunner);
   }

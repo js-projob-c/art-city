@@ -14,11 +14,11 @@ export class SystemEntity implements ISystem {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'timestamp' })
-  workHourFrom: string;
+  @Column({ type: 'time' })
+  workHourFrom: string; // 24-hour format
 
-  @Column({ type: 'timestamp' })
-  workHourTo: string;
+  @Column({ type: 'time' })
+  workHourTo: string; // 24-hour format
 
   @CreateDateColumn()
   createdAt: Date;

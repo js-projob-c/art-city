@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 export class UserDetailRepository extends Repository<UserDetailEntity> {
   constructor(
     @InjectRepository(UserDetailEntity)
-    private repository: Repository<UserDetailEntity>,
+    protected repository: Repository<UserDetailEntity>,
   ) {
     super(repository.target, repository.manager, repository.queryRunner);
   }
