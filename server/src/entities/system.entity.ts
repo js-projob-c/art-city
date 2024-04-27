@@ -1,16 +1,10 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ISystem } from '@art-city/common/types';
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { BaseEntity } from 'src/common/class/entities';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: DB_TABLE_NAMES.system })
-export class SystemEntity implements ISystem {
+export class SystemEntity extends BaseEntity implements ISystem {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -19,13 +13,4 @@ export class SystemEntity implements ISystem {
 
   @Column({ type: 'time' })
   workHourTo: string; // 24-hour format
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | undefined;
 }

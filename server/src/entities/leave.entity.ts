@@ -1,22 +1,20 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { LeaveStatus } from '@art-city/common/enums';
 import { ILeave, IUser } from '@art-city/common/types';
+import { BaseEntity } from 'src/common/class/entities';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 import { UserEntity } from './user.entity';
 
 @Entity({ name: DB_TABLE_NAMES.leave })
-export class LeaveEntity implements ILeave {
+export class LeaveEntity extends BaseEntity implements ILeave {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -49,13 +47,4 @@ export class LeaveEntity implements ILeave {
 
   @Column({ type: 'timestamp', nullable: true })
   reviewedAt?: string | undefined;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | undefined;
 }

@@ -2,21 +2,22 @@ import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ExternalProjectStatus } from '@art-city/common/enums/external-project';
 import { IExternalParty } from '@art-city/common/types';
 import { IExternalProject } from '@art-city/common/types/external-project';
+import { BaseEntity } from 'src/common/class/entities';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 import { ExternalPartyEntity } from './external-party.entity';
 
 @Entity({ name: DB_TABLE_NAMES.externalProject })
-export class ExternalProjectEntity implements IExternalProject {
+export class ExternalProjectEntity
+  extends BaseEntity
+  implements IExternalProject
+{
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -34,13 +35,4 @@ export class ExternalProjectEntity implements IExternalProject {
 
   @Column({ type: 'enum', enum: ExternalProjectStatus })
   status: ExternalProjectStatus;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | undefined;
 }

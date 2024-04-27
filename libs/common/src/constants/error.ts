@@ -1,7 +1,9 @@
-export const errorCodes = {
-  auth: {
+export const ERROR_CODES = {
+  GENERIC: {},
+  AUTH: {
     EMAIL_EXISTED: 'AUTH_001',
     EMAIL_NOT_FOUND: 'AUTH_002',
     PASSWORD_INCORRECT: 'AUTH_003',
   },
+  ATTENDANCE: {},
 };

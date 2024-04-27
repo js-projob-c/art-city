@@ -1,4 +1,4 @@
-import { errorCodes } from '@art-city/common/constants';
+import { ERROR_CODES } from '@art-city/common/constants';
 import { UserDepartment, UserRole } from '@art-city/common/enums';
 import {
   BadRequestException,
@@ -33,7 +33,7 @@ export class AuthController {
       },
     });
     if (user) {
-      throw new BadRequestException(errorCodes.auth.EMAIL_EXISTED);
+      throw new BadRequestException(ERROR_CODES.AUTH.EMAIL_EXISTED);
     }
 
     const hashedPassword = await this.authService.hashPassword(dto.password);

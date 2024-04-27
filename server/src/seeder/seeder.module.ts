@@ -1,5 +1,5 @@
 import { Module, OnModuleInit } from '@nestjs/common';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from 'src/features/auth/auth.module';
 
 import { SeederController } from './seeder.controller';
 import { SeederService } from './seeder.service';

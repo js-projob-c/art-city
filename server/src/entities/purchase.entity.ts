@@ -5,21 +5,19 @@ import {
   IPurchase,
   IPurchaseItem,
 } from '@art-city/common/types';
+import { BaseEntity } from 'src/common/class/entities';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 import { ExternalPartyEntity } from './external-party.entity';
 
 @Entity({ name: DB_TABLE_NAMES.purchase })
-export class PurchaseEntity implements IPurchase {
+export class PurchaseEntity extends BaseEntity implements IPurchase {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -43,13 +41,4 @@ export class PurchaseEntity implements IPurchase {
 
   @Column({ type: 'numeric' })
   amount: number;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | undefined;
 }

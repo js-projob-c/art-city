@@ -1,22 +1,23 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ShiftApplicationStatus } from '@art-city/common/enums';
 import { IShiftApplication, IUser } from '@art-city/common/types';
+import { BaseEntity } from 'src/common/class/entities';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 import { UserEntity } from './user.entity';
 
 @Entity({ name: DB_TABLE_NAMES.shiftApplication })
-export class ShiftApplicationEntity implements IShiftApplication {
+export class ShiftApplicationEntity
+  extends BaseEntity
+  implements IShiftApplication
+{
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -49,13 +50,4 @@ export class ShiftApplicationEntity implements IShiftApplication {
 
   @Column({ type: 'timestamp', nullable: true })
   reviewedAt?: string | undefined;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | undefined;
 }

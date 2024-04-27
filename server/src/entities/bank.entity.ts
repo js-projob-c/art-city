@@ -1,16 +1,10 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { IBank } from '@art-city/common/types';
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { BaseEntity } from 'src/common/class/entities';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: DB_TABLE_NAMES.bank })
-export class BankEntity implements IBank {
+export class BankEntity extends BaseEntity implements IBank {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -22,13 +16,4 @@ export class BankEntity implements IBank {
 
   @Column({ type: 'varchar' })
   account: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | undefined;
 }

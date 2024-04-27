@@ -1,10 +1,10 @@
 import { UserDepartment, UserRole } from '@art-city/common/enums';
 import { Injectable, Logger } from '@nestjs/common';
-import { AuthService } from 'src/auth/auth.service';
 import {
   UserDetailRepository,
   UserRepository,
 } from 'src/database/repositories';
+import { AuthService } from 'src/features/auth/auth.service';
 import { Repository } from 'typeorm';
 
 @Injectable()

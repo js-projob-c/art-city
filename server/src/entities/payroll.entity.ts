@@ -1,21 +1,19 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { PayrollType } from '@art-city/common/enums';
 import { IPayroll, IUser } from '@art-city/common/types';
+import { BaseEntity } from 'src/common/class/entities';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 import { UserEntity } from './user.entity';
 
 @Entity({ name: DB_TABLE_NAMES.payroll })
-export class PayrollEntity implements IPayroll {
+export class PayrollEntity extends BaseEntity implements IPayroll {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -33,13 +31,4 @@ export class PayrollEntity implements IPayroll {
 
   @Column({ type: 'enum', enum: PayrollType })
   type: PayrollType;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | undefined;
 }

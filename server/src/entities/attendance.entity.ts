@@ -1,20 +1,18 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { IAttendance, IUser } from '@art-city/common/types';
+import { BaseEntity } from 'src/common/class/entities';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 import { UserEntity } from './user.entity';
 
 @Entity({ name: DB_TABLE_NAMES.attendance })
-export class AttendanceEntity implements IAttendance {
+export class AttendanceEntity extends BaseEntity implements IAttendance {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -24,27 +22,18 @@ export class AttendanceEntity implements IAttendance {
   @ManyToOne(() => UserEntity, (user) => user.attendances)
   user: IUser;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   signInAt: string;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   signOutAt?: string | undefined;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   workHourFrom: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   workHourTo: string;
 
   @Column({ type: 'varchar', nullable: true })
   supportDocument?: string | undefined;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | undefined;
 }
