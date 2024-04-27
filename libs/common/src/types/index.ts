@@ -3,6 +3,7 @@ export * from './bank';
 export * from './bank';
 export * from './base';
 export * from './customer';
+export * from './error';
 export * from './external-party';
 export * from './jwt';
 export * from './leave';

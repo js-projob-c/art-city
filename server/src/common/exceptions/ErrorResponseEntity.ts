@@ -11,9 +11,9 @@ export interface IErrorResponseEntity {
 }
 
 export class ErrorResponseEntity<DataType = any> {
-  public code: string | null = null;
-  public message: string | null = null;
-  public data: DataType | null = null;
+  private code: string | null = null;
+  private message: string | null = null;
+  private data: DataType | null = null;
 
   constructor(protected props: Partial<IErrorResponseEntity>) {
     this.code = props.code || null;

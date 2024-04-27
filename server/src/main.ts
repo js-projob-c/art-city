@@ -12,7 +12,8 @@ import {
 import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
-import { ResponseTransformInterceptor } from './interceptors/response.interceptor';
+import { HttpExceptionFilter } from './common/filters/exception.filter';
+import { ResponseTransformInterceptor } from './common/interceptors/response.interceptor';
 import { SwaggerService } from './swagger/swagger.service';
 
 const apiPrefix = 'api';
@@ -46,6 +47,7 @@ async function bootstrap() {
     new ClassSerializerInterceptor(app.get(Reflector)),
     new ResponseTransformInterceptor(),
   );
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   const configService = app.get(ConfigService);
   const environment = configService.get('NODE_ENV', { infer: true });
@@ -56,7 +58,9 @@ async function bootstrap() {
     swaggerService.run(app);
   }
 
-  await app.listen(8080, '0.0.0.0');
+  const port = configService.get<{ PORT: number }>('PORT', { infer: true });
+
+  await app.listen(port || 8080, '0.0.0.0');
   const url = await app.getUrl();
   logger.log(`Server listening on ${url}`);
 }
