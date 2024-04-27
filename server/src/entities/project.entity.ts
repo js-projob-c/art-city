@@ -1,7 +1,7 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ProjectStatus } from '@art-city/common/enums';
 import { IProject, ITask, IUser } from '@art-city/common/types';
-import { BaseEntity } from 'src/common/class/entities';
+import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
   Entity,
@@ -32,7 +32,7 @@ export class ProjectEntity extends BaseEntity implements IProject {
   description: string;
   status: ProjectStatus;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   completedAt: string;
 
   @OneToMany(() => TaskEntity, (task) => task.project)

@@ -1,7 +1,7 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ReimburseStatus, ReimburseType } from '@art-city/common/enums';
 import { IReimburse, IUser } from '@art-city/common/types';
-import { BaseEntity } from 'src/common/class/entities';
+import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
   Entity,

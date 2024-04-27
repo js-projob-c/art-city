@@ -1,23 +1,21 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { TaskStatus, TaskVisibleTo } from '@art-city/common/enums';
 import { IProject, ITask, IUser } from '@art-city/common/types';
+import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 import { ProjectEntity } from './project.entity';
 import { UserEntity } from './user.entity';
 
 @Entity({ name: DB_TABLE_NAMES.task })
-export class TaskEntity implements ITask {
+export class TaskEntity extends BaseEntity implements ITask {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -42,17 +40,8 @@ export class TaskEntity implements ITask {
   @Column({ type: 'int2', default: 0 })
   progress: number;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   completedAt: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | undefined;
 
   @ManyToMany(() => UserEntity, (user) => user.tasks)
   users: IUser[];

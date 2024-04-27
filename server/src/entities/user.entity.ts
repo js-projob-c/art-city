@@ -12,17 +12,15 @@ import {
   IUser,
   IUserDetail,
 } from '@art-city/common/types';
+import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 import { AttendanceEntity } from './attendance.entity';
@@ -36,7 +34,7 @@ import { TaskEntity } from './task.entity';
 import { UserDetailEntity } from './user-detail.entity';
 
 @Entity({ name: DB_TABLE_NAMES.user })
-export class UserEntity implements IUser {
+export class UserEntity extends BaseEntity implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -57,15 +55,6 @@ export class UserEntity implements IUser {
 
   @Column({ type: 'enum', enum: UserDepartment })
   department: UserDepartment;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | undefined;
 
   @OneToOne(() => UserDetailEntity, (userDetail) => userDetail.user)
   detail: IUserDetail;

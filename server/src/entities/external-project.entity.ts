@@ -2,7 +2,7 @@ import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ExternalProjectStatus } from '@art-city/common/enums/external-project';
 import { IExternalParty } from '@art-city/common/types';
 import { IExternalProject } from '@art-city/common/types/external-project';
-import { BaseEntity } from 'src/common/class/entities';
+import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
   Entity,

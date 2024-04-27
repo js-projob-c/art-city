@@ -5,7 +5,7 @@ import {
   IPurchase,
   IPurchaseItem,
 } from '@art-city/common/types';
-import { BaseEntity } from 'src/common/class/entities';
+import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
   Entity,

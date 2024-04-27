@@ -1,20 +1,18 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { IUser, IUserDetail } from '@art-city/common/types';
+import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 import { UserEntity } from './user.entity';
 
 @Entity({ name: DB_TABLE_NAMES.userDetail })
-export class UserDetailEntity implements IUserDetail {
+export class UserDetailEntity extends BaseEntity implements IUserDetail {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -29,13 +27,4 @@ export class UserDetailEntity implements IUserDetail {
 
   @Column({ type: 'smallint' })
   annualLeave: number;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | undefined;
 }

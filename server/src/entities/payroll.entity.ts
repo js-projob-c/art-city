@@ -1,7 +1,7 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { PayrollType } from '@art-city/common/enums';
 import { IPayroll, IUser } from '@art-city/common/types';
-import { BaseEntity } from 'src/common/class/entities';
+import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
   Entity,
@@ -26,7 +26,7 @@ export class PayrollEntity extends BaseEntity implements IPayroll {
   @Column({ type: 'numeric' })
   amount: number;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   paidAt: string;
 
   @Column({ type: 'enum', enum: PayrollType })

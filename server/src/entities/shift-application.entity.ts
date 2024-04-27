@@ -1,7 +1,7 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ShiftApplicationStatus } from '@art-city/common/enums';
 import { IShiftApplication, IUser } from '@art-city/common/types';
-import { BaseEntity } from 'src/common/class/entities';
+import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
   Entity,
@@ -27,10 +27,10 @@ export class ShiftApplicationEntity
   @JoinColumn({ name: 'userId' })
   user: IUser;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   fromDate: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamptz' })
   toDate: string;
 
   @Column({ type: 'int2' })
@@ -48,6 +48,6 @@ export class ShiftApplicationEntity
   @JoinColumn({ name: 'reviewerId' })
   reviewBy?: IUser | undefined;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   reviewedAt?: string | undefined;
 }
