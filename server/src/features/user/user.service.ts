@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { ERROR_CODES, PLACEHOLDERS } from '@art-city/common/constants';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
+import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { UserRepository } from 'src/database/repositories/user.repository';
 import { UserDetailRepository } from 'src/database/repositories/user-detail.repository';
 import { UserDetailEntity, UserEntity } from 'src/entities';
 import { EntityManager } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -30,41 +31,21 @@ export class UserService {
   }
 
   async findAll() {
-    // const res = await this.userRepo.find({
-    //   relations: {
-    //     detail: true,
-    //   },
-    // });
     const res = await this.entityManager.find(UserEntity, {
       relations: {
         detail: true,
       },
     });
-    // const res = await this.entityManager.transaction(async (em) => {
-    //   return em.find(UserEntity, {
-    //     relations: {
-    //       detail: true,
-    //     },
-    //   });
-    // });
+
     return res;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  async remove(id: string) {
-    // return `This action removes a #${id} user`;
-    return await this.userRepo.softDelete({ id });
-  }
-
-  async removeDetail(id: string) {
-    // return `This action removes a #${id} user`;
-    return await this.userDetailRepo.softDelete({ id });
+  async validateUserId(id: string = PLACEHOLDERS.INCORRECT_ID) {
+    const user = await this.userRepo.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(
+        new ErrorResponseEntity({ code: ERROR_CODES.USER.USER_NOT_FOUND }),
+      );
+    }
   }
 }
