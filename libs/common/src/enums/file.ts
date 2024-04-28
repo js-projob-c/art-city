@@ -1,0 +1,3 @@
+export enum FileCategory {
+  ATTENDANCE_SUPPORTING = 'ATTENDANCE_SUPPORTING',
+}

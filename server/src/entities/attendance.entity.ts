@@ -19,21 +19,26 @@ export class AttendanceEntity extends BaseEntity implements IAttendance {
   userId: string;
 
   @JoinColumn({ name: 'userId' })
-  @ManyToOne(() => UserEntity, (user) => user.attendances)
+  @ManyToOne(() => UserEntity, (user) => user.attendances, {
+    onDelete: 'CASCADE',
+  })
   user: IUser;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp' })
   signInAt: string;
 
-  @Column({ type: 'timestamptz', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   signOutAt?: string | undefined;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'time' })
   workHourFrom: string;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'time', nullable: true })
   workHourTo: string;
 
   @Column({ type: 'varchar', nullable: true })
   supportDocument?: string | undefined;
+
+  @Column({ type: 'varchar', nullable: true })
+  remarks?: string | undefined;
 }

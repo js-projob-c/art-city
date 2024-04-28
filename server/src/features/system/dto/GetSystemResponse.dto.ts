@@ -1,1 +1,1 @@
-export class GetSystemResponse {}
+export class GetSystemResponseDto {}

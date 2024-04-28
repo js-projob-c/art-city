@@ -23,7 +23,9 @@ export class ExternalProjectEntity
 
   externalPartyId: string;
 
-  @ManyToOne(() => ExternalPartyEntity, (user) => user.externalProjects)
+  @ManyToOne(() => ExternalPartyEntity, (user) => user.externalProjects, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'externalPartyId' })
   externalParty: IExternalParty;
 

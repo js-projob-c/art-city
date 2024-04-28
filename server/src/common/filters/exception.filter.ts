@@ -4,6 +4,7 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
+  Logger,
 } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
@@ -11,12 +12,14 @@ import { ErrorResponseEntity } from '../exceptions/ErrorResponseEntity';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
+  private readonly logger: Logger = new Logger(HttpExceptionFilter.name);
+
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const reply = ctx.getResponse<FastifyReply>();
     const request = ctx.getRequest<FastifyRequest>();
     const status = exception.getStatus();
-    const payload = exception.getResponse();
+    const payload: any = exception.getResponse();
 
     const mappedPayload: IErrorResponse = {
       message: null,
@@ -31,18 +34,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
       mappedPayload.message = built.message;
       mappedPayload.statusCode = status;
     } else {
-      reply.status(500).send({
-        code: null,
-        message: null,
-        statusCode: 500,
-        path: mappedPayload.path,
-      });
+      mappedPayload.code = null;
+      mappedPayload.message = payload.message;
+      mappedPayload.statusCode = status;
     }
 
+    this.logger.error(mappedPayload);
     reply.status(status).send({
       code: mappedPayload?.code,
       message: mappedPayload?.message,
-      statusCode: mappedPayload.statusCode,
+      statusCode: mappedPayload.statusCode ?? 500,
       path: mappedPayload.path,
     });
   }

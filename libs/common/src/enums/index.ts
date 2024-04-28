@@ -1,5 +1,6 @@
 export * from './attendance';
 export * from './customer';
+export * from './file';
 export * from './leave';
 export * from './payroll';
 export * from './project';

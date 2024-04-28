@@ -29,6 +29,8 @@ export class CustomerEntity extends BaseEntity implements ICustomer {
   @Column({ type: 'enum', enum: CustomerSource })
   type: CustomerType;
 
-  @ManyToMany(() => UserEntity, (user) => user.customers)
+  @ManyToMany(() => UserEntity, (user) => user.customers, {
+    onDelete: 'CASCADE',
+  })
   users: IUser[];
 }

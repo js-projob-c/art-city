@@ -21,7 +21,9 @@ export class ProjectEntity extends BaseEntity implements IProject {
 
   ownerId: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.projects)
+  @ManyToOne(() => UserEntity, (user) => user.projects, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'ownerId' })
   owner: IUser;
 
@@ -32,7 +34,7 @@ export class ProjectEntity extends BaseEntity implements IProject {
   description: string;
   status: ProjectStatus;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp' })
   completedAt: string;
 
   @OneToMany(() => TaskEntity, (task) => task.project)

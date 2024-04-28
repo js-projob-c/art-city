@@ -19,7 +19,7 @@ export class UserDetailEntity extends BaseEntity implements IUserDetail {
   userId: string;
 
   @JoinColumn({ name: 'userId' })
-  @OneToOne(() => UserEntity, (user) => user.detail)
+  @OneToOne(() => UserEntity, (user) => user.detail, { onDelete: 'CASCADE' })
   user: IUser;
 
   @Column({ type: 'numeric' })

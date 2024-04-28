@@ -20,7 +20,7 @@ export class AttendanceRepository extends Repository<AttendanceEntity> {
       .createQueryBuilder('attendance')
       .where('attendance.userId = :userId', { userId })
       .andWhere(
-        "DATE_TRUNC('day', attendance.date) = DATE_TRUNC('day', :date)",
+        `DATE_TRUNC('day', attendance."signInAt") = DATE_TRUNC('day', :date::timestamp)`,
         { date },
       )
       .getOne();

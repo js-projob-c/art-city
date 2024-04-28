@@ -4,5 +4,4 @@ export enum AttendanceStatus {
   LEAVE_EARLY = 'LEAVE_EARLY',
   LATE_LEAVE_EARLY = 'LATE_LEAVE_EARLY',
   LEAVE = 'LEAVE',
-  SCHEDULED = 'SCHEDULED',
 }

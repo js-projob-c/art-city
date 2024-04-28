@@ -8,9 +8,9 @@ export class SystemEntity extends BaseEntity implements ISystem {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'time' })
+  @Column({ type: 'time without time zone' })
   workHourFrom: string; // 24-hour format
 
-  @Column({ type: 'time' })
+  @Column({ type: 'time without time zone' })
   workHourTo: string; // 24-hour format
 }

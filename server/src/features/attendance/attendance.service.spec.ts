@@ -2,15 +2,17 @@ import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DatetimeUtil } from 'src/common/utils/datetime.util';
 import { AttendanceRepository } from 'src/database/repositories';
-import { AttendanceEntity, SystemEntity } from 'src/entities';
+import { AttendanceEntity, SystemEntity, UserEntity } from 'src/entities';
 
 import { SystemService } from '../system/system.service';
+import { UserService } from '../user/user.service';
 import { AttendanceService } from './attendance.service';
 
 describe('AttendanceService', () => {
   let service: AttendanceService;
   let attendanceRepo: AttendanceRepository;
   let systemService: SystemService;
+  let userService: UserService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,11 +27,14 @@ describe('AttendanceService', () => {
           useValue: createMock<SystemService>(),
         },
       ],
-    }).compile();
+    })
+      .useMocker(createMock)
+      .compile();
 
     service = module.get<AttendanceService>(AttendanceService);
     attendanceRepo = module.get<AttendanceRepository>(AttendanceRepository);
     systemService = module.get<SystemService>(SystemService);
+    userService = module.get<UserService>(UserService);
   });
 
   it('should be defined', () => {
@@ -45,16 +50,12 @@ describe('AttendanceService', () => {
         workHourTo: '17:00',
       } as SystemEntity;
 
-      jest.spyOn(systemService, 'getSystem').mockResolvedValue(system);
-      jest
-        .spyOn(attendanceRepo, 'save')
-        .mockResolvedValueOnce({ id: 'attendance123' } as AttendanceEntity);
-
-      const result = await service.signInByUser(userId, date);
+      const user = { id: userId } as UserEntity; // Create UserEntity object using userId
+      const result = await service.signInByUser(user, date); // Pass user object as argument
 
       expect(systemService.getSystem).toHaveBeenCalled();
       expect(attendanceRepo.save).toHaveBeenCalledWith({
-        userId,
+        userId: user,
         signInAt: expect.any(String),
         workHourFrom: system.workHourFrom,
         workHourTo: system.workHourTo,
@@ -63,7 +64,7 @@ describe('AttendanceService', () => {
     });
 
     it('should throw an error if system is not found', async () => {
-      const userId = 'user123';
+      const userId = { id: 'user123' } as UserEntity;
       const date = '2022-01-01';
 
       jest.spyOn(systemService, 'getSystem').mockResolvedValue(null);
@@ -88,12 +89,11 @@ describe('AttendanceService', () => {
         .spyOn(attendanceRepo, 'findOneByUserAndDate')
         .mockResolvedValue(attendance);
 
-      jest
-        .spyOn(DatetimeUtil.moment(), 'toISOString')
-        .mockReturnValueOnce(expectedSignOutDate);
-      jest.spyOn(attendanceRepo, 'save').mockResolvedValue(attendance);
-
-      const result = await service.signOutByUser(userId, checkInDate);
+      const user = { id: userId } as UserEntity; // Create UserEntity object using userId
+      const result = await service.signOutByUser(
+        user, // Pass user object as argument
+        checkInDate,
+      );
 
       expect(attendanceRepo.findOneByUserAndDate).toHaveBeenCalledWith(
         userId,
@@ -120,8 +120,9 @@ describe('AttendanceService', () => {
         .mockReturnValueOnce(DatetimeUtil.moment(signOutDate));
       jest.spyOn(attendanceRepo, 'save').mockResolvedValue(attendance);
 
+      const user = { id: userId } as UserEntity; // Create UserEntity object using userId
       const result = await service.signOutByUser(
-        userId,
+        user, // Pass user object as argument
         checkInDate,
         signOutDate,
       );
@@ -144,8 +145,61 @@ describe('AttendanceService', () => {
         .mockResolvedValue(null);
 
       await expect(
-        service.signOutByUser(userId, checkInDate),
+        service.signOutByUser({ id: userId } as UserEntity, checkInDate),
       ).rejects.toThrowError('Attendance not found');
+    });
+  });
+
+  describe('getAttendanceByUser', () => {
+    it('should return attendances for a user', async () => {
+      // Arrange
+      const userId = 'user123';
+      const user = { id: userId } as UserEntity;
+      const attendances = [{ id: 'attendance123' }] as AttendanceEntity[];
+
+      jest.spyOn(userService, 'validateAndGetUser').mockResolvedValue(user);
+      jest.spyOn(attendanceRepo, 'find').mockResolvedValue(attendances);
+
+      // Act
+      const result = await service.getAttendanceByUser(userId);
+
+      // Assert
+      expect(userService.validateAndGetUser).toHaveBeenCalledWith(userId);
+      expect(attendanceRepo.find).toHaveBeenCalledWith({
+        where: { userId: user.id },
+      });
+      expect(result).toEqual(attendances);
+    });
+
+    it("should throw an error if user doesn't exist", async () => {
+      // Arrange
+      const userId = 'user123';
+
+      jest
+        .spyOn(userService, 'validateAndGetUser')
+        .mockRejectedValue(new Error());
+
+      // Act & Assert
+      await expect(service.getAttendanceByUser(userId)).rejects.toThrow();
+    });
+
+    it('should return an empty array if no attendances are found', async () => {
+      // Arrange
+      const userId = 'user123';
+      const user = { id: userId } as UserEntity;
+
+      jest.spyOn(userService, 'validateAndGetUser').mockResolvedValue(user);
+      jest.spyOn(attendanceRepo, 'find').mockResolvedValue([]);
+
+      // Act
+      const result = await service.getAttendanceByUser(userId);
+
+      // Assert
+      expect(userService.validateAndGetUser).toHaveBeenCalledWith(userId);
+      expect(attendanceRepo.find).toHaveBeenCalledWith({
+        where: { userId: user.id },
+      });
+      expect(result).toEqual([]);
     });
   });
 });

@@ -40,12 +40,15 @@ export class UserService {
     return res;
   }
 
-  async validateUserId(id: string = PLACEHOLDERS.INCORRECT_ID) {
+  async validateAndGetUser(
+    id: string = PLACEHOLDERS.INCORRECT_ID,
+  ): Promise<UserEntity> {
     const user = await this.userRepo.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(
         new ErrorResponseEntity({ code: ERROR_CODES.USER.USER_NOT_FOUND }),
       );
     }
+    return user;
   }
 }

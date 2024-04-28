@@ -21,7 +21,9 @@ export class TaskEntity extends BaseEntity implements ITask {
 
   projectId: string;
 
-  @ManyToOne(() => ProjectEntity, (project) => project.tasks)
+  @ManyToOne(() => ProjectEntity, (project) => project.tasks, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'projectId' })
   project: IProject;
 
@@ -40,9 +42,9 @@ export class TaskEntity extends BaseEntity implements ITask {
   @Column({ type: 'int2', default: 0 })
   progress: number;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp' })
   completedAt: string;
 
-  @ManyToMany(() => UserEntity, (user) => user.tasks)
+  @ManyToMany(() => UserEntity, (user) => user.tasks, { onDelete: 'SET NULL' })
   users: IUser[];
 }

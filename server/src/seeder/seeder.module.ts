@@ -13,7 +13,7 @@ export class SeederModule implements OnModuleInit {
   constructor(private readonly seederService: SeederService) {}
 
   async onModuleInit() {
-    await this.seederService.resetTables();
-    await this.seederService.seedTables();
+    // await this.seederService.resetTables();
+    // await this.seederService.seedTables();
   }
 }

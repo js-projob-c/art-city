@@ -27,10 +27,10 @@ export class ShiftApplicationEntity
   @JoinColumn({ name: 'userId' })
   user: IUser;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp' })
   fromDate: string;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp' })
   toDate: string;
 
   @Column({ type: 'int2' })
@@ -48,6 +48,6 @@ export class ShiftApplicationEntity
   @JoinColumn({ name: 'reviewerId' })
   reviewBy?: IUser | undefined;
 
-  @Column({ type: 'timestamptz', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   reviewedAt?: string | undefined;
 }

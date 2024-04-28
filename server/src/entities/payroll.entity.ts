@@ -19,14 +19,14 @@ export class PayrollEntity extends BaseEntity implements IPayroll {
 
   userId: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.payrolls)
+  @ManyToOne(() => UserEntity, (user) => user.payrolls, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: IUser;
 
   @Column({ type: 'numeric' })
   amount: number;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp' })
   paidAt: string;
 
   @Column({ type: 'enum', enum: PayrollType })

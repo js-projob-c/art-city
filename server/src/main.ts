@@ -44,8 +44,10 @@ async function bootstrap() {
     }),
   );
   app.useGlobalInterceptors(
-    new ClassSerializerInterceptor(app.get(Reflector)),
     new ResponseTransformInterceptor(),
+    new ClassSerializerInterceptor(app.get(Reflector), {
+      excludeExtraneousValues: true,
+    }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());
 

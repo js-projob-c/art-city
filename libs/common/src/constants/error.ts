@@ -13,5 +13,8 @@ export const ERROR_CODES = {
   USER: {
     USER_NOT_FOUND: 'USER_004',
   },
-  ATTENDANCE: {},
+  ATTENDANCE: {
+    ATTENDANCE_NOT_FOUND: 'ATT_004',
+    ALREADY_SIGN_OUT: 'ATT_SIGN_OUT_002',
+  },
 };

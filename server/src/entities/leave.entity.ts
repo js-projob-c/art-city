@@ -20,14 +20,14 @@ export class LeaveEntity extends BaseEntity implements ILeave {
 
   userId: string;
 
-  @ManyToOne(() => UserEntity, (user) => user)
+  @ManyToOne(() => UserEntity, (user) => user, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: IUser;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp' })
   from: string;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp' })
   to: string;
 
   @Column({ type: 'int2' })
@@ -41,10 +41,10 @@ export class LeaveEntity extends BaseEntity implements ILeave {
 
   reviewerId?: string | undefined;
 
-  @OneToOne(() => UserEntity, { nullable: true })
+  @OneToOne(() => UserEntity, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'reviewerId' })
   reviewBy?: IUser | undefined;
 
-  @Column({ type: 'timestamptz', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   reviewedAt?: string | undefined;
 }

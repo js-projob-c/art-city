@@ -8,4 +8,5 @@ export interface IAttendance extends IEntity {
   workHourFrom: string;
   workHourTo: string;
   supportDocument?: string;
+  remarks?: string;
 }
