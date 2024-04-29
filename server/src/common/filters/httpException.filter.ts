@@ -22,20 +22,29 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const payload: any = exception.getResponse();
 
     const mappedPayload: IErrorResponse = {
-      message: null,
+      message: [],
       code: null,
       statusCode: 0,
       path: request.url,
+      fields: payload?.fields ?? [],
     };
 
     if (payload instanceof ErrorResponseEntity) {
       const built = payload.build();
       mappedPayload.code = built.code;
-      mappedPayload.message = built.message;
+      mappedPayload.message = built.message
+        ? Array.isArray(built.message)
+          ? built.message
+          : [built.message]
+        : [];
       mappedPayload.statusCode = status;
     } else {
       mappedPayload.code = null;
-      mappedPayload.message = payload.message;
+      mappedPayload.message = mappedPayload.message
+        ? Array.isArray(mappedPayload.message)
+          ? mappedPayload.message
+          : [mappedPayload.message]
+        : [];
       mappedPayload.statusCode = status;
     }
 
@@ -45,6 +54,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message: mappedPayload?.message,
       statusCode: mappedPayload.statusCode ?? 500,
       path: mappedPayload.path,
+      fields: mappedPayload.fields,
     });
   }
 }

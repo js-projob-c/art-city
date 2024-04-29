@@ -12,7 +12,8 @@ import {
 import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './common/filters/exception.filter';
+import { ValidationErrorAdapter } from './common/exceptions/ValidationErrorAdapter';
+import { HttpExceptionFilter } from './common/filters/httpException.filter';
 import { ResponseTransformInterceptor } from './common/interceptors/response.interceptor';
 import { SwaggerService } from './swagger/swagger.service';
 
@@ -30,16 +31,17 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+      stopAtFirstError: true,
       exceptionFactory(errors) {
-        const result = errors.reduce((acc, error) => {
-          return {
-            ...acc,
-            [error.property]: Object.entries(error.constraints ?? {}).map(
-              ([key, value]) => ({ contraint: key, message: value }),
-            ),
-          };
-        }, {});
-        return new BadRequestException(result);
+        const result = errors.reduce(
+          (result, error) => ({
+            ...result,
+            ...new ValidationErrorAdapter(error).build(),
+          }),
+          {},
+        );
+
+        return new BadRequestException({ fields: result });
       },
     }),
   );
@@ -61,7 +63,6 @@ async function bootstrap() {
   }
 
   const port = configService.get<{ PORT: number }>('PORT', { infer: true });
-
   await app.listen(port || 8080, '0.0.0.0');
   const url = await app.getUrl();
   logger.log(`Server listening on ${url}`);
