@@ -14,6 +14,6 @@ export class SeederModule implements OnModuleInit {
 
   async onModuleInit() {
     // await this.seederService.resetTables();
-    // await this.seederService.seedTables();
+    await this.seederService.seedTables();
   }
 }

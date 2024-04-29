@@ -48,7 +48,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(
     new ResponseTransformInterceptor(),
     new ClassSerializerInterceptor(app.get(Reflector), {
-      excludeExtraneousValues: true,
+      // excludeExtraneousValues: true,
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());

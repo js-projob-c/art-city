@@ -40,6 +40,16 @@ export class FilesController {
     const { id } = user;
 
     const path = this.filesService.getFilePath(dto.category);
+    await Promise.all(
+      dto.files.map((obj) =>
+        this.filesService.uploadLocalFile({
+          path,
+          data: obj.base64 as unknown as Buffer,
+          name: obj.name,
+        }),
+      ),
+    );
+
     // const payload = dto.files.map((obj) => ({
     //   path: [...dto.categories, id, ...dto.paths],
     //   name: obj.name,

@@ -23,7 +23,7 @@ export class PayrollEntity extends BaseEntity implements IPayroll {
   @JoinColumn({ name: 'userId' })
   user: IUser;
 
-  @Column({ type: 'numeric' })
+  @Column({ type: 'decimal' })
   amount: number;
 
   @Column({ type: 'timestamp' })

@@ -62,7 +62,8 @@ export class SeederService {
     department: UserDepartment,
   ) {
     const hashedPassword = await this.authService.hashPassword(password);
-
+    const existed = await this.userRepo.findOne({ where: { email } });
+    if (existed) return;
     await this.userRepo.save(
       this.userRepo.create({
         id,

@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Req,
+  SerializeOptions,
   UseGuards,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
@@ -29,6 +30,7 @@ export class AttendanceController {
     return await this.attendanceService.signInOrOutByUser(user?.id);
   }
 
+  @SerializeOptions({ excludeExtraneousValues: true })
   @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
   @Get('employee')
   async getEmployeeAttendances(

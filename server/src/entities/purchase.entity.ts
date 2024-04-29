@@ -39,6 +39,6 @@ export class PurchaseEntity extends BaseEntity implements IPurchase {
   @Column({ type: 'enum', enum: PurchaseStatus })
   status: PurchaseStatus;
 
-  @Column({ type: 'numeric' })
+  @Column({ type: 'decimal' })
   amount: number;
 }

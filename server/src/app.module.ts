@@ -8,6 +8,7 @@ import { AttendanceModule } from './features/attendance/attendance.module';
 import { AuthModule } from './features/auth/auth.module';
 import { SystemModule } from './features/system/system.module';
 import { UserModule } from './features/user/user.module';
+import { FilesModule } from './files/files.module';
 import { HealthModule } from './health/health.module';
 import { LoggerModule } from './logger/logger.module';
 import { SeederModule } from './seeder/seeder.module';
@@ -25,6 +26,7 @@ import { SwaggerModule } from './swagger/swagger.module';
     SeederModule,
     SystemModule,
     AttendanceModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

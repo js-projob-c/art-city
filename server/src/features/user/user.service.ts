@@ -7,8 +7,6 @@ import { UserDetailRepository } from 'src/database/repositories/user-detail.repo
 import { UserDetailEntity, UserEntity } from 'src/entities';
 import { EntityManager } from 'typeorm';
 
-import { CreateUserDto } from './dto/create-user.dto';
-
 @Injectable()
 export class UserService {
   constructor(
@@ -16,19 +14,6 @@ export class UserService {
     private userDetailRepo: UserDetailRepository,
     @InjectEntityManager() private readonly entityManager: EntityManager,
   ) {}
-
-  async create(createUserDto: CreateUserDto) {
-    const detail = new UserDetailEntity();
-
-    detail.monthlySalary = 12;
-    detail.annualLeave = 12;
-
-    const res = await this.userRepo.save(createUserDto);
-    console.log('resresres', res);
-    detail.user = res;
-    const res2 = await this.userDetailRepo.save(detail);
-    return res2;
-  }
 
   async findAll() {
     const res = await this.entityManager.find(UserEntity, {
@@ -38,6 +23,19 @@ export class UserService {
     });
 
     return res;
+  }
+
+  async getOneUserById(userId: string) {
+    const user = await this.userRepo.findOne({
+      where: { id: userId },
+      relations: {
+        detail: true,
+      },
+      select: {
+        detail: true as any,
+      },
+    });
+    return user;
   }
 
   async validateAndGetUser(
@@ -50,5 +48,32 @@ export class UserService {
       );
     }
     return user;
+  }
+
+  async updateOneUserById(userId: string, payload: Partial<UserEntity>) {
+    await this.validateAndGetUser(userId);
+    await this.userRepo.update({ id: userId }, payload);
+    return await this.getOneUserById(userId);
+  }
+
+  async createOrUpdateUserDetails(
+    userId: string,
+    payload: Partial<UserDetailEntity>,
+  ) {
+    await this.validateAndGetUser(userId);
+    const userDetail = await this.userDetailRepo.findOne({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+    });
+    await this.userDetailRepo.save({
+      id: userDetail?.id,
+      user: {
+        id: userId,
+      },
+      ...payload,
+    });
   }
 }

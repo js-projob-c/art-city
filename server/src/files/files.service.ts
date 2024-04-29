@@ -5,9 +5,9 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { writeFile } from 'fs/promises';
+import fs from 'fs/promises';
 import path from 'path';
-import { streamReadable } from 'src/common/utils/file.util';
+// import { streamReadable } from 'src/common/utils/file.util';
 // import { base64StreamReadable, streamReadable } from 'src/common/utils/file';
 // import { bucketName, getAwsS3Object, uploadAwsS3Object } from 'src/provider';
 
@@ -27,25 +27,21 @@ interface FilePayload {
 export class FilesService {
   private logger = new Logger(FilesService.name);
 
-  async uploadFile(file: FilePayload): Promise<any> {
+  async uploadLocalFile(file: FilePayload): Promise<any> {
     try {
-      // const fileStream = fs.createReadStream(file.path);
-      const fileStream = streamReadable(file.data);
-      // console.log('fileStream', fileStream);
-
-      // const result = await uploadAwsS3Object(uploadParams);
-      // return { ...result, Bucket: uploadParams.Bucket, Key: uploadParams.Key };
-      await writeFile(
-        path.resolve(__dirname, `../uploads${file.path ?? ''}/${file.name}`),
-        fileStream,
+      await fs.writeFile(
+        path.resolve(__dirname, `../uploads${file.path}/${file.name}`),
+        file.data,
       );
+      // const fileStream = streamReadable(file.data);
+      // await writeFile(
+      //   path.resolve(__dirname, `../uploads${file.path ?? ''}/${file.name}`),
+      //   fileStream,
+      // );
     } catch (error) {
       this.logger.error('uploadFile', error);
       throw new InternalServerErrorException();
     }
-
-    // return await uploadAwsS3Object(uploadParams);
-    // return s3.upload(uploadParams).promise();
   }
 
   // upload file to s3

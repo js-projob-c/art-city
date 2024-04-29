@@ -26,7 +26,7 @@ export class ReimburseEntity extends BaseEntity implements IReimburse {
   @Column({ type: 'date' })
   date: string;
 
-  @Column({ type: 'numeric' })
+  @Column({ type: 'decimal' })
   amount: number;
 
   @Column({ type: 'varchar' })
