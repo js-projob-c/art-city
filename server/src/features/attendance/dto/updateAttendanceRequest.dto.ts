@@ -1,1 +1,17 @@
-export class UpdateAttendanceRequestDto {}
+import { IsDateString, IsOptional, IsString, IsUrl } from 'class-validator';
+import { AttendanceEntity } from 'src/entities';
+
+export class UpdateAttendanceRequestDto implements Partial<AttendanceEntity> {
+  @IsOptional()
+  @IsDateString()
+  signInAt: string;
+  @IsOptional()
+  @IsDateString()
+  signOutAt: string;
+  @IsOptional()
+  @IsUrl()
+  supportDocumentBase64: string;
+  @IsOptional()
+  @IsString()
+  remarks: string;
+}

@@ -45,11 +45,13 @@ export class AttendanceController {
     return plainToInstance(GetAttendanceResponseDto, attendancesWithStatus);
   }
 
+  @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
   @Put(':attendanceId')
   async updateAttendance(
     @Param('attendanceId') attendanceId: string,
     @Body() dto: UpdateAttendanceRequestDto,
   ) {
+    // TODO: upload supporting document and populate
     return await this.attendanceService.updateAttendance(attendanceId, dto);
   }
 }
