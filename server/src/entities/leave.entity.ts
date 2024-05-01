@@ -1,5 +1,5 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
-import { LeaveStatus } from '@art-city/common/enums';
+import { LeaveStatus, LeaveType } from '@art-city/common/enums';
 import { ILeave, IUser } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import {
@@ -35,6 +35,9 @@ export class LeaveEntity extends BaseEntity implements ILeave {
 
   @Column({ type: 'enum', enum: LeaveStatus })
   status: LeaveStatus;
+
+  @Column({ type: 'enum', enum: LeaveType })
+  type: LeaveType;
 
   @Column({ type: 'varchar' })
   reason: string;

@@ -95,4 +95,6 @@ export class LeaveService {
     }
     return leave;
   }
+
+  async getUserTotalLeaveDays(userId: string, year: number) {}
 }
