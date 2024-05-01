@@ -32,14 +32,28 @@ export class AttendanceController {
 
   @SerializeOptions({ excludeExtraneousValues: true })
   @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
-  @Get('employee')
-  async getEmployeeAttendances(
-    @Req() req: any,
+  @Get('user')
+  async getUserAttendances(
     @User() user: UserEntity,
   ): Promise<GetAttendanceResponseDto[]> {
     const attendances = await this.attendanceService.getAttendanceByUser(
       user.id,
     );
+    const attendancesWithStatus = attendances.map((attendance) => {
+      const status = this.attendanceService.getAttendanceStatus(attendance);
+      return { ...attendance, status };
+    });
+    return plainToInstance(GetAttendanceResponseDto, attendancesWithStatus);
+  }
+
+  @SerializeOptions({ excludeExtraneousValues: true })
+  @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
+  @Get('/:userId')
+  async getAttendancesByUserId(
+    @Param('userId') userId: string,
+  ): Promise<GetAttendanceResponseDto[]> {
+    const attendances =
+      await this.attendanceService.getAttendanceByUser(userId);
     const attendancesWithStatus = attendances.map((attendance) => {
       const status = this.attendanceService.getAttendanceStatus(attendance);
       return { ...attendance, status };
