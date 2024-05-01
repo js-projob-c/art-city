@@ -1,4 +1,5 @@
 import { createMock } from '@golevelup/ts-jest';
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DatetimeUtil } from 'src/common/utils/datetime.util';
 import { AttendanceRepository } from 'src/database/repositories';
@@ -51,6 +52,11 @@ describe('AttendanceService', () => {
       } as SystemEntity;
 
       const user = { id: userId } as UserEntity; // Create UserEntity object using userId
+      jest.spyOn(systemService, 'getSystem').mockResolvedValue(system);
+      jest
+        .spyOn(attendanceRepo, 'save')
+        .mockResolvedValue({ id: 'attendance123' } as any);
+
       const result = await service.signInByUser(user, date); // Pass user object as argument
 
       expect(systemService.getSystem).toHaveBeenCalled();
@@ -166,7 +172,7 @@ describe('AttendanceService', () => {
       // Assert
       expect(userService.validateAndGetUser).toHaveBeenCalledWith(userId);
       expect(attendanceRepo.find).toHaveBeenCalledWith({
-        where: { userId: user.id },
+        where: { user: { id: user.id } },
       });
       expect(result).toEqual(attendances);
     });
@@ -197,9 +203,59 @@ describe('AttendanceService', () => {
       // Assert
       expect(userService.validateAndGetUser).toHaveBeenCalledWith(userId);
       expect(attendanceRepo.find).toHaveBeenCalledWith({
-        where: { userId: user.id },
+        where: { user: { id: user.id } },
       });
       expect(result).toEqual([]);
+    });
+  });
+
+  describe('updateAttendance', () => {
+    it('should update the attendance record', async () => {
+      // Arrange
+      const attendanceId = 'attendance123';
+      const payload = {
+        signInAt: '2022-01-01T09:00:00Z',
+        signOutAt: '2022-01-01T17:00:00Z',
+        supportDocument: 'document.pdf',
+        remarks: 'Updated remarks',
+      };
+
+      const existingAttendance = { id: attendanceId } as AttendanceEntity;
+      jest
+        .spyOn(attendanceRepo, 'findOne')
+        .mockResolvedValue(existingAttendance);
+      jest.spyOn(attendanceRepo, 'save').mockResolvedValue(existingAttendance);
+
+      // Act
+      const result = await service.updateAttendance(attendanceId, payload);
+
+      // Assert
+      expect(attendanceRepo.findOne).toHaveBeenCalledWith({
+        where: { id: attendanceId },
+      });
+      expect(attendanceRepo.save).toHaveBeenCalledWith({
+        ...existingAttendance,
+        ...payload,
+      });
+      expect(result).toEqual(existingAttendance);
+    });
+
+    it('should throw a NotFoundException if attendance record is not found', async () => {
+      // Arrange
+      const attendanceId = 'nonexistent123';
+      const payload = {
+        signInAt: '2022-01-01T09:00:00Z',
+        signOutAt: '2022-01-01T17:00:00Z',
+        supportDocument: 'document.pdf',
+        remarks: 'Updated remarks',
+      };
+
+      jest.spyOn(attendanceRepo, 'findOne').mockResolvedValue(null);
+
+      // Act & Assert
+      await expect(
+        service.updateAttendance(attendanceId, payload),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });
