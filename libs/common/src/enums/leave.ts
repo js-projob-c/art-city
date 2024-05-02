@@ -10,3 +10,9 @@ export enum LeaveType {
   SICK = 'SICK',
   OTHERS = 'OTHERS',
 }
+
+export enum LeaveDayType {
+  FULL = 'FULL',
+  HALF_AM = 'HALF_AM',
+  HALF_PM = 'HALF_PM',
+}

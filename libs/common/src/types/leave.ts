@@ -1,11 +1,13 @@
-import { LeaveStatus, LeaveType } from '../enums';
+import { LeaveDayType, LeaveStatus, LeaveType } from '../enums';
 import { IEntity } from '.';
 
 export interface ILeave extends IEntity {
   id: string;
   userId: string;
   from: string;
+  fromDayType: LeaveDayType;
   to: string;
+  toDayType: LeaveDayType;
   days: number;
   status: LeaveStatus;
   type: LeaveType;

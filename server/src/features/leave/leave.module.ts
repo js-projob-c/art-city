@@ -8,5 +8,6 @@ import { LeaveService } from './leave.service';
   imports: [UserModule],
   controllers: [LeaveController],
   providers: [LeaveService],
+  exports: [LeaveService],
 })
 export class LeaveModule {}

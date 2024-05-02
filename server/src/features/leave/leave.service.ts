@@ -12,20 +12,53 @@ export class LeaveService {
   constructor(private readonly leaveRepo: LeaveRepository) {}
 
   populateLeaveDays(
-    leave: Pick<LeaveEntity, 'from' | 'to'>,
+    leave: Pick<LeaveEntity, 'from' | 'to' | 'fromDayType' | 'toDayType'>,
   ): Pick<LeaveEntity, 'from' | 'to' | 'days'> {
     if (!leave.from || !leave.to) {
       throw new Error('Leave from and to date is required');
     }
+    if (!leave.fromDayType || !leave.toDayType) {
+      throw new Error('Leave from and to day type is required');
+    }
     const from = DatetimeUtil.moment(leave.from);
     const to = DatetimeUtil.moment(leave.to);
-    const days = to.diff(from, 'days') + 1;
-    return { ...leave, days };
+    const dateRange = DatetimeUtil.generateDateRange(from, to);
+    let numberOfDays = 0;
+    dateRange.forEach((date) => {
+      if (DatetimeUtil.isWeekend(date)) {
+        return;
+      }
+      numberOfDays += 1;
+    });
+
+    const isFromHalfDay =
+      leave.fromDayType === 'HALF_AM' || leave.fromDayType === 'HALF_PM';
+    const isToHalfDay =
+      leave.toDayType === 'HALF_AM' || leave.toDayType === 'HALF_PM';
+
+    if (leave.from === leave.to) {
+      if (isFromHalfDay && isToHalfDay) {
+        numberOfDays -= 0.5;
+      }
+    } else {
+      if (leave.fromDayType === 'HALF_AM' || leave.fromDayType === 'HALF_PM') {
+        numberOfDays -= 0.5;
+      }
+      if (leave.toDayType === 'HALF_AM' || leave.toDayType === 'HALF_PM') {
+        numberOfDays -= 0.5;
+      }
+    }
+
+    return { ...leave, days: numberOfDays };
   }
 
   async createLeave(userId: string, payload: Partial<LeaveEntity>) {
     await this.leaveRepo.save(
-      this.leaveRepo.create({ ...payload, user: { id: userId } }),
+      this.leaveRepo.create({
+        ...payload,
+        user: { id: userId },
+        status: LeaveStatus.PENDING,
+      }),
     );
   }
 
@@ -96,5 +129,16 @@ export class LeaveService {
     return leave;
   }
 
-  async getUserTotalLeaveDays(userId: string, year: number) {}
+  async getUserTotalLeaveDays(userId: string, year: number): Promise<number> {
+    const query = `
+        SELECT sum(days) as days
+        FROM leave
+        WHERE "userId" = $1
+        AND date_trunc('year', "from") = to_timestamp($2::text, 'YYYY')
+        AND date_trunc('year', "to") = to_timestamp($2::text, 'YYYY')
+    `;
+    const leaves = await this.leaveRepo.query(query, [userId, year]);
+    const numOfDays = leaves[0]?.days || 0;
+    return numOfDays;
+  }
 }

@@ -56,4 +56,25 @@ describe('DatetimeUtil', () => {
       expect(result).toEqual('YYYY');
     });
   });
+
+  describe('isWeekend', () => {
+    it('should return true if the given date is a weekend', () => {
+      const satDate = '2024-05-04'; // Saturday
+      const sunDate = '2024-05-05'; // Sunday
+      expect(DatetimeUtil.isWeekend(satDate)).toBe(true);
+      expect(DatetimeUtil.isWeekend(sunDate)).toBe(true);
+      expect(DatetimeUtil.isWeekend('2022-09-03')).toBe(true);
+      expect(DatetimeUtil.isWeekend('2022-09-04')).toBe(true);
+    });
+
+    it('should return false if the given date is not a weekend', () => {
+      const date = '2024-05-06'; // Monday
+      const result = DatetimeUtil.isWeekend(date);
+      expect(result).toBe(false);
+      expect(DatetimeUtil.isWeekend('2022-09-01')).toBe(false);
+      expect(DatetimeUtil.isWeekend('2022-09-02')).toBe(false);
+      expect(DatetimeUtil.isWeekend('2022-09-05')).toBe(false);
+      expect(DatetimeUtil.isWeekend('2022-09-06')).toBe(false);
+    });
+  });
 });

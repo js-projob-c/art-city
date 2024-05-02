@@ -6,9 +6,9 @@ export class DatetimeUtil {
 
   public static moment(
     dateTime: moment.MomentInput | undefined = undefined,
-    timeZone: string = TIMEZONE.UTC,
+    timezone: string = TIMEZONE.UTC,
   ): moment.Moment {
-    return moment(dateTime).tz(timeZone);
+    return moment(dateTime).tz(timezone, true);
   }
 
   public static generateDateRange(
@@ -19,10 +19,18 @@ export class DatetimeUtil {
     const dateArray: string[] = [];
     const currentDate = DatetimeUtil.moment(startDate);
     while (currentDate.isSameOrBefore(DatetimeUtil.moment(endDate))) {
-      dateArray.push(currentDate.format(DatetimeUtil.getDateFormat(dateType)));
+      const formatDate = currentDate.format(
+        DatetimeUtil.getDateFormat(dateType),
+      );
+      dateArray.push(formatDate);
       currentDate.add(1, dateType);
     }
     return dateArray;
+  }
+
+  public static isWeekend(date: moment.MomentInput): boolean {
+    const weekDay = DatetimeUtil.moment(date).isoWeekday();
+    return weekDay >= 6;
   }
 
   private static getDateFormat = (

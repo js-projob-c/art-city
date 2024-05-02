@@ -1,5 +1,5 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
-import { LeaveStatus, LeaveType } from '@art-city/common/enums';
+import { LeaveDayType, LeaveStatus, LeaveType } from '@art-city/common/enums';
 import { ILeave, IUser } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import {
@@ -24,11 +24,17 @@ export class LeaveEntity extends BaseEntity implements ILeave {
   @JoinColumn({ name: 'userId' })
   user: IUser;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'date' })
   from: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({ enum: LeaveDayType })
+  fromDayType: LeaveDayType;
+
+  @Column({ type: 'date' })
   to: string;
+
+  @Column({ enum: LeaveDayType })
+  toDayType: LeaveDayType;
 
   @Column({ type: 'int2' })
   days: number;
