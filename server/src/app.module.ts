@@ -13,6 +13,7 @@ import { FilesModule } from './files/files.module';
 import { HealthModule } from './health/health.module';
 import { LoggerModule } from './logger/logger.module';
 import { SeederModule } from './seeder/seeder.module';
+import { ShiftApplicationModule } from './shift-application/shift-application.module';
 import { SwaggerModule } from './swagger/swagger.module';
 
 @Module({
@@ -29,6 +30,7 @@ import { SwaggerModule } from './swagger/swagger.module';
     AttendanceModule,
     FilesModule,
     LeaveModule,
+    ShiftApplicationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
