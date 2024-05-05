@@ -1,0 +1,39 @@
+import { UserRole } from '@art-city/common/enums';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { User } from 'src/common/decorators';
+import { UserEntity } from 'src/entities';
+import { JwtAuthGuard } from 'src/features/auth/guards/jwt-auth.guard';
+import { UserService } from 'src/features/user/user.service';
+
+import { CreateScheduleRequestDto } from './dto/create-schedule-request.dto';
+import { ScheduleService } from './schedule.service';
+
+@Controller('schedule')
+export class ScheduleController {
+  constructor(
+    private readonly scheduleService: ScheduleService,
+    private readonly userService: UserService,
+  ) {}
+
+  @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
+  @Post()
+  async userCreateSchedule(@Body() dto: CreateScheduleRequestDto) {
+    await this.userService.validateAndGetUser(dto?.userId);
+    return await this.scheduleService.batchCreateSchedule(
+      dto.userId,
+      dto.dates,
+    );
+  }
+
+  @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
+  @Get('user')
+  async getUserSchedules(@User() user: UserEntity) {
+    return await this.scheduleService.getSchedules(user.id);
+  }
+
+  @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
+  @Get()
+  async getSchedules(@Query('userId') userId: string) {
+    return await this.scheduleService.getSchedules(userId);
+  }
+}

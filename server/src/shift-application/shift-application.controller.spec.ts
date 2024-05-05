@@ -1,3 +1,4 @@
+import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ShiftApplicationController } from './shift-application.controller';
@@ -10,7 +11,9 @@ describe('ShiftApplicationController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ShiftApplicationController],
       providers: [ShiftApplicationService],
-    }).compile();
+    })
+      .useMocker(createMock)
+      .compile();
 
     controller = module.get<ShiftApplicationController>(
       ShiftApplicationController,

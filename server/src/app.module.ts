@@ -12,6 +12,7 @@ import { UserModule } from './features/user/user.module';
 import { FilesModule } from './files/files.module';
 import { HealthModule } from './health/health.module';
 import { LoggerModule } from './logger/logger.module';
+import { ScheduleModule } from './schedule/schedule.module';
 import { SeederModule } from './seeder/seeder.module';
 import { ShiftApplicationModule } from './shift-application/shift-application.module';
 import { SwaggerModule } from './swagger/swagger.module';
@@ -31,6 +32,7 @@ import { SwaggerModule } from './swagger/swagger.module';
     FilesModule,
     LeaveModule,
     ShiftApplicationModule,
+    ScheduleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

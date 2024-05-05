@@ -27,6 +27,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       statusCode: 0,
       path: request.url,
       fields: payload?.fields ?? [],
+      data: payload?.data ?? null,
     };
 
     if (payload instanceof ErrorResponseEntity) {
@@ -55,6 +56,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       statusCode: mappedPayload.statusCode ?? 500,
       path: mappedPayload.path,
       fields: mappedPayload.fields,
+      data: payload?.data ?? null,
     });
   }
 }

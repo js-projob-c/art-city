@@ -1,3 +1,4 @@
+import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ShiftApplicationService } from './shift-application.service';
@@ -8,7 +9,9 @@ describe('ShiftApplicationService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [ShiftApplicationService],
-    }).compile();
+    })
+      .useMocker(createMock)
+      .compile();
 
     service = module.get<ShiftApplicationService>(ShiftApplicationService);
   });

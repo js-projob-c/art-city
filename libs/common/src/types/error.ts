@@ -9,4 +9,5 @@ export interface IErrorResponse {
   statusCode: number;
   path: string;
   fields: IErrorFields;
+  data?: any | null;
 }

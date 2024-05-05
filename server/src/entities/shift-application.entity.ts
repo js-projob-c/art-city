@@ -7,7 +7,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -27,14 +26,11 @@ export class ShiftApplicationEntity
   @JoinColumn({ name: 'userId' })
   user: IUser;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'date' })
   fromDate: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'date' })
   toDate: string;
-
-  @Column({ type: 'int2' })
-  days: number;
 
   @Column({ type: 'varchar', nullable: true })
   reason?: string | undefined;
@@ -44,7 +40,7 @@ export class ShiftApplicationEntity
 
   reviewerId?: string | undefined;
 
-  @OneToOne(() => UserEntity, { nullable: true })
+  @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'reviewerId' })
   reviewBy?: IUser | undefined;
 

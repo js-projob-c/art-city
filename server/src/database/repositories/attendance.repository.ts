@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AttendanceEntity } from 'src/entities';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 
 @Injectable()
 export class AttendanceRepository extends Repository<AttendanceEntity> {
@@ -15,9 +15,11 @@ export class AttendanceRepository extends Repository<AttendanceEntity> {
   async findOneByUserAndDate(
     userId: string,
     date: string,
+    em?: EntityManager,
   ): Promise<AttendanceEntity | null> {
-    return await this.repository
-      .createQueryBuilder('attendance')
+    const manager = em || this.repository.manager;
+    return await manager
+      .createQueryBuilder(AttendanceEntity, 'attendance')
       .where('attendance.userId = :userId', { userId })
       .andWhere(
         `DATE_TRUNC('day', attendance."signInAt") = DATE_TRUNC('day', :date::timestamp)`,
