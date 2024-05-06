@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { AttendanceModule } from './features/attendance/attendance.module';
 import { AuthModule } from './features/auth/auth.module';
+import { BankModule } from './features/bank/bank.module';
 import { LeaveModule } from './features/leave/leave.module';
 import { SystemModule } from './features/system/system.module';
 import { UserModule } from './features/user/user.module';
@@ -33,6 +34,7 @@ import { SwaggerModule } from './swagger/swagger.module';
     LeaveModule,
     ShiftApplicationModule,
     ScheduleModule,
+    BankModule,
   ],
   controllers: [AppController],
   providers: [AppService],
