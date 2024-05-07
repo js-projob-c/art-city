@@ -12,7 +12,9 @@ import { AuthGuard } from '@nestjs/passport';
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   private logger = new Logger(JwtAuthGuard.name);
-  constructor(private roles: UserRole[] | undefined = undefined) {
+  constructor(
+    private roles: UserRole[] | undefined = [...Object.values(UserRole)],
+  ) {
     super();
   }
   canActivate(context: ExecutionContext) {
