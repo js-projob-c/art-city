@@ -17,6 +17,7 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { SeederModule } from './seeder/seeder.module';
 import { ShiftApplicationModule } from './shift-application/shift-application.module';
 import { SwaggerModule } from './swagger/swagger.module';
+import { ReimburseModule } from './reimburse/reimburse.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { SwaggerModule } from './swagger/swagger.module';
     ShiftApplicationModule,
     ScheduleModule,
     BankModule,
+    ReimburseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

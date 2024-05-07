@@ -34,4 +34,7 @@ export const ERROR_CODES = {
   BANK: {
     BANK_NOT_FOUND: 'BANK_004',
   },
+  REIMBURSE: {
+    REIMBURSE_NOT_FOUND: 'REIMBURSE_004',
+  },
 };
