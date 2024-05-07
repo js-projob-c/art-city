@@ -229,6 +229,14 @@ export class ShiftApplicationService {
     });
   }
 
+  async getShiftApplications(filter: Partial<ShiftApplicationEntity> = {}) {
+    return await this.shiftApplicationRepository.find({
+      where: {
+        ...filter,
+      },
+    });
+  }
+
   async validateShiftApplicationOwnership(
     shiftApplicationId: string,
     userId: string,

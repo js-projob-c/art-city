@@ -12,6 +12,7 @@ import {
 import { User } from 'src/common/decorators';
 import { UserEntity } from 'src/entities';
 import { JwtAuthGuard } from 'src/features/auth/guards/jwt-auth.guard';
+import { EntityManager } from 'typeorm';
 
 import { ApproveReimburseApplicationRequestDto } from './dto/approve-reimburse-application-request.dto';
 import { CreateReimburseApplicationRequestDto } from './dto/create-reimburse-application-request.dto';
@@ -48,19 +49,28 @@ export class ReimburseController {
 
   @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
   @Get('user')
-  async getUserReimburse(@User() user: UserEntity) {
-    return await this.reimburseService.getReimbursesByUser(user.id);
+  async getUserReimburse(
+    @User() user: UserEntity,
+    @Query('status') status: ReimburseStatus,
+  ) {
+    return await this.reimburseService.getReimbursesByUser(user.id, {
+      ...(status && { status }),
+    });
   }
 
   @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
   @Get()
-  async getReimburses(@Query('userId') userId: string) {
+  async getReimburses(
+    @Query('userId') userId: string,
+    @Query('status') status: ReimburseStatus,
+  ) {
     return await this.reimburseService.getReimburse({
       ...(userId && {
         user: {
           id: userId,
         } as UserEntity,
       }),
+      ...(status && { status }),
     });
   }
 }

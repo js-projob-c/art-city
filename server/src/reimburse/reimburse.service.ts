@@ -4,11 +4,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { ReimburseRepository } from 'src/database/repositories';
 import { ReimburseEntity } from 'src/entities';
-import { In } from 'typeorm';
+import { EntityManager, In } from 'typeorm';
 
 @Injectable()
 export class ReimburseService {
-  constructor(private readonly reimburseRepository: ReimburseRepository) {}
+  constructor(
+    private readonly entityManager: EntityManager,
+    private readonly reimburseRepository: ReimburseRepository,
+  ) {}
 
   async validateAndGetReimburse(reimburseId: string) {
     const reimburse = await this.reimburseRepository.findOne({
@@ -37,9 +40,12 @@ export class ReimburseService {
   }
 
   async approveOrRejectReimburseApplication(id: string, isApprove: boolean) {
-    await this.reimburseRepository.save({
-      status: isApprove ? ReimburseStatus.APPROVED : ReimburseStatus.REJECTED,
-      id,
+    await this.entityManager.transaction(async (em) => {
+      await em.save(ReimburseEntity, {
+        status: isApprove ? ReimburseStatus.APPROVED : ReimburseStatus.REJECTED,
+        id,
+      });
+      // TODO: Implement salary calculation
     });
   }
 
@@ -62,10 +68,16 @@ export class ReimburseService {
     }
   }
 
-  async getReimbursesByUser(userId: string) {
+  async getReimbursesByUser(
+    userId: string,
+    filter: Partial<ReimburseEntity> = {},
+  ) {
     return await this.reimburseRepository.find({
       where: {
-        id: userId,
+        ...filter,
+        user: {
+          id: userId,
+        },
       },
     });
   }

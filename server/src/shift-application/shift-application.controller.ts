@@ -75,10 +75,10 @@ export class ShiftApplicationController {
 
   @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
   @Get()
-  async getShiftApplicationsByUserId(@Query('userId') userId: string) {
-    return await this.shiftApplicationService.getShiftApplicationsByUserId(
-      userId,
-    );
+  async getShiftApplications(@Query('userId') userId: string) {
+    return await this.shiftApplicationService.getShiftApplications({
+      ...(userId && { user: { id: userId } as UserEntity }),
+    });
   }
 
   @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE, UserRole.ADMIN]))
