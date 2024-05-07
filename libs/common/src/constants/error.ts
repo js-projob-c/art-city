@@ -31,4 +31,7 @@ export const ERROR_CODES = {
   SCHEDULE: {
     SCHEDULE_ALREADY_EXISTED: 'SCHEDULE_002',
   },
+  BANK: {
+    BANK_NOT_FOUND: 'BANK_004',
+  },
 };
