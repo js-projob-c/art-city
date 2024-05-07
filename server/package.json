@@ -24,6 +24,7 @@
     "migration:revert": "npm run build && typeorm-ts-node-esm migration:revert -d dist/server/src/external/database/migration.configuration.js"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.569.0",
     "@fastify/static": "^7.0.3",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.0",

@@ -1,22 +1,31 @@
 import { Readable } from 'stream';
 
-export const base64StreamReadable = (base64data: string) => {
-  const splitedString = base64data.split(',');
-  // console.log('splitedString', splitedString[splitedString.length - 1]);
-  const buffer = Buffer.from(splitedString[splitedString.length - 1], 'base64');
-  const readable = new Readable();
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  readable._read = () => {};
-  readable.push(buffer);
-  readable.push(null);
-  return readable;
-};
+export class FileUtil {
+  static getBase64StreamReadable(base64data: string) {
+    const splitedString = base64data.split(',');
+    const buffer = Buffer.from(
+      splitedString[splitedString.length - 1],
+      'base64',
+    );
+    const readable = new Readable();
+    readable._read = () => {};
+    readable.push(buffer);
+    readable.push(null);
+    return readable;
+  }
 
-export const streamReadable = (buffer: Buffer) => {
-  const readable = new Readable();
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  readable._read = () => {};
-  readable.push(buffer);
-  readable.push(null);
-  return readable;
-};
+  static getBufferStreamReadable = (buffer: Buffer) => {
+    const readable = new Readable();
+    readable._read = () => {};
+    readable.push(buffer);
+    readable.push(null);
+    return readable;
+  };
+
+  static extractFileNameAndExtension = (filename: string) => {
+    const lastDotIndex = filename.lastIndexOf('.');
+    const name = filename.substring(0, lastDotIndex);
+    const extension = filename.substring(lastDotIndex + 1);
+    return { name, extension };
+  };
+}

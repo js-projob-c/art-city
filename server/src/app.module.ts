@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AwsModule } from './aws/aws.module';
 import { DatabaseModule } from './database/database.module';
 import { AttendanceModule } from './features/attendance/attendance.module';
 import { AuthModule } from './features/auth/auth.module';
@@ -13,11 +14,11 @@ import { UserModule } from './features/user/user.module';
 import { FilesModule } from './files/files.module';
 import { HealthModule } from './health/health.module';
 import { LoggerModule } from './logger/logger.module';
+import { ReimburseModule } from './reimburse/reimburse.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { SeederModule } from './seeder/seeder.module';
 import { ShiftApplicationModule } from './shift-application/shift-application.module';
 import { SwaggerModule } from './swagger/swagger.module';
-import { ReimburseModule } from './reimburse/reimburse.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { ReimburseModule } from './reimburse/reimburse.module';
     ScheduleModule,
     BankModule,
     ReimburseModule,
+    AwsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
