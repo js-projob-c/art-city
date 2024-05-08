@@ -8,6 +8,7 @@ import { DatabaseModule } from './database/database.module';
 import { AttendanceModule } from './features/attendance/attendance.module';
 import { AuthModule } from './features/auth/auth.module';
 import { BankModule } from './features/bank/bank.module';
+import { ExternalPartyModule } from './features/external-party/external-party.module';
 import { LeaveModule } from './features/leave/leave.module';
 import { SystemModule } from './features/system/system.module';
 import { UserModule } from './features/user/user.module';
@@ -39,6 +40,7 @@ import { SwaggerModule } from './swagger/swagger.module';
     BankModule,
     ReimburseModule,
     AwsModule,
+    ExternalPartyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
