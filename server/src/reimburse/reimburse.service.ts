@@ -82,7 +82,7 @@ export class ReimburseService {
     });
   }
 
-  async getReimburse(filter: Partial<ReimburseEntity> = {}) {
+  async getReimburses(filter: Partial<ReimburseEntity> = {}) {
     return await this.reimburseRepository.find({
       where: {
         ...filter,

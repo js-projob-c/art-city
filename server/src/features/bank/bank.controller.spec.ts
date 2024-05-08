@@ -1,3 +1,4 @@
+import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { BankController } from './bank.controller';
@@ -10,7 +11,9 @@ describe('BankController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [BankController],
       providers: [BankService],
-    }).compile();
+    })
+      .useMocker(createMock)
+      .compile();
 
     controller = module.get<BankController>(BankController);
   });

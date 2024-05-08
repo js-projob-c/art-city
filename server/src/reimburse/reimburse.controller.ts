@@ -64,7 +64,7 @@ export class ReimburseController {
     @Query('userId') userId: string,
     @Query('status') status: ReimburseStatus,
   ) {
-    return await this.reimburseService.getReimburse({
+    return await this.reimburseService.getReimburses({
       ...(userId && {
         user: {
           id: userId,
