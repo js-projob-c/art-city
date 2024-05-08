@@ -10,6 +10,7 @@ import { AuthModule } from './features/auth/auth.module';
 import { BankModule } from './features/bank/bank.module';
 import { ExternalPartyModule } from './features/external-party/external-party.module';
 import { LeaveModule } from './features/leave/leave.module';
+import { ProjectModule } from './features/project/project.module';
 import { SystemModule } from './features/system/system.module';
 import { UserModule } from './features/user/user.module';
 import { FilesModule } from './files/files.module';
@@ -41,6 +42,7 @@ import { SwaggerModule } from './swagger/swagger.module';
     ReimburseModule,
     AwsModule,
     ExternalPartyModule,
+    ProjectModule,
   ],
   controllers: [AppController],
   providers: [AppService],
