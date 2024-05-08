@@ -12,6 +12,7 @@ import { ExternalPartyModule } from './features/external-party/external-party.mo
 import { LeaveModule } from './features/leave/leave.module';
 import { ProjectModule } from './features/project/project.module';
 import { SystemModule } from './features/system/system.module';
+import { TaskModule } from './features/task/task.module';
 import { UserModule } from './features/user/user.module';
 import { FilesModule } from './files/files.module';
 import { HealthModule } from './health/health.module';
@@ -43,6 +44,7 @@ import { SwaggerModule } from './swagger/swagger.module';
     AwsModule,
     ExternalPartyModule,
     ProjectModule,
+    TaskModule,
   ],
   controllers: [AppController],
   providers: [AppService],
