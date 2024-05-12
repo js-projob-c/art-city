@@ -32,6 +32,8 @@ export class ProjectEntity extends BaseEntity implements IProject {
 
   @Column({ type: 'varchar' })
   description: string;
+
+  @Column({ type: 'enum', enum: ProjectStatus })
   status: ProjectStatus;
 
   @Column({ type: 'timestamp' })
