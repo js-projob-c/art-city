@@ -42,7 +42,7 @@ export class TaskEntity extends BaseEntity implements ITask {
   @Column({ type: 'int2', default: 0 })
   progress: number;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamp', nullable: true })
   completedAt: string;
 
   @ManyToMany(() => UserEntity, (user) => user.tasks, { onDelete: 'SET NULL' })

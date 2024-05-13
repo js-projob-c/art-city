@@ -3,18 +3,23 @@ import { TaskStatus } from '@art-city/common/enums';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { TaskRepository, UserRepository } from 'src/database/repositories';
-import { TaskEntity } from 'src/entities';
-import { In } from 'typeorm';
+import { TaskEntity, UserEntity } from 'src/entities';
+import { EntityManager, In } from 'typeorm';
+
+import { ProjectService } from '../project/project.service';
 
 @Injectable()
 export class TaskService {
   constructor(
     private readonly taskRepository: TaskRepository,
     private readonly userRepository: UserRepository,
+    private readonly entityManager: EntityManager,
+    private readonly projectService: ProjectService,
   ) {}
 
-  async validateAndGetTaskById(taskId: string) {
-    const project = await this.taskRepository.findOne({
+  async validateAndGetTaskById(taskId: string, em?: EntityManager) {
+    const manager = em || this.taskRepository.manager;
+    const project = await manager.findOne(TaskEntity, {
       where: { id: taskId },
     });
     if (!project) {
@@ -28,7 +33,10 @@ export class TaskService {
   }
 
   async createTask(payload: Partial<TaskEntity>) {
-    const taskEntity = this.taskRepository.create(payload);
+    const taskEntity = this.taskRepository.create({
+      status: TaskStatus.PENDING,
+      ...payload,
+    });
     return await this.taskRepository.save(taskEntity);
   }
 
@@ -36,29 +44,39 @@ export class TaskService {
     taskId: string,
     payload: Partial<TaskEntity> & { ownerIds?: string[] },
   ) {
-    const { ownerIds, ...rest } = payload;
-    const taskRecord = await this.validateAndGetTaskById(taskId);
+    return await this.entityManager.transaction(async (em) => {
+      const { ownerIds, ...rest } = payload;
+      const taskRecord = await this.validateAndGetTaskById(taskId, em);
 
-    const upcomingStatus = rest.status || taskRecord.status;
-    const upcomingProgress = rest.progress || taskRecord.progress || 0;
+      const upcomingStatus = rest.status || taskRecord.status;
+      const upcomingProgress = rest.progress || taskRecord.progress || 0;
 
-    if (upcomingStatus !== TaskStatus.ABANDONED) {
-      rest.status = this.getTaskStatusByProgress(upcomingProgress);
-    }
+      if (upcomingStatus !== TaskStatus.ABANDONED) {
+        rest.status = this.getTaskStatusByProgress(upcomingProgress);
+      }
 
-    if (ownerIds) {
-      await this.validateAndGetOwners(ownerIds);
-    }
+      if (ownerIds) {
+        await this.validateAndGetOwners(ownerIds, em);
+      }
 
-    return await this.taskRepository.save({
-      ...rest,
-      ...(ownerIds && { users: ownerIds.map((id) => ({ id })) }),
-      id: taskId,
+      const task = await em.save(TaskEntity, {
+        ...rest,
+        ...(ownerIds && { users: ownerIds.map((id) => ({ id })) }),
+        id: taskId,
+      });
+
+      await this.projectService.checkTasksProgressAndUpdateProjectStatus(
+        taskRecord.project.id,
+        em,
+      );
+
+      return task;
     });
   }
 
-  async validateAndGetOwners(ownerIds: string[]) {
-    const owner = await this.userRepository.find({
+  async validateAndGetOwners(ownerIds: string[], em?: EntityManager) {
+    const manager = em || this.userRepository.manager;
+    const owner = await manager.find(UserEntity, {
       where: { id: In(ownerIds) },
     });
     if (owner.length !== ownerIds.length) {

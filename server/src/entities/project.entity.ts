@@ -36,7 +36,7 @@ export class ProjectEntity extends BaseEntity implements IProject {
   @Column({ type: 'enum', enum: ProjectStatus })
   status: ProjectStatus;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamp', nullable: true })
   completedAt: string;
 
   @OneToMany(() => TaskEntity, (task) => task.project)

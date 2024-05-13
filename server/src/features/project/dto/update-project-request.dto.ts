@@ -1,14 +1,13 @@
 import { ProjectStatus } from '@art-city/common/enums';
-import { Optional } from '@nestjs/common';
 import { PartialType } from '@nestjs/swagger';
-import { IsEnum } from 'class-validator';
+import { IsIn, IsOptional } from 'class-validator';
 
 import { CreateProjectRequestDto } from './create-project-request.dto';
 
 export class UpdateProjectRequestDto extends PartialType(
   CreateProjectRequestDto,
 ) {
-  @Optional()
-  @IsEnum(ProjectStatus)
+  @IsOptional()
+  @IsIn([ProjectStatus.ABANDONED])
   status: ProjectStatus;
 }

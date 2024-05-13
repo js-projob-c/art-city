@@ -1,4 +1,4 @@
-import { IsString, IsUUID } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateProjectRequestDto {
   @IsString()
@@ -7,6 +7,6 @@ export class CreateProjectRequestDto {
   @IsString()
   description: string;
 
-  @IsUUID()
-  ownerIds: string;
+  @IsString()
+  ownerId: string;
 }

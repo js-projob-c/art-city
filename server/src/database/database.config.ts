@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import { DatabaseVariables } from './database.variables';
+import { ProjectSubscriber } from './subscribers';
 
 @Injectable()
 export class DatabaseConfig {
@@ -23,6 +24,7 @@ export class DatabaseConfig {
       autoLoadEntities: true,
       synchronize: false,
       migrationsRun: true,
+      // subscribers: [ProjectSubscriber],
     };
   }
 

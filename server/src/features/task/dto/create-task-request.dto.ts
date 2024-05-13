@@ -1,5 +1,5 @@
 import { TaskVisibleTo } from '@art-city/common/enums';
-import { IsEnum, IsString } from 'class-validator';
+import { ArrayUnique, IsEnum, IsString } from 'class-validator';
 
 export class CreateTaskRequestDto {
   @IsString()
@@ -8,6 +8,7 @@ export class CreateTaskRequestDto {
   @IsString()
   description: string;
 
+  @ArrayUnique()
   @IsString({ each: true })
   ownerIds: string[];
 

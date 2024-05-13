@@ -6,6 +6,7 @@ export enum TaskStatus {
 }
 
 export enum TaskVisibleTo {
+  ALL = 'ALL',
   INVISIBLE = 'INVISIBLE',
   DEPARTMENT = 'DEPARTMENT',
   ASSIGNEE = 'ASSIGNEE',
