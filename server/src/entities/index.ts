@@ -4,6 +4,7 @@ import { CustomerEntity } from './customer.entity';
 import { ExternalPartyEntity } from './external-party.entity';
 import { ExternalProjectEntity } from './external-project.entity';
 import { LeaveEntity } from './leave.entity';
+import { OrderEntity } from './order.entity';
 import { PayrollEntity } from './payroll.entity';
 import { ProjectEntity } from './project.entity';
 import { PurchaseEntity } from './purchase.entity';
@@ -22,6 +23,7 @@ export {
   ExternalPartyEntity,
   ExternalProjectEntity,
   LeaveEntity,
+  OrderEntity,
   PayrollEntity,
   ProjectEntity,
   PurchaseEntity,

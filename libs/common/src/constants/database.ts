@@ -18,4 +18,5 @@ export const DB_TABLE_NAMES = {
   userDetail: 'user_detail',
   userTask: 'user_task',
   transaction: 'transaction',
+  order: 'order',
 };

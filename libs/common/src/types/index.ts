@@ -7,6 +7,7 @@ export * from './error';
 export * from './external-party';
 export * from './jwt';
 export * from './leave';
+export * from './order';
 export * from './payroll';
 export * from './project';
 export * from './purchase';

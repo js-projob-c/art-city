@@ -18,7 +18,6 @@ export interface IPurchasePartyDetails {
 
 export interface IPurchase extends IEntity {
   id: string;
-  // externalPartyId: string;
   externalPartyDetails: IPurchasePartyDetails;
   description: string;
   items: IPurchaseItem[];
