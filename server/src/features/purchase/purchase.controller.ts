@@ -18,13 +18,11 @@ export class PurchaseController {
   @Post()
   async createPurchase(@Body() dto: CreatePurchaseRequestDto) {
     const { externalPartyId, ...rest } = dto;
-    await this.externalPartyService.validateAndGetExternalParty(
-      externalPartyId,
-    );
-    return await this.purchaseService.createPurchase({
-      ...rest,
-      externalParty: { id: externalPartyId } as ExternalPartyEntity,
-    });
+    const externalParty =
+      await this.externalPartyService.validateAndGetExternalParty(
+        externalPartyId,
+      );
+    return await this.purchaseService.createPurchase(rest, externalParty);
   }
 
   @UseGuards(new JwtAuthGuard())

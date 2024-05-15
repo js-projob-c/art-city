@@ -1,5 +1,6 @@
 export * from './attendance';
 export * from './customer';
+export * from './external-party';
 export * from './file';
 export * from './leave';
 export * from './payroll';
@@ -8,4 +9,5 @@ export * from './purchase';
 export * from './reimburse';
 export * from './shift-application';
 export * from './task';
+export * from './transaction';
 export * from './user';

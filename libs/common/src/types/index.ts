@@ -15,6 +15,7 @@ export * from './schedule';
 export * from './shift-application';
 export * from './system';
 export * from './task';
+export * from './transaction';
 export * from './user';
 export * from './user-customer';
 export * from './user-detail';

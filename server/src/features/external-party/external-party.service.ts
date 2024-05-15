@@ -1,4 +1,4 @@
-import { ERROR_CODES } from '@art-city/common/constants';
+import { ERROR_CODES, PLACEHOLDERS } from '@art-city/common/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ExternalPartyRepository } from 'src/database/repositories';
 import { ExternalPartyEntity } from 'src/entities';
@@ -28,7 +28,7 @@ export class ExternalPartyService {
 
   async validateAndGetExternalParty(externalPartyId: string) {
     const entity = await this.externalPartyRepository.findOne({
-      where: { id: externalPartyId },
+      where: { id: externalPartyId || PLACEHOLDERS.INCORRECT_ID },
     });
     if (!entity) {
       throw new NotFoundException(
@@ -41,7 +41,7 @@ export class ExternalPartyService {
   async getExternalParties(filter: Partial<ExternalPartyEntity> = {}) {
     return await this.externalPartyRepository.find({
       where: {
-        ...filter,
+        ...(filter as any),
       },
     });
   }

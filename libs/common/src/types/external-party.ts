@@ -1,3 +1,4 @@
+import { ExternalPartyCustomerType, ExternalPartyType } from '../enums';
 import { IEntity } from '.';
 
 export interface IExternalParty extends IEntity {
@@ -7,4 +8,7 @@ export interface IExternalParty extends IEntity {
   contactRole: string;
   email?: string;
   phone?: string;
+  types: ExternalPartyType[];
+  customerSource?: string;
+  customerType?: ExternalPartyCustomerType;
 }

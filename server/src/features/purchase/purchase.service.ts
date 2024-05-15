@@ -2,14 +2,24 @@ import { ERROR_CODES } from '@art-city/common/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { PurchaseRepository } from 'src/database/repositories';
-import { PurchaseEntity } from 'src/entities';
+import { ExternalPartyEntity, PurchaseEntity } from 'src/entities';
+import { PurchasePartyDetails } from 'src/entities/purchase.entity';
 
 @Injectable()
 export class PurchaseService {
   constructor(private readonly purchaseRepository: PurchaseRepository) {}
 
-  async createPurchase(payload: Partial<PurchaseEntity>) {
-    const entity = this.purchaseRepository.create(payload);
+  async createPurchase(
+    payload: Partial<PurchaseEntity>,
+    externalParty: ExternalPartyEntity,
+  ) {
+    const mappedExternalParty = externalParty
+      ? this.mapExternalParty(externalParty)
+      : undefined;
+    const entity = this.purchaseRepository.create({
+      ...payload,
+      externalPartyDetails: mappedExternalParty,
+    });
     return await this.purchaseRepository.save(entity);
   }
 
@@ -30,5 +40,20 @@ export class PurchaseService {
       );
     }
     return purchase;
+  }
+
+  mapExternalParty(
+    externalParty: ExternalPartyEntity,
+  ): PurchasePartyDetails | undefined {
+    if (!externalParty) {
+      return;
+    }
+    return {
+      company: externalParty.company,
+      contactName: externalParty.contactName,
+      contactRole: externalParty.contactRole,
+      email: externalParty.email,
+      phone: externalParty.phone,
+    };
   }
 }
