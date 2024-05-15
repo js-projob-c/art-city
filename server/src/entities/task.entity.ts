@@ -6,6 +6,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -46,5 +47,6 @@ export class TaskEntity extends BaseEntity implements ITask {
   completedAt: string;
 
   @ManyToMany(() => UserEntity, (user) => user.tasks, { onDelete: 'SET NULL' })
+  @JoinTable({ name: DB_TABLE_NAMES.userTask })
   users: IUser[];
 }

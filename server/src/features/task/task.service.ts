@@ -21,6 +21,7 @@ export class TaskService {
     const manager = em || this.taskRepository.manager;
     const project = await manager.findOne(TaskEntity, {
       where: { id: taskId },
+      relations: ['project'],
     });
     if (!project) {
       throw new NotFoundException(
@@ -32,12 +33,18 @@ export class TaskService {
     return project;
   }
 
-  async createTask(payload: Partial<TaskEntity>) {
-    const taskEntity = this.taskRepository.create({
-      status: TaskStatus.PENDING,
-      ...payload,
+  async createTask(payload: Partial<TaskEntity> & { ownerIds?: string[] }) {
+    const { projectId, ownerIds = [] } = payload;
+    return await this.entityManager.transaction(async (em) => {
+      const taskEntity = this.taskRepository.create({
+        status: TaskStatus.PENDING,
+        ...payload,
+        project: { id: projectId },
+        users: ownerIds.map((id) => ({ id })),
+      });
+      await em.save(UserEntity, { id: ownerIds[0], tasks: [] });
+      return await em.save(TaskEntity, taskEntity);
     });
-    return await this.taskRepository.save(taskEntity);
   }
 
   async updateTask(
@@ -45,7 +52,8 @@ export class TaskService {
     payload: Partial<TaskEntity> & { ownerIds?: string[] },
   ) {
     return await this.entityManager.transaction(async (em) => {
-      const { ownerIds, ...rest } = payload;
+      delete payload['projectId'];
+      const { ownerIds = [], ...rest } = payload;
       const taskRecord = await this.validateAndGetTaskById(taskId, em);
 
       const upcomingStatus = rest.status || taskRecord.status;

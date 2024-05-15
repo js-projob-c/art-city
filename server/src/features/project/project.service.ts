@@ -68,6 +68,8 @@ export class ProjectService {
           where: { project: { id: project.id } },
         });
         status = this.getProjectStatusByTasksProgress(tasks);
+      } else {
+        await this.updateAllTaskToAbandoned(projectId, em);
       }
       await this.projectRepository.save({
         ...rest,
@@ -116,9 +118,22 @@ export class ProjectService {
 
     const status = this.getProjectStatusByTasksProgress(tasks);
 
-    await manager.update(ProjectEntity, { projectId }, { status });
+    await manager.save(ProjectEntity, { id: projectId, status });
 
     return projectStatus;
+  }
+
+  async updateAllTaskToAbandoned(projectId: string, em?: EntityManager) {
+    const manager = em || this.projectRepository.manager;
+    const tasks = await manager.find(TaskEntity, {
+      where: { project: { id: projectId } },
+    });
+    await manager.update(
+      TaskEntity,
+      tasks.map((task) => task.id),
+      { status: TaskStatus.ABANDONED },
+    );
+    return tasks;
   }
 
   getProjectStatusByTasksProgress(tasks: TaskEntity[]): ProjectStatus {
@@ -126,7 +141,9 @@ export class ProjectService {
       (task) => task.status !== TaskStatus.ABANDONED,
     );
 
-    if (nonAbandonedTasks.length === 0) {
+    if (tasks.length > 0 && nonAbandonedTasks.length === 0) {
+      return ProjectStatus.ABANDONED;
+    } else if (nonAbandonedTasks.length === 0) {
       return ProjectStatus.PENDING;
     } else if (nonAbandonedTasks.every((task) => task.progress === 100)) {
       return ProjectStatus.COMPLETED;

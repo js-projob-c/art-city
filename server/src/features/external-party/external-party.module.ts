@@ -6,5 +6,6 @@ import { ExternalPartyService } from './external-party.service';
 @Module({
   controllers: [ExternalPartyController],
   providers: [ExternalPartyService],
+  exports: [ExternalPartyService],
 })
 export class ExternalPartyModule {}

@@ -12,7 +12,6 @@ import {
 import { User } from 'src/common/decorators';
 import { UserEntity } from 'src/entities';
 import { JwtAuthGuard } from 'src/features/auth/guards/jwt-auth.guard';
-import { EntityManager } from 'typeorm';
 
 import { ApproveReimburseApplicationRequestDto } from './dto/approve-reimburse-application-request.dto';
 import { CreateReimburseApplicationRequestDto } from './dto/create-reimburse-application-request.dto';

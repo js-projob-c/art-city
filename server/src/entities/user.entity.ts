@@ -82,6 +82,5 @@ export class UserEntity extends BaseEntity implements IUser {
   customers: ICustomer[];
 
   @ManyToMany(() => TaskEntity, (task) => task.users)
-  @JoinTable({ name: DB_TABLE_NAMES.userTask })
   tasks: ITask[];
 }

@@ -48,4 +48,7 @@ export const ERROR_CODES = {
     TASK_NOT_FOUND: 'TASK_004',
     OWNER_INVALID: 'TASK_OWNER_003',
   },
+  PURCHASE: {
+    PURCHASE_NOT_FOUND: 'PURCHASE_004',
+  },
 };
