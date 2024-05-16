@@ -1,5 +1,5 @@
 import { Body, Controller, Param, Post, Put, UseGuards } from '@nestjs/common';
-import { ExternalPartyEntity } from 'src/entities';
+import { ExternalPartyEntity } from 'src/database/entities';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ExternalPartyService } from '../external-party/external-party.service';

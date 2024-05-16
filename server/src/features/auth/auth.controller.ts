@@ -10,7 +10,7 @@ import {
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { UserRepository } from 'src/database/repositories';
 import { TokenUser } from 'src/decorators';
-import { UserEntity } from 'src/entities';
+import { UserEntity } from 'src/database/entities';
 
 import { AuthService } from './auth.service';
 import { LoginRequestDto } from './dto/LoginRequest.dto';

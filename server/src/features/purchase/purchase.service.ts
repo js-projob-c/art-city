@@ -1,9 +1,9 @@
 import { ERROR_CODES } from '@art-city/common/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
+import { ExternalPartyEntity, PurchaseEntity } from 'src/database/entities';
+import { PurchasePartyDetails } from 'src/database/entities/purchase.entity';
 import { PurchaseRepository } from 'src/database/repositories';
-import { ExternalPartyEntity, PurchaseEntity } from 'src/entities';
-import { PurchasePartyDetails } from 'src/entities/purchase.entity';
 
 @Injectable()
 export class PurchaseService {

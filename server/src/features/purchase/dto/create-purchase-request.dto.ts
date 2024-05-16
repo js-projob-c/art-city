@@ -9,7 +9,7 @@ import {
   IsUUID,
   ValidateNested,
 } from 'class-validator';
-import { PurchaseEntity } from 'src/entities';
+import { PurchaseEntity } from 'src/database/entities';
 
 import { CreatePurchaseItemsDto } from './purchase-item.dto';
 

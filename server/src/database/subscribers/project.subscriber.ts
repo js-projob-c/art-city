@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProjectEntity } from 'src/entities';
+import { ProjectEntity } from 'src/database/entities';
 import {
   EntitySubscriberInterface,
   EventSubscriber,

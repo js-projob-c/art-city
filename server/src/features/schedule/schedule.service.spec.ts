@@ -1,7 +1,7 @@
 import { createMock } from '@golevelup/ts-jest';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ScheduleEntity } from 'src/entities'; // Add missing import statement
+import { ScheduleEntity } from 'src/database/entities'; // Add missing import statement
 import { EntityManager } from 'typeorm';
 
 import { ScheduleService } from './schedule.service';

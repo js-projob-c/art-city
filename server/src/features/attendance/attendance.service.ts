@@ -14,7 +14,7 @@ import moment from 'moment-timezone';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { DatetimeUtil } from 'src/common/utils/datetime.util';
 import { AttendanceRepository } from 'src/database/repositories';
-import { AttendanceEntity, UserEntity } from 'src/entities';
+import { AttendanceEntity, UserEntity } from 'src/database/entities';
 
 import { SystemService } from '../system/system.service';
 import { UserService } from '../user/user.service';

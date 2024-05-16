@@ -1,5 +1,5 @@
 import { IsString } from 'class-validator';
-import { BankEntity } from 'src/entities';
+import { BankEntity } from 'src/database/entities';
 
 export class CreateBankRequestDto implements Partial<BankEntity> {
   @IsString()

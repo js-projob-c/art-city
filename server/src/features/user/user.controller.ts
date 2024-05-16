@@ -2,7 +2,7 @@ import { UserRole } from '@art-city/common/enums';
 import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
-import { UserEntity } from 'src/entities';
+import { UserEntity } from 'src/database/entities';
 import { JwtAuthGuard } from 'src/features/auth/guards/jwt-auth.guard';
 
 import { GetUserResponseDto } from './dto/get-user-response.dto';

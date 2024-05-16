@@ -1,7 +1,7 @@
 import { ERROR_CODES, PLACEHOLDERS } from '@art-city/common/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ExternalPartyEntity } from 'src/database/entities';
 import { ExternalPartyRepository } from 'src/database/repositories';
-import { ExternalPartyEntity } from 'src/entities';
 
 @Injectable()
 export class ExternalPartyService {

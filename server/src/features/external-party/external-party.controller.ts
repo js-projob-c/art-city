@@ -8,7 +8,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ExternalPartyEntity } from 'src/entities';
+import { ExternalPartyEntity } from 'src/database/entities';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdateExternalPartyRequestDto } from './dto/update-external-party-request.dto';

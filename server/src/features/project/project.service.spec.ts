@@ -1,7 +1,7 @@
 import { ProjectStatus, TaskStatus } from '@art-city/common/enums';
 import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TaskEntity } from 'src/entities';
+import { TaskEntity } from 'src/database/entities';
 
 import { ProjectService } from './project.service';
 

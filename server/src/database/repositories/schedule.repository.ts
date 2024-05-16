@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ScheduleEntity } from 'src/entities';
+import { ScheduleEntity } from 'src/database/entities';
 import { EntityManager, Repository } from 'typeorm';
 
 @Injectable()

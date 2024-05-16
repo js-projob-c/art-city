@@ -6,7 +6,7 @@ import {
   ExternalPartyEntity,
   ExternalProjectEntity,
   UserEntity,
-} from 'src/entities';
+} from 'src/database/entities';
 import { DataSource } from 'typeorm';
 
 export const repositoriesProviders = [

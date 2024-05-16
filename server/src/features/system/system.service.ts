@@ -1,7 +1,7 @@
 import { ISystem } from '@art-city/common/types';
 import { Injectable } from '@nestjs/common';
 import { SystemRepository } from 'src/database/repositories';
-import { SystemEntity } from 'src/entities';
+import { SystemEntity } from 'src/database/entities';
 import { IsNull, Not } from 'typeorm';
 
 @Injectable()

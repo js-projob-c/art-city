@@ -1,7 +1,7 @@
 import { AttendanceStatus } from '@art-city/common/enums';
 import { IUser } from '@art-city/common/types';
 import { Expose } from 'class-transformer';
-import { AttendanceEntity } from 'src/entities';
+import { AttendanceEntity } from 'src/database/entities';
 
 export class GetAttendanceResponseDto implements AttendanceEntity {
   @Expose()

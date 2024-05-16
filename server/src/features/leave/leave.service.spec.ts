@@ -1,7 +1,7 @@
 import { LeaveDayType } from '@art-city/common/enums';
 import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { LeaveEntity } from 'src/entities';
+import { LeaveEntity } from 'src/database/entities';
 
 import { LeaveService } from './leave.service';
 

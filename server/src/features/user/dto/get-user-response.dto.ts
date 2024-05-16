@@ -1,5 +1,5 @@
 import { Exclude, Type } from 'class-transformer';
-import { UserDetailEntity } from 'src/entities';
+import { UserDetailEntity } from 'src/database/entities';
 
 export class GetUserResponseDetailDto implements Partial<UserDetailEntity> {
   @Exclude()

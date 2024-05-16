@@ -2,8 +2,8 @@ import { ERROR_CODES } from '@art-city/common/constants';
 import { TaskStatus } from '@art-city/common/enums';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
+import { TaskEntity, UserEntity } from 'src/database/entities';
 import { TaskRepository, UserRepository } from 'src/database/repositories';
-import { TaskEntity, UserEntity } from 'src/entities';
 import { EntityManager, In } from 'typeorm';
 
 import { ProjectService } from '../project/project.service';

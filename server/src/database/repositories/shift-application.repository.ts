@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ShiftApplicationEntity } from 'src/entities';
+import { ShiftApplicationEntity } from 'src/database/entities';
 import { Repository } from 'typeorm';
 
 @Injectable()

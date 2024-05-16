@@ -1,6 +1,6 @@
 import { PartialType } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
-import { BankEntity } from 'src/entities';
+import { BankEntity } from 'src/database/entities';
 
 import { CreateBankRequestDto } from './create-bank-request.dto';
 

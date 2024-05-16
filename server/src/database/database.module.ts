@@ -2,9 +2,9 @@ import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
 
-import * as Entities from '../entities';
 import { DatabaseConfig } from './database.config';
 import { DatabaseService } from './database.service';
+import * as Entities from './entities';
 import * as Repositories from './repositories';
 
 @Global()

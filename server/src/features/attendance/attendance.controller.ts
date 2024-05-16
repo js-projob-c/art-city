@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { User } from 'src/common/decorators';
-import { UserEntity } from 'src/entities';
+import { UserEntity } from 'src/database/entities';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AttendanceService } from './attendance.service';

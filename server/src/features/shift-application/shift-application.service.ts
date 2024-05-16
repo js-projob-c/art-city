@@ -11,7 +11,7 @@ import {
   ScheduleRepository,
   ShiftApplicationRepository,
 } from 'src/database/repositories';
-import { ScheduleEntity, ShiftApplicationEntity } from 'src/entities';
+import { ScheduleEntity, ShiftApplicationEntity } from 'src/database/entities';
 import { EntityManager, In } from 'typeorm';
 
 @Injectable()

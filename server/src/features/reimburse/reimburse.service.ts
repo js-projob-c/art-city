@@ -3,7 +3,7 @@ import { ReimburseStatus } from '@art-city/common/enums';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { ReimburseRepository } from 'src/database/repositories';
-import { ReimburseEntity } from 'src/entities';
+import { ReimburseEntity } from 'src/database/entities';
 import { EntityManager, In } from 'typeorm';
 
 @Injectable()

@@ -1,7 +1,7 @@
 import { UserRole } from '@art-city/common/enums';
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { User } from 'src/common/decorators';
-import { UserEntity } from 'src/entities';
+import { UserEntity } from 'src/database/entities';
 import { JwtAuthGuard } from 'src/features/auth/guards/jwt-auth.guard';
 import { UserService } from 'src/features/user/user.service';
 

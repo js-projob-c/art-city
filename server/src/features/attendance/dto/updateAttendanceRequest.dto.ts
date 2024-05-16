@@ -1,5 +1,5 @@
 import { IsDateString, IsOptional, IsString, IsUrl } from 'class-validator';
-import { AttendanceEntity } from 'src/entities';
+import { AttendanceEntity } from 'src/database/entities';
 
 export class UpdateAttendanceRequestDto implements Partial<AttendanceEntity> {
   @IsOptional()
