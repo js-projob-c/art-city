@@ -9,6 +9,7 @@ import { AttendanceModule } from './features/attendance/attendance.module';
 import { AuthModule } from './features/auth/auth.module';
 import { BankModule } from './features/bank/bank.module';
 import { ExternalPartyModule } from './features/external-party/external-party.module';
+import { ExternalProjectModule } from './features/external-project/external-project.module';
 import { LeaveModule } from './features/leave/leave.module';
 import { ProjectModule } from './features/project/project.module';
 import { PurchaseModule } from './features/purchase/purchase.module';
@@ -47,6 +48,7 @@ import { SwaggerModule } from './swagger/swagger.module';
     ProjectModule,
     TaskModule,
     PurchaseModule,
+    ExternalProjectModule,
   ],
   controllers: [AppController],
   providers: [AppService],
