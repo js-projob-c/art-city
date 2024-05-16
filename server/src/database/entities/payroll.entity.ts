@@ -1,6 +1,6 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { PayrollType } from '@art-city/common/enums';
-import { IPayroll, IUser } from '@art-city/common/types';
+import { IPayroll } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
@@ -21,7 +21,7 @@ export class PayrollEntity extends BaseEntity implements IPayroll {
 
   @ManyToOne(() => UserEntity, (user) => user.payrolls, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
-  user: IUser;
+  user: UserEntity;
 
   @Column({ type: 'decimal' })
   amount: number;

@@ -1,11 +1,6 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ExternalPartyCustomerType } from '@art-city/common/enums';
-import {
-  IExternalParty,
-  IOrder,
-  IOrderItem,
-  IOrderPartyDetails,
-} from '@art-city/common/types';
+import { IOrder, IOrderItem, IOrderPartyDetails } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
@@ -45,7 +40,7 @@ export class OrderEntity extends BaseEntity implements IOrder {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'externalPartyId' })
-  externalParty: IExternalParty;
+  externalParty: ExternalPartyEntity;
 
   @Column({ type: 'jsonb' })
   externalPartyDetails: OrderPartyDetails;

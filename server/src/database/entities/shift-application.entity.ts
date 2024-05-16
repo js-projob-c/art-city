@@ -1,6 +1,6 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ShiftApplicationStatus } from '@art-city/common/enums';
-import { IShiftApplication, IUser } from '@art-city/common/types';
+import { IShiftApplication } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
@@ -24,7 +24,7 @@ export class ShiftApplicationEntity
 
   @ManyToOne(() => UserEntity, (user) => user)
   @JoinColumn({ name: 'userId' })
-  user: IUser;
+  user: UserEntity;
 
   @Column({ type: 'date' })
   fromDate: string;
@@ -42,7 +42,7 @@ export class ShiftApplicationEntity
 
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'reviewerId' })
-  reviewBy?: IUser | undefined;
+  reviewBy?: UserEntity | undefined;
 
   @Column({ type: 'timestamp', nullable: true })
   reviewedAt?: string | undefined;

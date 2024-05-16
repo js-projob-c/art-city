@@ -1,17 +1,6 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { UserDepartment, UserRole } from '@art-city/common/enums';
-import {
-  IAttendance,
-  ICustomer,
-  ILeave,
-  IPayroll,
-  IProject,
-  IReimburse,
-  ISchedule,
-  ITask,
-  IUser,
-  IUserDetail,
-} from '@art-city/common/types';
+import { IUser } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
@@ -57,30 +46,30 @@ export class UserEntity extends BaseEntity implements IUser {
   department: UserDepartment;
 
   @OneToOne(() => UserDetailEntity, (userDetail) => userDetail.user)
-  detail: IUserDetail;
+  detail: UserDetailEntity;
 
   @OneToMany(() => AttendanceEntity, (attendance) => attendance.user)
-  attendances: IAttendance[];
+  attendances: AttendanceEntity[];
 
   @OneToMany(() => LeaveEntity, (leave) => leave.user)
-  leaves: ILeave[];
+  leaves: LeaveEntity[];
 
   @OneToMany(() => ProjectEntity, (project) => project.owner)
-  projects: IProject[];
+  projects: ProjectEntity[];
 
   @OneToMany(() => ReimburseEntity, (reimburse) => reimburse.user)
-  reimburses: IReimburse[];
+  reimburses: ReimburseEntity[];
 
   @OneToMany(() => ScheduleEntity, (schedule) => schedule.user)
-  schedules: ISchedule[];
+  schedules: ScheduleEntity[];
 
   @OneToMany(() => PayrollEntity, (payroll) => payroll.user)
-  payrolls: IPayroll[];
+  payrolls: PayrollEntity[];
 
   @ManyToMany(() => CustomerEntity, (customer) => customer.users)
   @JoinTable({ name: DB_TABLE_NAMES.userCustomer })
-  customers: ICustomer[];
+  customers: CustomerEntity[];
 
   @ManyToMany(() => TaskEntity, (task) => task.users)
-  tasks: ITask[];
+  tasks: TaskEntity[];
 }

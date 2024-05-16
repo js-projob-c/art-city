@@ -1,7 +1,6 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { PurchaseStatus } from '@art-city/common/enums';
 import {
-  IExternalParty,
   IPurchase,
   IPurchaseItem,
   IPurchasePartyDetails,
@@ -38,7 +37,7 @@ export class PurchaseEntity extends BaseEntity implements IPurchase {
     (externalParty) => externalParty.purchases,
   )
   @JoinColumn({ name: 'externalPartyId' })
-  externalParty: IExternalParty;
+  externalParty: ExternalPartyEntity;
 
   @Column({ type: 'varchar' })
   description: string;

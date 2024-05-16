@@ -1,6 +1,6 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ProjectStatus } from '@art-city/common/enums';
-import { IProject, ITask, IUser } from '@art-city/common/types';
+import { IProject } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
@@ -25,7 +25,7 @@ export class ProjectEntity extends BaseEntity implements IProject {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'ownerId' })
-  owner: IUser;
+  owner: UserEntity;
 
   @Column({ type: 'varchar' })
   name: string;
@@ -40,5 +40,5 @@ export class ProjectEntity extends BaseEntity implements IProject {
   completedAt: string;
 
   @OneToMany(() => TaskEntity, (task) => task.project)
-  tasks: ITask[];
+  tasks: TaskEntity[];
 }

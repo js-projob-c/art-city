@@ -1,5 +1,5 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
-import { IUser, IUserDetail } from '@art-city/common/types';
+import { IUserDetail } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
@@ -20,7 +20,7 @@ export class UserDetailEntity extends BaseEntity implements IUserDetail {
 
   @JoinColumn({ name: 'userId' })
   @OneToOne(() => UserEntity, (user) => user.detail, { onDelete: 'CASCADE' })
-  user: IUser;
+  user: UserEntity;
 
   @Column({ type: 'int' })
   monthlySalary: number;

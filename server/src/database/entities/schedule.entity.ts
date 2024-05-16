@@ -1,5 +1,5 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
-import { ISchedule, IUser } from '@art-city/common/types';
+import { ISchedule } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -13,7 +13,7 @@ export class ScheduleEntity extends BaseEntity implements ISchedule {
   userId: string;
 
   @ManyToOne(() => UserEntity, (user) => user.schedules)
-  user: IUser;
+  user: UserEntity;
 
   @Column({ type: 'date' })
   date: string;

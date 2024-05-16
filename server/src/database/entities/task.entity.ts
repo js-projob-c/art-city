@@ -1,6 +1,6 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { TaskStatus, TaskVisibleTo } from '@art-city/common/enums';
-import { IProject, ITask, IUser } from '@art-city/common/types';
+import { ITask } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
@@ -26,7 +26,7 @@ export class TaskEntity extends BaseEntity implements ITask {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'projectId' })
-  project: IProject;
+  project: ProjectEntity;
 
   @Column({ type: 'varchar' })
   name: string;
@@ -48,5 +48,5 @@ export class TaskEntity extends BaseEntity implements ITask {
 
   @ManyToMany(() => UserEntity, (user) => user.tasks, { onDelete: 'SET NULL' })
   @JoinTable({ name: DB_TABLE_NAMES.userTask })
-  users: IUser[];
+  users: UserEntity[];
 }

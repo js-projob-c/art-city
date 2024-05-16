@@ -1,6 +1,5 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ExternalProjectStatus } from '@art-city/common/enums/external-project';
-import { IExternalParty } from '@art-city/common/types';
 import {
   IExternalProject,
   IExternalProjectPartyDetails,
@@ -39,7 +38,7 @@ export class ExternalProjectEntity
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'externalPartyId' })
-  externalParty: IExternalParty;
+  externalParty: ExternalPartyEntity;
 
   @Column({ type: 'jsonb' })
   externalPartyDetails: ExternalProjectParty;

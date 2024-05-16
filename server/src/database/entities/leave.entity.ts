@@ -1,6 +1,6 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { LeaveDayType, LeaveStatus, LeaveType } from '@art-city/common/enums';
-import { ILeave, IUser } from '@art-city/common/types';
+import { ILeave } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
@@ -22,7 +22,7 @@ export class LeaveEntity extends BaseEntity implements ILeave {
 
   @ManyToOne(() => UserEntity, (user) => user, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
-  user: IUser;
+  user: UserEntity;
 
   @Column({ type: 'date' })
   from: string;
@@ -52,7 +52,7 @@ export class LeaveEntity extends BaseEntity implements ILeave {
 
   @OneToOne(() => UserEntity, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'reviewerId' })
-  reviewBy?: IUser | undefined;
+  reviewBy?: UserEntity | undefined;
 
   @Column({ type: 'timestamp', nullable: true })
   reviewedAt?: string | undefined;

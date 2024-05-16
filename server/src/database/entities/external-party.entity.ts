@@ -3,8 +3,7 @@ import {
   ExternalPartyCustomerType,
   ExternalPartyType,
 } from '@art-city/common/enums';
-import { IExternalParty, IPurchase } from '@art-city/common/types';
-import { IExternalProject } from '@art-city/common/types/external-project';
+import { IExternalParty } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -41,11 +40,11 @@ export class ExternalPartyEntity extends BaseEntity implements IExternalParty {
   customerType?: ExternalPartyCustomerType;
 
   @ManyToOne(() => PurchaseEntity, (purchase) => purchase.externalParty)
-  purchases: IPurchase[];
+  purchases: PurchaseEntity[];
 
   @ManyToOne(
     () => ExternalProjectEntity,
     (externalProject) => externalProject.externalParty,
   )
-  externalProjects: IExternalProject[];
+  externalProjects: ExternalProjectEntity[];
 }
