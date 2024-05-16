@@ -46,7 +46,7 @@ export class OrderEntity extends BaseEntity implements IOrder {
   externalPartyDetails: OrderPartyDetails;
 
   @Column({ type: 'jsonb' })
-  items: IOrderItem[];
+  items: OrderItem[];
 
   @Column({ type: 'decimal' })
   totalAmount: number;

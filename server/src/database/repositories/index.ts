@@ -4,6 +4,7 @@ import { CustomerRepository } from './customer.repository';
 import { ExternalPartyRepository } from './external-party.repository';
 import { ExternalProjectRepository } from './external-project.repository';
 import { LeaveRepository } from './leave.repository';
+import { OrderRepository } from './order.repository';
 import { PayrollRepository } from './payroll.repository';
 import { ProjectRepository } from './project.repository';
 import { PurchaseRepository } from './purchase.repository';
@@ -22,6 +23,7 @@ export {
   ExternalPartyRepository,
   ExternalProjectRepository,
   LeaveRepository,
+  OrderRepository,
   PayrollRepository,
   ProjectRepository,
   PurchaseRepository,
