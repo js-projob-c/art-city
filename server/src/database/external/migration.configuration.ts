@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { DataSource } from 'typeorm';
 
-import * as Entities from '../../database/entities';
+import * as Entities from '../entities';
 
 const entities = Object.values(Entities);
 
