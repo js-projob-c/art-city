@@ -3,8 +3,8 @@ import { LeaveStatus } from '@art-city/common/enums';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { DatetimeUtil } from 'src/common/utils/datetime.util';
-import { LeaveRepository } from 'src/database/repositories';
 import { LeaveEntity } from 'src/database/entities';
+import { LeaveRepository } from 'src/database/repositories';
 import { In, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 
 @Injectable()

@@ -1,7 +1,7 @@
 import { ERROR_CODES } from '@art-city/common/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { BankRepository } from 'src/database/repositories/bank.repository';
 import { BankEntity } from 'src/database/entities';
+import { BankRepository } from 'src/database/repositories/bank.repository';
 
 @Injectable()
 export class BankService {

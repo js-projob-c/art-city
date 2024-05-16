@@ -7,11 +7,11 @@ import {
 } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { DatetimeUtil } from 'src/common/utils/datetime.util';
+import { ScheduleEntity, ShiftApplicationEntity } from 'src/database/entities';
 import {
   ScheduleRepository,
   ShiftApplicationRepository,
 } from 'src/database/repositories';
-import { ScheduleEntity, ShiftApplicationEntity } from 'src/database/entities';
 import { EntityManager, In } from 'typeorm';
 
 @Injectable()

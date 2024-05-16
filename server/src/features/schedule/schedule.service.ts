@@ -2,8 +2,8 @@ import { ERROR_CODES } from '@art-city/common/constants';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { PromiseRunner } from 'src/common/utils/promise-runner.util';
-import { ScheduleRepository } from 'src/database/repositories';
 import { ScheduleEntity } from 'src/database/entities';
+import { ScheduleRepository } from 'src/database/repositories';
 import { EntityManager } from 'typeorm';
 
 @Injectable()

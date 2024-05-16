@@ -8,9 +8,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { UserEntity } from 'src/database/entities';
 import { UserRepository } from 'src/database/repositories';
 import { TokenUser } from 'src/decorators';
-import { UserEntity } from 'src/database/entities';
 
 import { AuthService } from './auth.service';
 import { LoginRequestDto } from './dto/LoginRequest.dto';

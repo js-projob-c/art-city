@@ -2,9 +2,9 @@ import { ERROR_CODES, PLACEHOLDERS } from '@art-city/common/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
+import { UserDetailEntity, UserEntity } from 'src/database/entities';
 import { UserRepository } from 'src/database/repositories/user.repository';
 import { UserDetailRepository } from 'src/database/repositories/user-detail.repository';
-import { UserDetailEntity, UserEntity } from 'src/database/entities';
 import { EntityManager } from 'typeorm';
 
 @Injectable()

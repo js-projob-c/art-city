@@ -3,8 +3,8 @@ import { IJwtTokenResponse } from '@art-city/common/types';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
-import { UserRepository } from 'src/database/repositories';
 import { UserEntity } from 'src/database/entities';
+import { UserRepository } from 'src/database/repositories';
 
 @Injectable()
 export class AuthService {

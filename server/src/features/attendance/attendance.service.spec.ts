@@ -2,12 +2,12 @@ import { createMock } from '@golevelup/ts-jest';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DatetimeUtil } from 'src/common/utils/datetime.util';
-import { AttendanceRepository } from 'src/database/repositories';
 import {
   AttendanceEntity,
   SystemEntity,
   UserEntity,
 } from 'src/database/entities';
+import { AttendanceRepository } from 'src/database/repositories';
 
 import { SystemService } from '../system/system.service';
 import { UserService } from '../user/user.service';
