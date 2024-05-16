@@ -1,4 +1,11 @@
-import { IsEmail, IsNumberString, IsOptional, IsString } from 'class-validator';
+import { ExternalPartyType } from '@art-city/common/enums';
+import {
+  IsEmail,
+  IsEnum,
+  IsNumberString,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateExternalPartyRequestDto {
   @IsString()
@@ -13,4 +20,6 @@ export class CreateExternalPartyRequestDto {
   @IsOptional()
   @IsNumberString()
   phone: string;
+  @IsEnum(ExternalPartyType)
+  type: ExternalPartyType;
 }

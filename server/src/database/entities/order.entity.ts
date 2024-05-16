@@ -1,10 +1,24 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ExternalPartyCustomerType } from '@art-city/common/enums';
-import { IOrder, IOrderItem, IOrderPartyDetails } from '@art-city/common/types';
+import {
+  IExternalParty,
+  IOrder,
+  IOrderItem,
+  IOrderPartyDetails,
+} from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+
+import { ExternalPartyEntity } from './external-party.entity';
 
 export class OrderPartyDetails implements IOrderPartyDetails {
+  id: string;
   company: string;
   contactName: string;
   contactRole: string;
@@ -24,6 +38,14 @@ export class OrderItem implements IOrderItem {
 export class OrderEntity extends BaseEntity implements IOrder {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  externalPartyId: string;
+
+  @ManyToOne(() => ExternalPartyEntity, (user) => user.externalProjects, {
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'externalPartyId' })
+  externalParty: IExternalParty;
 
   @Column({ type: 'jsonb' })
   externalPartyDetails: OrderPartyDetails;

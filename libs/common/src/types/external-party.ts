@@ -8,7 +8,7 @@ export interface IExternalParty extends IEntity {
   contactRole: string;
   email?: string;
   phone?: string;
-  types: ExternalPartyType[];
+  type: ExternalPartyType;
   customerSource?: string;
   customerType?: ExternalPartyCustomerType;
 }

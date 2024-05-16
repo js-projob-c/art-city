@@ -1,5 +1,6 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
 import { ExternalProjectStatus } from '@art-city/common/enums/external-project';
+import { IExternalParty } from '@art-city/common/types';
 import {
   IExternalProject,
   IExternalProjectPartyDetails,
@@ -8,12 +9,15 @@ import { BaseEntity } from 'src/common/class/base';
 import {
   Column,
   Entity,
-  // JoinColumn,
-  // ManyToOne,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { ExternalPartyEntity } from './external-party.entity';
+
 export class ExternalProjectParty implements IExternalProjectPartyDetails {
+  id: string;
   company: string;
   contactName: string;
   contactRole: string;
@@ -29,13 +33,13 @@ export class ExternalProjectEntity
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // externalPartyId: string;
+  externalPartyId: string;
 
-  // @ManyToOne(() => ExternalPartyEntity, (user) => user.externalProjects, {
-  //   onDelete: 'SET NULL',
-  // })
-  // @JoinColumn({ name: 'externalPartyId' })
-  // externalParty: IExternalParty;
+  @ManyToOne(() => ExternalPartyEntity, (user) => user.externalProjects, {
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'externalPartyId' })
+  externalParty: IExternalParty;
 
   @Column({ type: 'jsonb' })
   externalPartyDetails: ExternalProjectParty;

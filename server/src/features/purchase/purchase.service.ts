@@ -18,6 +18,7 @@ export class PurchaseService {
       : undefined;
     const entity = this.purchaseRepository.create({
       ...payload,
+      ...(mappedExternalParty && { id: mappedExternalParty.id }),
       externalPartyDetails: mappedExternalParty,
     });
     return await this.purchaseRepository.save(entity);
@@ -49,6 +50,7 @@ export class PurchaseService {
       return;
     }
     return {
+      id: externalParty.id,
       company: externalParty.company,
       contactName: externalParty.contactName,
       contactRole: externalParty.contactRole,
