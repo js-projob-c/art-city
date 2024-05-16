@@ -1,5 +1,4 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
-import { ExternalPartyCustomerType } from '@art-city/common/enums';
 import { IOrder, IOrderItem, IOrderPartyDetails } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import {
@@ -20,7 +19,6 @@ export class OrderPartyDetails implements IOrderPartyDetails {
   email?: string | undefined;
   phone?: string | undefined;
   customerSource: string;
-  customerType: ExternalPartyCustomerType;
 }
 
 export class OrderItem implements IOrderItem {

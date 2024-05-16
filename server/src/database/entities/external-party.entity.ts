@@ -1,13 +1,11 @@
 import { DB_TABLE_NAMES } from '@art-city/common/constants';
-import {
-  ExternalPartyCustomerType,
-  ExternalPartyType,
-} from '@art-city/common/enums';
+import { ExternalPartyType } from '@art-city/common/enums';
 import { IExternalParty } from '@art-city/common/types';
 import { BaseEntity } from 'src/common/class/base';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { ExternalProjectEntity } from './external-project.entity';
+import { OrderEntity } from './order.entity';
 import { PurchaseEntity } from './purchase.entity';
 
 @Entity({ name: DB_TABLE_NAMES.externalParty })
@@ -36,9 +34,6 @@ export class ExternalPartyEntity extends BaseEntity implements IExternalParty {
   @Column({ type: 'varchar', nullable: true })
   customerSource?: string;
 
-  @Column({ type: 'enum', enum: ExternalPartyCustomerType, nullable: true })
-  customerType?: ExternalPartyCustomerType;
-
   @ManyToOne(() => PurchaseEntity, (purchase) => purchase.externalParty)
   purchases: PurchaseEntity[];
 
@@ -47,4 +42,7 @@ export class ExternalPartyEntity extends BaseEntity implements IExternalParty {
     (externalProject) => externalProject.externalParty,
   )
   externalProjects: ExternalProjectEntity[];
+
+  @ManyToOne(() => OrderEntity, (order) => order.externalParty)
+  orders: OrderEntity[];
 }

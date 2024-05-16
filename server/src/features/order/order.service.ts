@@ -76,11 +76,7 @@ export class OrderService {
         `customerSource is missing for externalParty ${externalParty.id}`,
       );
     }
-    if (!externalParty.customerType) {
-      throw new Error(
-        `customerType is missing for externalParty ${externalParty.id}`,
-      );
-    }
+
     return {
       id: externalParty.id,
       company: externalParty.company,
@@ -89,7 +85,6 @@ export class OrderService {
       email: externalParty.email,
       phone: externalParty.phone,
       customerSource: externalParty.customerSource,
-      customerType: externalParty.customerType,
     };
   }
 }

@@ -1,4 +1,3 @@
-import { ExternalPartyCustomerType } from '../enums';
 import { IEntity } from './base';
 
 export interface IOrderPartyDetails {
@@ -8,7 +7,6 @@ export interface IOrderPartyDetails {
   email?: string;
   phone?: string;
   customerSource: string;
-  customerType: ExternalPartyCustomerType;
 }
 
 export interface IOrderItem {

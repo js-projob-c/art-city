@@ -43,6 +43,7 @@ export class ExternalPartyService {
       where: {
         ...(filter as any),
       },
+      relations: ['orders'],
     });
   }
 }

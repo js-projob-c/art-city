@@ -1,4 +1,4 @@
-import { UserRole } from '@art-city/common/enums';
+import { ExternalPartyType, UserRole } from '@art-city/common/enums';
 import {
   Body,
   Controller,
@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ExternalPartyEntity } from 'src/database/entities';
@@ -38,7 +39,7 @@ export class ExternalPartyController {
   }
 
   @Get()
-  async getExternalParties() {
-    return await this.externalPartyService.getExternalParties();
+  async getExternalParties(@Query('type') type: ExternalPartyType) {
+    return await this.externalPartyService.getExternalParties({ type });
   }
 }
