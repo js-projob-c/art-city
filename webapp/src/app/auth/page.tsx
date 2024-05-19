@@ -1,8 +1,8 @@
-import { Image } from "@mantine/core";
+import { Button, Image } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
-import { IMAGES } from "@/assets";
+import { IMAGES } from "@/common/assets";
 
 interface IProps {}
 
@@ -17,6 +17,7 @@ const AuthPage: React.FC<IProps> = ({}) => {
         h={200}
         w={"auto"}
       />
+      <Button>Login</Button>
     </div>
   );
 };

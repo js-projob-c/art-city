@@ -3,7 +3,7 @@
 import { Flex } from "@mantine/core";
 import React, { ReactNode } from "react";
 
-import { IMAGES } from "@/assets";
+import { IMAGES } from "@/common/assets";
 import DashboardSideBar from "@/components/DashboardSideNavbar";
 import DashboardTopNavbar from "@/components/DashboardTopNavbar";
 import { dashboardSideNavbarConfig } from "@/configs/dashboardSideNavbar";

@@ -2,7 +2,7 @@ import { Center } from "@mantine/core";
 import Image from "next/image";
 import React from "react";
 
-import { IMAGES } from "@/assets";
+import { IMAGES } from "@/common/assets";
 
 import styles from "./page.module.scss";
 
