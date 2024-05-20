@@ -4,6 +4,7 @@ import {
   PLACEHOLDERS,
 } from '@art-city/common/constants';
 import { AttendanceStatus } from '@art-city/common/enums';
+import { DatetimeUtil } from '@art-city/common/utils/datetime.util';
 import {
   BadRequestException,
   Injectable,
@@ -12,7 +13,6 @@ import {
 } from '@nestjs/common';
 import moment from 'moment-timezone';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
-import { DatetimeUtil } from 'src/common/utils/datetime.util';
 import { AttendanceEntity, UserEntity } from 'src/database/entities';
 import { AttendanceRepository } from 'src/database/repositories';
 

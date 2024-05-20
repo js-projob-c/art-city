@@ -1,12 +1,12 @@
 import { ERROR_CODES, PLACEHOLDERS } from '@art-city/common/constants';
 import { ShiftApplicationStatus } from '@art-city/common/enums';
+import { DatetimeUtil } from '@art-city/common/utils/datetime.util';
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
-import { DatetimeUtil } from 'src/common/utils/datetime.util';
 import { ScheduleEntity, ShiftApplicationEntity } from 'src/database/entities';
 import {
   ScheduleRepository,

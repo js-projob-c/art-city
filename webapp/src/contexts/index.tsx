@@ -1,6 +1,8 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+
+import { queryClient } from "@/services/query";
 
 import { AppProvider } from "./AppContext";
 import { ThemeProvider } from "./ThemeContext";
@@ -8,8 +10,6 @@ import { ThemeProvider } from "./ThemeContext";
 interface IProps {
   children: React.ReactNode;
 }
-
-const queryClient = new QueryClient();
 
 const Providers = ({ children }: IProps) => {
   return (

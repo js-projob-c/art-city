@@ -23,7 +23,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
-    { bufferLogs: true },
+    { bufferLogs: true, cors: true },
   );
   const logger = app.get(Logger);
   app.useLogger(logger);

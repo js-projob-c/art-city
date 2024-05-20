@@ -1,7 +1,7 @@
 import { DATETIME_FORMAT, TIMEZONE } from '@art-city/common/constants';
 import { UserDepartment, UserRole } from '@art-city/common/enums';
+import { DatetimeUtil } from '@art-city/common/utils/datetime.util';
 import { Injectable, Logger } from '@nestjs/common';
-import { DatetimeUtil } from 'src/common/utils/datetime.util';
 import {
   SystemRepository,
   UserDetailRepository,

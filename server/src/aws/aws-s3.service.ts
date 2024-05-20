@@ -1,3 +1,4 @@
+import { FileUtil } from '@art-city/common/utils/file.util';
 import {
   PutObjectCommand,
   PutObjectCommandInput,
@@ -9,7 +10,6 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { FileUtil } from 'src/common/utils/file.util';
 
 import { AwsS3Config } from './aws-s3.config';
 

@@ -1,7 +1,7 @@
 import { FileCategory } from '@art-city/common/enums';
+import { FileUtil } from '@art-city/common/utils/file.util';
 import { Injectable, Logger } from '@nestjs/common';
 import { AwsS3Service } from 'src/aws/aws-s3.service';
-import { FileUtil } from 'src/common/utils/file.util';
 
 interface Base64FilePayload {
   path: string;

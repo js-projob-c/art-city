@@ -1,7 +1,7 @@
+import { DatetimeUtil } from '@art-city/common/utils/datetime.util';
 import { createMock } from '@golevelup/ts-jest';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { DatetimeUtil } from 'src/common/utils/datetime.util';
 import {
   AttendanceEntity,
   SystemEntity,
