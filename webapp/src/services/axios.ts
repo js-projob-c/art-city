@@ -8,10 +8,10 @@ import axios, {
 import { isNil } from "lodash";
 
 import { ACCESS_TOKEN_KEY } from "@/common/constants/variables";
-import { decodeToken, decryptToken } from "@/common/utils/auth";
+import { TokenUtil } from "@/common/utils/token";
 
-export interface UseRequestPayload {
-  body?: Record<string, any>;
+export interface UseRequestPayload<Body = Record<string, any>> {
+  body?: Body;
   query?: Record<string, any>;
   param?: string;
   headers?: Record<string, any>;
@@ -48,13 +48,13 @@ export default class Axios {
     this.axiosClient.interceptors.request.use(
       (config) => {
         const encryptedToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-        const accessToken = decryptToken(
+        const accessToken = TokenUtil.decryptToken(
           encryptedToken || "",
           process.env.ENCRYPT_TOKEN_SECRET || ""
         );
 
         if (config?.headers && accessToken) {
-          const details = decodeToken(accessToken);
+          const details = TokenUtil.decodeToken(accessToken);
           const right = details?.right;
           config.headers.Authorization = `Bearer ${accessToken}`;
           config.headers["x-admin-right"] = right;
