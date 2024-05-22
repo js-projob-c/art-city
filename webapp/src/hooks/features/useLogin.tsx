@@ -1,4 +1,6 @@
+import { LoginRequestDto } from "@art-city/common/dto/auth/LoginRequest.dto";
 import { UserDepartment, UserRole } from "@art-city/common/enums";
+import { classValidatorResolver } from "@hookform/resolvers/class-validator";
 import { useMutation } from "@tanstack/react-query";
 
 import { QUERY_KEY } from "@/common/constants/enums";
@@ -26,6 +28,8 @@ export const loginApi: ApiObject = {
   url: "/auth/login",
   method: ApiMethod.POST,
 };
+
+export const loginResolver = classValidatorResolver(LoginRequestDto);
 
 export const login = async (
   payload: UseRequestPayload<LoginRequest>

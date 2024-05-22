@@ -5,5 +5,5 @@ import styles from "./page.module.scss";
 export default function Home() {
   redirect(`/auth`);
 
-  return <main className={styles.main}>Main page</main>;
+  return <main className={styles.main}></main>;
 }
