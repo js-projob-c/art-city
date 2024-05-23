@@ -1,14 +1,19 @@
 import { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 import { headers } from "next/headers";
 import { ReactNode } from "react";
+import { useLocalStorage } from "usehooks-ts";
+
+import { ACCESS_TOKEN_KEY } from "@/common/constants/variables";
+import { EncryptionUtil } from "@/common/utils/encryption";
+import { TokenUtil } from "@/common/utils/token";
 
 import AuthLayout from "./AuthLayout";
 import DashboardLayout from "./DashboardLayout";
 import DefaultLayout from "./DefaultLayout";
 
 const layouts = {
-  auth: AuthLayout,
   dashboard: DashboardLayout,
+  auth: AuthLayout,
 };
 
 interface IProps {
@@ -26,7 +31,9 @@ const LayoutWrapper: React.FC<IProps> = ({ children }) => {
 
 function getLayoutByPath(path: string): React.FC<any> {
   for (const [key, layout] of Object.entries(layouts)) {
-    if (path.startsWith(`/${key}`)) {
+    const isMatch = path.startsWith(`/${key}`);
+
+    if (isMatch) {
       return layout;
     }
   }

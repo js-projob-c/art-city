@@ -1,25 +1,13 @@
-import { AES, enc } from "crypto-js";
 import { jwtDecode } from "jwt-decode";
 
+import { ACCESS_TOKEN_KEY } from "../constants/variables";
+import { EncryptionUtil } from "./encryption";
+
 export class TokenUtil {
-  static encryptToken(token: string, secret: string) {
-    return AES.encrypt(token, secret).toString();
-  }
-
-  static decryptToken(encryptedToken: string, secret: string) {
-    try {
-      return AES.decrypt(encryptedToken, secret).toString(enc.Utf8);
-    } catch (error) {
-      return undefined;
-    }
-  }
-
-  static loadToken(key: string, token: string, secret: string) {
+  static getTokenDetails(token: string) {
+    // const token = TokenUtil.getToken();
+    if (!token) return undefined;
     const details: any = jwtDecode(token);
-    if (key && details) {
-      const encryptedToken = TokenUtil.encryptToken(token, secret);
-      window.localStorage.setItem(key, encryptedToken);
-    }
     return details;
   }
 
@@ -28,15 +16,17 @@ export class TokenUtil {
     return details;
   }
 
-  static storeToken(key: string, token: string) {
-    if (key) {
-      window.localStorage.setItem(key, token);
-    }
-  }
+  // static getToken(): string | undefined {
+  //   const encryptedToken = window.localStorage.getItem(ACCESS_TOKEN_KEY);
+  //   return encryptedToken ? EncryptionUtil.decrypt(encryptedToken) : undefined;
+  // }
 
-  static removeToken(key: string) {
-    if (key) {
-      window.localStorage.removeItem(key);
-    }
-  }
+  // static storeToken(token: string) {
+  //   const encryptedToken = EncryptionUtil.encrypt(token);
+  //   window.localStorage.setItem(ACCESS_TOKEN_KEY, encryptedToken);
+  // }
+
+  // static removeToken() {
+  //   window.localStorage.removeItem(ACCESS_TOKEN_KEY);
+  // }
 }

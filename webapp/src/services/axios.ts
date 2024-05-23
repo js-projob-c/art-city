@@ -8,6 +8,7 @@ import axios, {
 import { isNil } from "lodash";
 
 import { ACCESS_TOKEN_KEY } from "@/common/constants/variables";
+import { EncryptionUtil } from "@/common/utils/encryption";
 import { TokenUtil } from "@/common/utils/token";
 
 export interface UseRequestPayload<Body = Record<string, any>> {
@@ -48,10 +49,7 @@ export default class Axios {
     this.axiosClient.interceptors.request.use(
       (config) => {
         const encryptedToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-        const accessToken = TokenUtil.decryptToken(
-          encryptedToken || "",
-          process.env.ENCRYPT_TOKEN_SECRET || ""
-        );
+        const accessToken = EncryptionUtil.decrypt(encryptedToken || "");
 
         if (config?.headers && accessToken) {
           const details = TokenUtil.decodeToken(accessToken);

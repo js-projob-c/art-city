@@ -2,9 +2,11 @@
 
 import { NavLink } from "@mantine/core";
 import Image, { StaticImageData } from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 import { SideNavbarConfigType } from "@/configs/dashboardSideNavbar";
+import { logout } from "@/hooks/features/useLogin";
 
 import styles from "./DashboardSideNavbar.module.scss";
 
@@ -19,6 +21,8 @@ const DashboardSideNavbar: React.FC<IProps> = ({
   navConfig,
   logoSrc,
 }) => {
+  const router = useRouter();
+
   const renderNavLinks = (items: SideNavbarConfigType[]) => {
     return items.map((item, i) => {
       const isParent = !!(item.children && item.children?.length > 0);
@@ -43,6 +47,12 @@ const DashboardSideNavbar: React.FC<IProps> = ({
     });
   };
 
+  const onLogout = () => {
+    logout();
+    router.push("/");
+    router.refresh();
+  };
+
   return (
     <div className={`${styles.root}`}>
       <div className={styles.top}>
@@ -54,7 +64,7 @@ const DashboardSideNavbar: React.FC<IProps> = ({
       <div className={styles.bottom}>
         <div className={styles.signOut}>
           <NavLink label={"系統"} childrenOffset={0}>
-            <NavLink label={"登出"} />
+            <NavLink label={"登出"} onClick={onLogout} />
           </NavLink>
         </div>
       </div>

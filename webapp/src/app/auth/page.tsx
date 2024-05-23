@@ -2,13 +2,12 @@
 
 import { LoginRequestDto } from "@art-city/common/dto/auth/LoginRequest.dto";
 import { Button, Image, Stack, TextInput } from "@mantine/core";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 import { IMAGES } from "@/common/assets";
-import { ACCESS_TOKEN_KEY } from "@/common/constants/variables";
-import { TokenUtil } from "@/common/utils/token";
 import { loginResolver, useLogin } from "@/hooks/features/useLogin";
 
 interface IProps {}
@@ -21,6 +20,7 @@ const AuthPage: React.FC<IProps> = ({}) => {
     formState: { errors },
     watch,
   } = useForm<LoginRequestDto>({ resolver: loginResolver });
+  const router = useRouter();
   const { data, isPending, mutateAsync } = useLogin();
 
   const onLogin = async (data: { email: string; password: string }) => {
@@ -33,13 +33,13 @@ const AuthPage: React.FC<IProps> = ({}) => {
       },
       {
         onSuccess(data) {
-          const { access_token } = data;
-          TokenUtil.storeToken(ACCESS_TOKEN_KEY, access_token);
+          router.push("/");
+          router.refresh();
           toast.success("Login success");
         },
         onError(error) {
           console.error(error);
-          TokenUtil.removeToken(ACCESS_TOKEN_KEY);
+          // removeValue();
           toast.error("Login failed");
         },
       }
