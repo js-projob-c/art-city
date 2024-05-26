@@ -10,7 +10,7 @@ dotenv.config({
   path: path.join(process.cwd(), '.env'),
 });
 
-const migrationPaths = ['dist/server/src/external/database/migrations/*.js'];
+const migrationPaths = ['dist/server/src/database/external/migrations/*.js'];
 
 export const migrationDatasource = new DataSource({
   type: 'postgres',
@@ -25,4 +25,5 @@ export const migrationDatasource = new DataSource({
   migrationsTableName: 'migration',
   // typeorm-ts-node-esm does not support ts path mapping
   migrations: migrationPaths,
+  migrationsRun: true,
 });

@@ -2,6 +2,7 @@ import {
   DATETIME_FORMAT,
   ERROR_CODES,
   PLACEHOLDERS,
+  TIMEZONE,
 } from '@art-city/common/constants';
 import { AttendanceStatus } from '@art-city/common/enums';
 import { DatetimeUtil } from '@art-city/common/utils/datetime.util';
@@ -122,20 +123,30 @@ export class AttendanceService {
     const user = await this.userService.validateAndGetUser(userId);
     const attendances = await this.attendanceRepo.find({
       where: { user: { id: user.id } },
+      order: { signInAt: 'DESC' },
     });
     return attendances;
   }
 
-  getAttendanceStatus(attendance: AttendanceEntity) {
+  getAttendanceStatus(
+    attendance: AttendanceEntity,
+    workHourTimezone = TIMEZONE.HK,
+  ) {
     const { signInAt, signOutAt, workHourFrom, workHourTo } = attendance;
     const signInAtMoment = DatetimeUtil.moment(signInAt);
     const signOutAtMoment = DatetimeUtil.moment(signOutAt);
     const workHourFromMoment = DatetimeUtil.moment(
-      `${signInAtMoment.format(DATETIME_FORMAT.DATE)} ${workHourFrom}`,
+      `${signInAtMoment.tz(workHourTimezone).format(DATETIME_FORMAT.DATE)} ${workHourFrom}`,
+      workHourTimezone,
     );
     const workHourToMoment = DatetimeUtil.moment(
-      `${signOutAtMoment.format(DATETIME_FORMAT.DATE)} ${workHourTo}`,
+      `${signOutAtMoment.tz(workHourTimezone).format(DATETIME_FORMAT.DATE)} ${workHourTo}`,
+      workHourTimezone,
     );
+    if (signInAt && !signOutAt) {
+      return null;
+    }
+
     if (
       signInAtMoment.isAfter(workHourFromMoment) &&
       signOutAtMoment.isBefore(workHourToMoment)
