@@ -14,12 +14,12 @@ import {
   UseRequestPayload,
 } from "@/services/axios";
 
-export interface LoginRequest {
+export interface ILoginRequest {
   email: string;
   password: string;
 }
 
-export interface LoginResponse {
+export interface ILoginResponse {
   access_token: string;
   department: UserDepartment;
   email: string;
@@ -35,8 +35,8 @@ export const loginApi: ApiObject = {
 export const loginResolver = classValidatorResolver(LoginRequestDto);
 
 export const login = async (
-  payload: UseRequestPayload<LoginRequest>
-): Promise<LoginResponse> => {
+  payload: UseRequestPayload<ILoginRequest>
+): Promise<ILoginResponse> => {
   const res = await axiosClient.use(loginApi, payload);
   const data = res.data.data;
 
@@ -57,6 +57,6 @@ export const logout = () => {
 
 export const useLogin = () =>
   useMutation({
-    mutationKey: [QUERY_KEY.LOGIN],
+    mutationKey: [QUERY_KEY.AUTH_LOGIN],
     mutationFn: login,
   });

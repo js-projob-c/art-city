@@ -5,6 +5,7 @@ import axios, {
   AxiosResponse,
   Method,
 } from "axios";
+import Cookies from "js-cookie";
 import { isNil } from "lodash";
 
 import { ACCESS_TOKEN_KEY } from "@/common/constants/variables";
@@ -48,7 +49,7 @@ export default class Axios {
   private useSetHeaderInterceptor() {
     this.axiosClient.interceptors.request.use(
       (config) => {
-        const encryptedToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+        const encryptedToken = Cookies.get(ACCESS_TOKEN_KEY);
         const accessToken = EncryptionUtil.decrypt(encryptedToken || "");
 
         if (config?.headers && accessToken) {

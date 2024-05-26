@@ -1,13 +1,13 @@
 "use client";
 
-import { Flex } from "@mantine/core";
+import { AppShell, Burger, Group, Image } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import NextImage from "next/image";
 import React, { ReactNode } from "react";
 
 import { IMAGES } from "@/common/assets";
 import DashboardSideBar from "@/components/DashboardSideNavbar";
-import DashboardTopNavbar from "@/components/DashboardTopNavbar";
 import { dashboardSideNavbarConfig } from "@/configs/dashboardSideNavbar";
-import { useApp } from "@/contexts/AppContext";
 
 import styles from "./DashboardLayout.module.scss";
 
@@ -17,28 +17,55 @@ interface IProps {
 }
 
 const DashboardLayout: React.FC<IProps> = ({ children, pathname }: IProps) => {
-  const { isNavbarToggled } = useApp();
-
-  const sidebarOpenedClassName = !isNavbarToggled ? styles.closed : "";
+  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
+  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
   return (
-    <div className={styles.root}>
-      <div className={`${styles.sidebar} ${sidebarOpenedClassName}`}>
-        <DashboardSideBar
-          currentPathname={pathname}
-          logoSrc={IMAGES.logoRec}
-          navConfig={dashboardSideNavbarConfig}
-        />
-      </div>
-      <main className={`${styles.main} ${sidebarOpenedClassName}`}>
-        <header className={styles.header}>
-          <DashboardTopNavbar />
-        </header>
-        <Flex className={styles.content} p="sm">
+    <div>
+      <AppShell
+        header={{ height: 60 }}
+        navbar={{
+          width: 300,
+          breakpoint: "sm",
+          collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
+        }}
+        padding="md"
+        className={styles.root}
+      >
+        <AppShell.Header>
+          <Group h="100%" px="md">
+            <Burger
+              opened={mobileOpened}
+              onClick={toggleMobile}
+              hiddenFrom="sm"
+              size="sm"
+            />
+            <Burger
+              opened={desktopOpened}
+              onClick={toggleDesktop}
+              visibleFrom="sm"
+              size="sm"
+            />
+            <Image
+              component={NextImage}
+              src={IMAGES.logoRec}
+              alt="logo"
+              fit="contain"
+              className={styles.logo}
+            />
+          </Group>
+        </AppShell.Header>
+        <AppShell.Navbar>
+          <DashboardSideBar
+            currentPathname={pathname}
+            navConfig={dashboardSideNavbarConfig}
+          />
+        </AppShell.Navbar>
+        <AppShell.Main className={`${styles.main}`}>
           {children}
-        </Flex>
-        <footer></footer>
-      </main>
+          <footer></footer>
+        </AppShell.Main>
+      </AppShell>
     </div>
   );
 };

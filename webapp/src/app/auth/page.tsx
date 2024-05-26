@@ -8,7 +8,7 @@ import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 import { IMAGES } from "@/common/assets";
-import { loginResolver, useLogin } from "@/hooks/features/useLogin";
+import { loginResolver, useLogin } from "@/hooks/features/auth/useLogin";
 
 interface IProps {}
 

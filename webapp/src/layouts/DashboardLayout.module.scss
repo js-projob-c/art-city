@@ -5,34 +5,17 @@
   height: auto;
   width: 100%;
 
-  .sidebar {
-    &.closed {
-      z-index: -1;
-    }
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    height: 80%;
   }
 
   .main {
     display: flex;
     flex-direction: column;
     width: 100%;
-    flex-grow: 1;
-    transition: margin 0.3s ease-in;
-
-    &.closed {
-      margin-left: calc(-1 * var(--side-navbar-width));
-      transition: margin 0.3s ease-in;
-    }
-
-    .header {
-      height: 80px;
-      width: 100%;
-    }
-
-    .content {
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      height: 100%;
-    }
   }
 }

@@ -6,14 +6,14 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 import { SideNavbarConfigType } from "@/configs/dashboardSideNavbar";
-import { logout } from "@/hooks/features/useLogin";
+import { logout } from "@/hooks/features/auth/useLogin";
 
 import styles from "./DashboardSideNavbar.module.scss";
 
 interface IProps {
   currentPathname: string;
   navConfig: any[];
-  logoSrc: string | StaticImageData;
+  logoSrc?: string | StaticImageData;
 }
 
 const DashboardSideNavbar: React.FC<IProps> = ({
@@ -23,17 +23,17 @@ const DashboardSideNavbar: React.FC<IProps> = ({
 }) => {
   const router = useRouter();
 
-  const renderNavLinks = (items: SideNavbarConfigType[]) => {
+  const renderNavLinks: any = (items: SideNavbarConfigType[]) => {
     return items.map((item, i) => {
       const isParent = !!(item.children && item.children?.length > 0);
-      const isExpanded = isParent
-        ? item?.children?.some((child) => child.href === currentPathname)
-        : false;
+      // const isExpanded = isParent
+      //   ? item?.children?.some((child) => child.href === currentPathname)
+      //   : false;
 
       return (
         <NavLink
           w={"100%"}
-          defaultOpened={isExpanded}
+          defaultOpened={true}
           active={currentPathname === item.href}
           href={item.href ?? ""}
           label={item.label}
@@ -56,9 +56,11 @@ const DashboardSideNavbar: React.FC<IProps> = ({
   return (
     <div className={`${styles.root}`}>
       <div className={styles.top}>
-        <div className={styles.logo}>
-          <Image src={logoSrc} alt="logo" className={styles.logo} />
-        </div>
+        {logoSrc && (
+          <div className={styles.logo}>
+            <Image src={logoSrc} alt="logo" className={styles.logo} />
+          </div>
+        )}
         <div className={styles.items}>{renderNavLinks(navConfig)}</div>
       </div>
       <div className={styles.bottom}>

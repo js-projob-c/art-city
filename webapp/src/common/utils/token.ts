@@ -12,6 +12,7 @@ export class TokenUtil {
   }
 
   static decodeToken(token: string) {
+    if (!token) return undefined;
     const details: any = jwtDecode(token);
     return details;
   }
