@@ -2,49 +2,72 @@ import { DATETIME_FORMAT } from "@art-city/common/constants/datetime";
 import { REGEX } from "@art-city/common/constants/regex";
 import { DatetimeUtil } from "@art-city/common/utils/datetime.util";
 import { Table as MantineTable } from "@mantine/core";
-import React from "react";
+import React, { ReactNode, useCallback } from "react";
 
 import { TableValueBuilder } from "./TableValueBuilder";
 
 export interface ITableConfig {
-  header: string;
+  name: string;
+  isCustom?: boolean;
+  renderCustomElement?: (value: any, item: any) => JSX.Element;
+  transform?: (value: any) => any;
 }
 
 interface IProps {
   emptyText?: string;
   defaultDateTimeFormat?: string;
-  headers: string[];
   data: any[];
-  config: ITableConfig[];
+  configs: ITableConfig[];
 }
 
 const Table = ({
   data,
-  headers,
-  config,
+  configs,
   emptyText = "-",
   defaultDateTimeFormat = DATETIME_FORMAT.DATETIME,
 }: IProps) => {
-  const formatDateTime = (value: string) => {
-    if (value?.match(REGEX.DATETIME_ISO)) {
-      return DatetimeUtil.moment(value).format(defaultDateTimeFormat);
-    }
-    return value;
-  };
+  const formatDateTime = useCallback(
+    (value: string) => {
+      if (value?.match(REGEX.DATETIME_ISO)) {
+        return DatetimeUtil.moment(value).format(defaultDateTimeFormat);
+      }
+      return value;
+    },
+    [defaultDateTimeFormat]
+  );
 
-  const formatValue = (value: any) => {
-    return new TableValueBuilder(value).transform(formatDateTime).build();
-  };
+  const formatValue = useCallback(
+    (value: any, transform?: (value: any) => any) => {
+      return new TableValueBuilder(value)
+        .transform(formatDateTime)
+        .transform(transform)
+        .build();
+    },
+    [formatDateTime]
+  );
+
+  const renderElement = useCallback(
+    (item: any, config: any) => {
+      if (config.isCustom)
+        return config.renderCustomElement(item[config.name], item);
+      return item[config.name]
+        ? formatValue(item[config.name], config.transform)
+        : emptyText;
+    },
+    [emptyText, formatValue]
+  );
 
   return (
     <>
-      {headers && data && (
+      {configs && data && (
         <MantineTable>
           <MantineTable.Thead>
             <MantineTable.Tr>
-              {headers.map((header: string, i: number) => {
+              {configs.map((config: any, i: number) => {
                 return (
-                  <MantineTable.Th key={header + i}>{header}</MantineTable.Th>
+                  <MantineTable.Th key={config.name + i}>
+                    {config.name}
+                  </MantineTable.Th>
                 );
               })}
             </MantineTable.Tr>
@@ -53,10 +76,10 @@ const Table = ({
             {data.map((item: any, i: number) => {
               return (
                 <MantineTable.Tr key={i + item?.id}>
-                  {headers.map((header: string, index: number) => {
+                  {configs.map((config: any, index: number) => {
                     return (
-                      <MantineTable.Td key={header + index}>
-                        {item[header] ? formatValue(item[header]) : emptyText}
+                      <MantineTable.Td key={config.name + index}>
+                        {renderElement(item, config)}
                       </MantineTable.Td>
                     );
                   })}

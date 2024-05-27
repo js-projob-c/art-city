@@ -1,23 +1,44 @@
 "use client";
 
 import { Box, Button, Flex, Stack } from "@mantine/core";
-import React from "react";
+import React, { useCallback } from "react";
 import toast from "react-hot-toast";
 
-import Table from "@/components/Table";
+import Table, { ITableConfig } from "@/components/Table";
 import { useSignInOrOut } from "@/hooks/features/attendances/useSignInOrOut";
 import {
   IUserAttendance,
   useUserAttendances,
 } from "@/hooks/features/attendances/useUserAttendances";
 
+const configs: ITableConfig[] = [
+  {
+    name: "signInAt",
+  },
+  {
+    name: "signOutAt",
+  },
+  {
+    name: "status",
+    transform: (value: string) => {
+      return value + "ohohoh";
+    },
+  },
+  {
+    name: "supportDocument",
+  },
+  {
+    name: "remarks",
+  },
+];
+
 interface IProps {}
 
 const SigningPage: React.FC<IProps> = () => {
-  const { mutateAsync } = useSignInOrOut();
-  const { data, refetch } = useUserAttendances();
+  const { mutateAsync, isPending: isSigning } = useSignInOrOut();
+  const { data, refetch, isLoading } = useUserAttendances();
 
-  const onSignInOrOut = async () => {
+  const onSignInOrOut = useCallback(async () => {
     mutateAsync(
       {
         body: {},
@@ -34,56 +55,52 @@ const SigningPage: React.FC<IProps> = () => {
         },
       }
     );
-  };
+  }, [mutateAsync, refetch]);
 
-  const config = [
-    {
-      header: "signInAt",
-    },
-    {
-      header: "signOutAt",
-    },
-    {
-      header: "status",
-    },
-    {
-      header: "signOut",
-    },
-    {
-      header: "supportDocument",
-    },
-    {
-      header: "remarks",
-    },
-  ];
+  const renderSignButton = useCallback(() => {
+    const sortedData = data?.sort((a: IUserAttendance, b: IUserAttendance) => {
+      if (!a.signInAt || !b.signInAt) return 0;
+      return new Date(b.signInAt).getTime() - new Date(a.signInAt).getTime();
+    });
+    const latestAttendance = sortedData?.[0];
+    if (latestAttendance?.signInAt && latestAttendance?.signOutAt) {
+      return (
+        <Button variant="outline" disabled>
+          已簽到
+        </Button>
+      );
+    } else if (latestAttendance?.signInAt && !latestAttendance?.signOutAt) {
+      return (
+        <Button
+          variant="outline"
+          onClick={onSignInOrOut}
+          disabled={isLoading}
+          loading={isSigning}
+        >
+          簽出
+        </Button>
+      );
+    } else if (!latestAttendance?.signInAt && !latestAttendance?.signOutAt) {
+      return (
+        <Button
+          variant="outline"
+          onClick={onSignInOrOut}
+          disabled={isLoading}
+          loading={isSigning}
+        >
+          簽到
+        </Button>
+      );
+    }
+  }, [data, onSignInOrOut, isLoading, isSigning]);
 
   return (
     <>
       <Stack>
-        <Flex w={"100%"} justify={"flex-end"}>
-          <Button variant="outline" onClick={onSignInOrOut}>
-            簽到
-          </Button>
+        <Flex w={"100%"} justify={"flex-end"} align={"center"}>
+          {renderSignButton()}
         </Flex>
-        <Box>
-          {data && (
-            <Table
-              config={config}
-              data={data}
-              headers={[
-                "signInAt",
-                "signOutAt",
-                "status",
-                "signOut",
-                "supportDocument",
-                "remarks",
-              ]}
-            />
-          )}
-          {/* {data?.map((attendance: IUserAttendance) => {
-            return `${attendance.status}`;
-          })} */}
-        </Box>
+        <Box>{data && <Table configs={configs} data={data} />}</Box>
       </Stack>
     </>
   );

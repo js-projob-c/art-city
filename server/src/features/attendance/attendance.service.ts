@@ -70,8 +70,10 @@ export class AttendanceService {
     );
     if (!attendance) {
       await this.signInByUser(user, currentDateime);
-    } else {
+    } else if (!attendance.signOutAt) {
       await this.signOutByUser(user, attendance.signInAt);
+    } else {
+      throw new BadRequestException(ERROR_CODES.ATTENDANCE.ALREADY_SIGN_OUT);
     }
   }
 

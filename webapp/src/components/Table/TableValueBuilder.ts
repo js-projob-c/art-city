@@ -9,7 +9,8 @@ export class TableValueBuilder {
     return this.value;
   }
 
-  public transform(transformer: (value: any) => any): TableValueBuilder {
+  public transform(transformer?: (value: any) => any): TableValueBuilder {
+    if (!transformer) return this;
     this.value = transformer(this.value);
     return this;
   }

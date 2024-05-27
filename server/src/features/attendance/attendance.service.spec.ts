@@ -1,4 +1,3 @@
-import { TIMEZONE } from '@art-city/common/constants';
 import { AttendanceStatus } from '@art-city/common/enums';
 import { DatetimeUtil } from '@art-city/common/utils/datetime.util';
 import { createMock } from '@golevelup/ts-jest';
