@@ -1,11 +1,6 @@
 import { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 import { headers } from "next/headers";
 import { ReactNode } from "react";
-import { useLocalStorage } from "usehooks-ts";
-
-import { ACCESS_TOKEN_KEY } from "@/common/constants/variables";
-import { EncryptionUtil } from "@/common/utils/encryption";
-import { TokenUtil } from "@/common/utils/token";
 
 import AuthLayout from "./AuthLayout";
 import DashboardLayout from "./DashboardLayout";

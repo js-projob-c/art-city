@@ -21,8 +21,6 @@ export function middleware(request: NextRequest) {
 
   const currentUser = request.cookies.get(ACCESS_TOKEN_KEY)?.value;
 
-  console.log("currentUser", currentUser);
-
   if (currentUser && !request.nextUrl.pathname.startsWith("/dashboard")) {
     return Response.redirect(new URL("/dashboard", request.url));
   }
