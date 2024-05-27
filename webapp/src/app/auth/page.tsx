@@ -39,7 +39,6 @@ const AuthPage: React.FC<IProps> = ({}) => {
         },
         onError(error) {
           console.error(error);
-          // removeValue();
           toast.error("Login failed");
         },
       }

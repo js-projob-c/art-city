@@ -20,9 +20,6 @@ const configs: ITableConfig[] = [
   },
   {
     name: "status",
-    transform: (value: string) => {
-      return value + "ohohoh";
-    },
   },
   {
     name: "supportDocument",
@@ -40,9 +37,7 @@ const SigningPage: React.FC<IProps> = () => {
 
   const onSignInOrOut = useCallback(async () => {
     mutateAsync(
-      {
-        body: {},
-      },
+      {},
       {
         async onSuccess(data) {
           console.log("data", data);

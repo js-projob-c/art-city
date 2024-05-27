@@ -15,7 +15,7 @@ import { TokenUtil } from "@/common/utils/token";
 export interface UseRequestPayload<Body = Record<string, any>> {
   body?: Body;
   query?: Record<string, any>;
-  param?: string;
+  param?: Record<string, string>;
   headers?: Record<string, any>;
   options?: Record<string, any>;
 }
@@ -35,6 +35,7 @@ export interface ApiObject {
 
 export default class Axios {
   private axiosClient: AxiosInstance;
+
   constructor(axiosInstance: AxiosInstance) {
     this.axiosClient = axiosInstance;
     this.setTimeout();
@@ -74,10 +75,10 @@ export default class Axios {
       (error: AxiosError) => {
         console.log("AXIOS error", error?.response);
         if (error?.response?.status === 401) {
-          if (!isNil(window.localStorage.getItem(ACCESS_TOKEN_KEY))) {
+          if (!isNil(Cookies.get(ACCESS_TOKEN_KEY))) {
             // 1.Redirect to login page
             window.location.href = "/auth";
-            window.localStorage.removeItem(ACCESS_TOKEN_KEY);
+            Cookies.remove(ACCESS_TOKEN_KEY);
           }
           //or 2.Request refresh token
         }
@@ -91,16 +92,9 @@ export default class Axios {
     payload: UseRequestPayload | undefined = {},
     config: AxiosRequestConfig<any> | undefined = undefined
   ): Promise<AxiosResponse<any, any>> {
-    const { query = {}, param = "" } = payload;
-    const urlWithParam = param ? `${url}/${param}` : url;
-    const queryString = Object.entries(query)
-      .map(([key, value]) => {
-        return `${key}=${value}`;
-      })
-      ?.join("&");
-    const urlWithQueryAndParam = queryString
-      ? `${urlWithParam}?${queryString}`
-      : urlWithParam;
+    const { query = {}, param = {} } = payload;
+    const urlWithParam = this.mapParamsToUrl(url, param);
+    const urlWithQueryAndParam = this.mapQueryToUrl(urlWithParam, query);
     return await this.axiosClient.get(urlWithQueryAndParam, config);
   }
 
@@ -118,16 +112,9 @@ export default class Axios {
     payload: UseRequestPayload | undefined = {},
     config: AxiosRequestConfig<any> | undefined = undefined
   ): Promise<AxiosResponse<any, any>> {
-    const { query = {}, body = {}, param = "" } = payload;
-    const urlWithParam = param ? `${url}/${param}` : url;
-    const queryString = Object.entries(query)
-      .map(([key, value]) => {
-        return `${key}=${value}`;
-      })
-      ?.join("&");
-    const urlWithQueryAndParam = queryString
-      ? `${urlWithParam}?${queryString}`
-      : urlWithParam;
+    const { query = {}, body = {}, param = {} } = payload;
+    const urlWithParam = this.mapParamsToUrl(url, param);
+    const urlWithQueryAndParam = this.mapQueryToUrl(urlWithParam, query);
     return await this.axiosClient.put(urlWithQueryAndParam, body, config);
   }
 
@@ -136,16 +123,9 @@ export default class Axios {
     payload: UseRequestPayload | undefined = {},
     config: AxiosRequestConfig<any> | undefined = undefined
   ): Promise<AxiosResponse<any, any>> {
-    const { query = {}, body = {}, param = "" } = payload;
-    const urlWithParam = param ? `${url}/${param}` : url;
-    const queryString = Object.entries(query)
-      .map(([key, value]) => {
-        return `${key}=${value}`;
-      })
-      ?.join("&");
-    const urlWithQueryAndParam = queryString
-      ? `${urlWithParam}?${queryString}`
-      : urlWithParam;
+    const { query = {}, body = {}, param = {} } = payload;
+    const urlWithParam = this.mapParamsToUrl(url, param);
+    const urlWithQueryAndParam = this.mapQueryToUrl(urlWithParam, query);
     return await this.axiosClient.patch(urlWithQueryAndParam, body, config);
   }
 
@@ -154,9 +134,24 @@ export default class Axios {
     payload: UseRequestPayload | undefined = {},
     config: AxiosRequestConfig<any> | undefined = undefined
   ): Promise<AxiosResponse<any, any>> {
-    const { param = "" } = payload;
-    const urlWithParam = param ? `${url}/${param}` : url;
+    const { param = {} } = payload;
+    const urlWithParam = this.mapParamsToUrl(url, param);
     return await this.axiosClient.delete(urlWithParam, config);
+  }
+
+  private mapParamsToUrl(url: string, params: Record<string, string>) {
+    return Object.entries(params).reduce((acc, [key, value]) => {
+      return acc.replace(`:${key}`, value);
+    }, url);
+  }
+
+  private mapQueryToUrl(url: string, query: Record<string, string>) {
+    const queryString = Object.entries(query)
+      .map(([key, value]) => {
+        return `${key}=${value}`;
+      })
+      ?.join("&");
+    return queryString ? `${url}?${queryString}` : url;
   }
 
   async use(
@@ -206,4 +201,4 @@ export const axiosFileInstance = axios.create({
 
 export const axiosClient = new Axios(axiosInstance);
 export const axiosFileUploadClient = new Axios(axiosFileInstance);
-axiosFileUploadClient.setTimeout(100000);
+axiosFileUploadClient.setTimeout(10000);
