@@ -33,4 +33,14 @@ export class SystemService {
       where: { id: Not(IsNull()) },
     });
   }
+
+  async getWorkingHours(): Promise<
+    Pick<SystemEntity, 'workHourFrom' | 'workHourTo'>
+  > {
+    const system = await this.getSystem();
+    return {
+      workHourFrom: system?.workHourFrom ?? '',
+      workHourTo: system?.workHourTo ?? '',
+    };
+  }
 }

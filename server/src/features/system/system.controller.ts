@@ -16,4 +16,9 @@ export class SystemController {
   async getSystem() {
     return await this.systemService.getSystem();
   }
+
+  @Get('working-hours')
+  async getWorkingHours() {
+    return await this.systemService.getWorkingHours();
+  }
 }

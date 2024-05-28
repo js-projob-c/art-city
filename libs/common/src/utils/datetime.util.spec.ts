@@ -8,7 +8,9 @@ describe('DatetimeUtil', () => {
     });
 
     it('should return a moment object with specified timezone', () => {
-      const result = DatetimeUtil.moment(undefined, 'America/New_York');
+      const result = DatetimeUtil.moment(undefined, {
+        timezone: 'America/New_York',
+      });
       expect(result).toBeDefined();
     });
   });

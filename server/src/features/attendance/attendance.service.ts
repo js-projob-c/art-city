@@ -139,11 +139,11 @@ export class AttendanceService {
     const signOutAtMoment = DatetimeUtil.moment(signOutAt);
     const workHourFromMoment = DatetimeUtil.moment(
       `${signInAtMoment.tz(workHourTimezone).format(DATETIME_FORMAT.DATE)} ${workHourFrom}`,
-      workHourTimezone,
+      { timezone: workHourTimezone },
     );
     const workHourToMoment = DatetimeUtil.moment(
       `${signOutAtMoment.tz(workHourTimezone).format(DATETIME_FORMAT.DATE)} ${workHourTo}`,
-      workHourTimezone,
+      { timezone: workHourTimezone },
     );
     if (signInAt && !signOutAt) {
       return null;

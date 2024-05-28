@@ -1,7 +1,7 @@
 "use client";
 import { TIMEZONE } from "@art-city/common/constants";
 import { DatetimeUtil } from "@art-city/common/utils/datetime.util";
-import { Button, Text } from "@mantine/core";
+import { Text } from "@mantine/core";
 import React, { useState } from "react";
 import { Unit } from "react-calendar-timeline";
 

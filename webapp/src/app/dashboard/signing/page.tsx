@@ -1,6 +1,8 @@
 "use client";
 
-import { Box, Button, Flex, Stack } from "@mantine/core";
+import { TIMEZONE } from "@art-city/common/constants";
+import { DatetimeUtil } from "@art-city/common/utils/datetime.util";
+import { Box, Button, Flex, Stack, Text } from "@mantine/core";
 import React, { useCallback } from "react";
 import toast from "react-hot-toast";
 
@@ -10,6 +12,7 @@ import {
   IUserAttendance,
   useUserAttendances,
 } from "@/hooks/features/attendances/useUserAttendances";
+import { useGetWorkingHours } from "@/hooks/features/system/useWorkingHours";
 
 const configs: ITableConfig[] = [
   {
@@ -34,6 +37,7 @@ interface IProps {}
 const SigningPage: React.FC<IProps> = () => {
   const { mutateAsync, isPending: isSigning } = useSignInOrOut();
   const { data, refetch, isLoading } = useUserAttendances();
+  const { data: workingHoursData } = useGetWorkingHours();
 
   const onSignInOrOut = useCallback(async () => {
     mutateAsync(
@@ -92,7 +96,31 @@ const SigningPage: React.FC<IProps> = () => {
   return (
     <>
       <Stack>
-        <Flex w={"100%"} justify={"flex-end"} align={"center"}>
+        <Flex w={"100%"} justify={"space-between"} align={"center"}>
+          <Stack>
+            <Text>
+              上班時間:{" "}
+              {workingHoursData?.workHourFrom
+                ? DatetimeUtil.moment(workingHoursData?.workHourFrom, {
+                    timezone: TIMEZONE.UTC,
+                    format: "HH:mm:ss",
+                  })
+                    .tz(TIMEZONE.HK)
+                    .format("HH:mm")
+                : "-"}
+            </Text>
+            <Text>
+              下班時間:{" "}
+              {workingHoursData?.workHourTo
+                ? DatetimeUtil.moment(workingHoursData?.workHourTo, {
+                    timezone: TIMEZONE.UTC,
+                    format: "HH:mm:ss",
+                  })
+                    .tz(TIMEZONE.HK)
+                    .format("HH:mm")
+                : "-"}
+            </Text>
+          </Stack>
           {renderSignButton()}
         </Flex>
         <Box>{data && <Table configs={configs} data={data} />}</Box>

@@ -6,9 +6,10 @@ export class DatetimeUtil {
 
   public static moment(
     dateTime: moment.MomentInput | undefined = undefined,
-    timezone: string = TIMEZONE.UTC,
+    options: { timezone?: string; format?: string } = {},
   ): moment.Moment {
-    return moment(dateTime).tz(timezone, true);
+    const { timezone = TIMEZONE.UTC, format } = options;
+    return moment(dateTime, format).tz(timezone, true);
   }
 
   public static generateDateRange(

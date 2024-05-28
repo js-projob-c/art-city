@@ -78,13 +78,17 @@ export class SeederService {
   }
 
   async createSystem() {
-    const workHourFromTime = DatetimeUtil.moment(undefined, TIMEZONE.HK)
+    const workHourFromTime = DatetimeUtil.moment(undefined, {
+      timezone: TIMEZONE.HK,
+    })
       .set('hour', 9)
       .set('minute', 0)
       .set('second', 0)
       .tz(TIMEZONE.UTC)
       .format(DATETIME_FORMAT.TIME);
-    const workHourToTime = DatetimeUtil.moment(undefined, TIMEZONE.HK)
+    const workHourToTime = DatetimeUtil.moment(undefined, {
+      timezone: TIMEZONE.HK,
+    })
       .set('hour', 18)
       .set('minute', 0)
       .set('second', 0)
