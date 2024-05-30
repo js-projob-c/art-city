@@ -24,6 +24,10 @@ export const dashboardSideNavbarConfig: SideNavbarConfigType[] = [
         href: "/dashboard/schedule",
         label: "排班",
       },
+      {
+        href: "/dashboard/shift",
+        label: "換班",
+      },
     ],
   },
   {

@@ -5,6 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/services/query";
 
 import { AppProvider } from "./AppContext";
+import { ModalProvider } from "./ModalContext";
 import { ThemeProvider } from "./ThemeContext";
 import { ToastProvider } from "./ToastContext";
 
@@ -17,7 +18,9 @@ const Providers = ({ children }: IProps) => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AppProvider>
-          <ToastProvider>{children}</ToastProvider>
+          <ToastProvider>
+            <ModalProvider>{children}</ModalProvider>
+          </ToastProvider>
         </AppProvider>
       </ThemeProvider>
     </QueryClientProvider>

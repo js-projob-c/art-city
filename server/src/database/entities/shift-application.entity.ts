@@ -22,7 +22,7 @@ export class ShiftApplicationEntity
 
   userId: string;
 
-  @ManyToOne(() => UserEntity, (user) => user)
+  @ManyToOne(() => UserEntity, (user) => user.shiftApplications)
   @JoinColumn({ name: 'userId' })
   user: UserEntity;
 

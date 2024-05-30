@@ -72,6 +72,9 @@ export class ScheduleService {
   async getSchedules(userId: string) {
     return await this.scheduleRepository.find({
       where: { user: { id: userId } },
+      relations: {
+        user: true,
+      },
     });
   }
 }

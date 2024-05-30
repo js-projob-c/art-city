@@ -1,7 +1,7 @@
 "use client";
 
 import { LoginRequestDto } from "@art-city/common/dto/auth/LoginRequest.dto";
-import { Button, Image, Stack, TextInput } from "@mantine/core";
+import { Button, Center, Flex, Image, Stack, TextInput } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -51,58 +51,61 @@ const AuthPage: React.FC<IProps> = ({}) => {
 
   return (
     <div>
-      AuthPage
-      <Image
-        src={IMAGES.logoSquare.src}
-        alt="Website Logo"
-        fit="contain"
-        h={200}
-        w={"auto"}
-      />
-      <Stack gap={"md"}>
-        <Controller
-          render={({
-            field: { onChange, onBlur, value },
-            fieldState: { error },
-          }) => (
-            <TextInput
-              label="Email"
-              name="email"
-              type="email"
-              required
-              onChange={onChange}
-              value={value}
-              onBlur={onBlur}
-              error={error?.message}
+      <Center>
+        <Flex direction={"column"} gap={50} justify={"center"}>
+          <Image
+            src={IMAGES.logoSquare.src}
+            alt="Website Logo"
+            fit="contain"
+            h={200}
+            w={"auto"}
+          />
+          <Stack gap={"md"}>
+            <Controller
+              render={({
+                field: { onChange, onBlur, value },
+                fieldState: { error },
+              }) => (
+                <TextInput
+                  label="Email"
+                  name="email"
+                  type="email"
+                  required
+                  onChange={onChange}
+                  value={value}
+                  onBlur={onBlur}
+                  error={error?.message}
+                />
+              )}
+              name={"email"}
+              control={control}
+              defaultValue={""}
             />
-          )}
-          name={"email"}
-          control={control}
-          defaultValue={""}
-        />
-        <Controller
-          render={({
-            field: { onChange, onBlur, value },
-            fieldState: { error },
-          }) => (
-            <TextInput
-              label="Password"
-              name="password"
-              type="password"
-              required
-              onChange={onChange}
-              value={value}
-              onBlur={onBlur}
-              error={error?.message}
+            <Controller
+              render={({
+                field: { onChange, onBlur, value },
+                fieldState: { error },
+              }) => (
+                <TextInput
+                  label="Password"
+                  name="password"
+                  type="password"
+                  required
+                  onChange={onChange}
+                  value={value}
+                  onBlur={onBlur}
+                  error={error?.message}
+                />
+              )}
+              name={"password"}
+              control={control}
+              defaultValue={""}
             />
-          )}
-          name={"password"}
-          control={control}
-          defaultValue={""}
-        />
 
-        <Button onClick={handleSubmit(onSubmit)}>Login</Button>
-      </Stack>
+            <Button onClick={handleSubmit(onSubmit)}>Login</Button>
+          </Stack>
+        </Flex>
+      </Center>
     </div>
   );
 };

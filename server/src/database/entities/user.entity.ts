@@ -19,6 +19,7 @@ import { PayrollEntity } from './payroll.entity';
 import { ProjectEntity } from './project.entity';
 import { ReimburseEntity } from './reimburse.entity';
 import { ScheduleEntity } from './schedule.entity';
+import { ShiftApplicationEntity } from './shift-application.entity';
 import { TaskEntity } from './task.entity';
 import { UserDetailEntity } from './user-detail.entity';
 
@@ -45,31 +46,58 @@ export class UserEntity extends BaseEntity implements IUser {
   @Column({ type: 'enum', enum: UserDepartment })
   department: UserDepartment;
 
-  @OneToOne(() => UserDetailEntity, (userDetail) => userDetail.user)
+  @OneToOne(() => UserDetailEntity, (userDetail) => userDetail.user, {
+    onDelete: 'CASCADE',
+  })
   detail: UserDetailEntity;
 
-  @OneToMany(() => AttendanceEntity, (attendance) => attendance.user)
+  @OneToMany(() => AttendanceEntity, (attendance) => attendance.user, {
+    onDelete: 'CASCADE',
+  })
   attendances: AttendanceEntity[];
 
-  @OneToMany(() => LeaveEntity, (leave) => leave.user)
+  @OneToMany(() => LeaveEntity, (leave) => leave.user, {
+    onDelete: 'CASCADE',
+  })
   leaves: LeaveEntity[];
 
-  @OneToMany(() => ProjectEntity, (project) => project.owner)
+  @OneToMany(() => ProjectEntity, (project) => project.owner, {
+    onDelete: 'SET NULL',
+  })
   projects: ProjectEntity[];
 
-  @OneToMany(() => ReimburseEntity, (reimburse) => reimburse.user)
+  @OneToMany(() => ReimburseEntity, (reimburse) => reimburse.user, {
+    onDelete: 'CASCADE',
+  })
   reimburses: ReimburseEntity[];
 
-  @OneToMany(() => ScheduleEntity, (schedule) => schedule.user)
+  @OneToMany(
+    () => ShiftApplicationEntity,
+    (shiftApplication) => shiftApplication.user,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  shiftApplications: ShiftApplicationEntity[];
+
+  @OneToMany(() => ScheduleEntity, (schedule) => schedule.user, {
+    onDelete: 'CASCADE',
+  })
   schedules: ScheduleEntity[];
 
-  @OneToMany(() => PayrollEntity, (payroll) => payroll.user)
+  @OneToMany(() => PayrollEntity, (payroll) => payroll.user, {
+    onDelete: 'CASCADE',
+  })
   payrolls: PayrollEntity[];
 
-  @ManyToMany(() => CustomerEntity, (customer) => customer.users)
+  @ManyToMany(() => CustomerEntity, (customer) => customer.users, {
+    onDelete: 'SET NULL',
+  })
   @JoinTable({ name: DB_TABLE_NAMES.userCustomer })
   customers: CustomerEntity[];
 
-  @ManyToMany(() => TaskEntity, (task) => task.users)
+  @ManyToMany(() => TaskEntity, (task) => task.users, {
+    onDelete: 'SET NULL',
+  })
   tasks: TaskEntity[];
 }

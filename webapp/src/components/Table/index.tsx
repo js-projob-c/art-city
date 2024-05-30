@@ -8,6 +8,7 @@ import { TableValueBuilder } from "./TableValueBuilder";
 
 export interface ITableConfig {
   name: string;
+  label?: string;
   isCustom?: boolean;
   renderCustomElement?: (value: any, item: any) => JSX.Element;
   transform?: (value: any) => any;
@@ -46,13 +47,16 @@ const Table = ({
     [formatDateTime]
   );
 
+  function getNestedProperty(obj: Record<string, any>, path: string) {
+    return path.split(".").reduce((o, p) => (o ? o[p] : undefined), obj);
+  }
+
   const renderElement = useCallback(
     (item: any, config: any) => {
       if (config.isCustom)
         return config.renderCustomElement(item[config.name], item);
-      return item[config.name]
-        ? formatValue(item[config.name], config.transform)
-        : emptyText;
+      const value = getNestedProperty(item, config.name);
+      return value ? formatValue(value, config.transform) : emptyText;
     },
     [emptyText, formatValue]
   );
@@ -66,7 +70,7 @@ const Table = ({
               {configs.map((config: any, i: number) => {
                 return (
                   <MantineTable.Th key={config.name + i}>
-                    {config.name}
+                    {config.label ?? config.name}
                   </MantineTable.Th>
                 );
               })}

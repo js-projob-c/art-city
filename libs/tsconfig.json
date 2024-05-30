@@ -20,8 +20,9 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "paths": {
-      "@art-city/common/*": ["../libs/common/src/*"],
-      "@art-city/common": ["../libs/common/src/index.ts"]
+      "^common/src/*": ["./common/src/*"],
+      "@art-city/common/*": ["./common/src/*"],
+      "@art-city/common": ["./common/src/index.ts"]
     }
   },
   "include": ["../server/**/*.ts", "../libs/**/*.ts", "../libs/**/*.util.ts"]

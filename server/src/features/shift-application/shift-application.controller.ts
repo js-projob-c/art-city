@@ -15,8 +15,8 @@ import { UserEntity } from 'src/database/entities';
 import { JwtAuthGuard } from 'src/features/auth/guards/jwt-auth.guard';
 import { UserService } from 'src/features/user/user.service';
 
-import { ApproveShiftApplicationRequestDto } from './dto/approve-shift-application-request.dto';
-import { CreateShiftApplicationRequestDto } from './dto/create-shift-application-request.dto';
+import { ApproveShiftApplicationRequestDto } from '../../../../libs/common/src/dto/shift-application/approve-shift-application-request.dto';
+import { CreateShiftApplicationRequestDto } from '../../../../libs/common/src/dto/shift-application/create-shift-application-request.dto';
 import { ShiftApplicationService } from './shift-application.service';
 
 @Controller('shift-application')

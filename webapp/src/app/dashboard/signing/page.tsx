@@ -14,6 +14,8 @@ import {
 } from "@/hooks/features/attendances/useUserAttendances";
 import { useGetWorkingHours } from "@/hooks/features/system/useWorkingHours";
 
+interface IProps {}
+
 const configs: ITableConfig[] = [
   {
     name: "signInAt",
@@ -31,8 +33,6 @@ const configs: ITableConfig[] = [
     name: "remarks",
   },
 ];
-
-interface IProps {}
 
 const SigningPage: React.FC<IProps> = () => {
   const { mutateAsync, isPending: isSigning } = useSignInOrOut();

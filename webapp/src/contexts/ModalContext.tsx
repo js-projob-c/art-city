@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from "react";
+import { ModalsProvider } from "@mantine/modals";
+import React, { createContext, useContext } from "react";
 
 interface ContextProps {}
 
