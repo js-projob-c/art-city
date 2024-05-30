@@ -8,6 +8,7 @@ import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 import { IMAGES } from "@/common/assets";
+import { toastErrorCode } from "@/common/utils/toast";
 import { loginResolver, useLogin } from "@/hooks/features/auth/useLogin";
 
 interface IProps {}
@@ -38,8 +39,7 @@ const AuthPage: React.FC<IProps> = ({}) => {
           toast.success("Login success");
         },
         onError(error) {
-          console.error(error);
-          toast.error("Login failed");
+          toastErrorCode(error);
         },
       }
     );

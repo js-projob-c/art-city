@@ -18,6 +18,7 @@ import React, { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
+import { toastErrorCode } from "@/common/utils/toast";
 import Table, { ITableConfig } from "@/components/Table";
 import { useUserSchedules } from "@/hooks/features/schedules/useUserSchedules";
 import {
@@ -94,8 +95,8 @@ const ShiftPage: React.FC<IProps> = () => {
           modals.close("apply-shift");
           await refetchShiftApplications();
         },
-        onError: (error) => {
-          toast.error("Failed");
+        onError: (error: any) => {
+          toastErrorCode(error);
         },
       }
     );
