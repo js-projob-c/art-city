@@ -46,58 +46,37 @@ export class UserEntity extends BaseEntity implements IUser {
   @Column({ type: 'enum', enum: UserDepartment })
   department: UserDepartment;
 
-  @OneToOne(() => UserDetailEntity, (userDetail) => userDetail.user, {
-    onDelete: 'CASCADE',
-  })
+  @OneToOne(() => UserDetailEntity, (userDetail) => userDetail.user)
   detail: UserDetailEntity;
 
-  @OneToMany(() => AttendanceEntity, (attendance) => attendance.user, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => AttendanceEntity, (attendance) => attendance.user)
   attendances: AttendanceEntity[];
 
-  @OneToMany(() => LeaveEntity, (leave) => leave.user, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => LeaveEntity, (leave) => leave.user)
   leaves: LeaveEntity[];
 
-  @OneToMany(() => ProjectEntity, (project) => project.owner, {
-    onDelete: 'SET NULL',
-  })
+  @OneToMany(() => ProjectEntity, (project) => project.owner)
   projects: ProjectEntity[];
 
-  @OneToMany(() => ReimburseEntity, (reimburse) => reimburse.user, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => ReimburseEntity, (reimburse) => reimburse.user)
   reimburses: ReimburseEntity[];
 
   @OneToMany(
     () => ShiftApplicationEntity,
     (shiftApplication) => shiftApplication.user,
-    {
-      onDelete: 'CASCADE',
-    },
   )
   shiftApplications: ShiftApplicationEntity[];
 
-  @OneToMany(() => ScheduleEntity, (schedule) => schedule.user, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => ScheduleEntity, (schedule) => schedule.user)
   schedules: ScheduleEntity[];
 
-  @OneToMany(() => PayrollEntity, (payroll) => payroll.user, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => PayrollEntity, (payroll) => payroll.user)
   payrolls: PayrollEntity[];
 
-  @ManyToMany(() => CustomerEntity, (customer) => customer.users, {
-    onDelete: 'SET NULL',
-  })
+  @ManyToMany(() => CustomerEntity, (customer) => customer.users)
   @JoinTable({ name: DB_TABLE_NAMES.userCustomer })
   customers: CustomerEntity[];
 
-  @ManyToMany(() => TaskEntity, (task) => task.users, {
-    onDelete: 'SET NULL',
-  })
+  @ManyToMany(() => TaskEntity, (task) => task.users)
   tasks: TaskEntity[];
 }

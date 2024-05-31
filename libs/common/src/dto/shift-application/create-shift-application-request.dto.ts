@@ -12,14 +12,14 @@ import { REGEX } from '../../constants';
 export class CreateShiftApplicationRequestDto
   implements Partial<IShiftApplication>
 {
-  @IsNotEmpty()
-  @IsDateString()
   @Matches(REGEX.DATE)
+  @IsDateString()
+  @IsNotEmpty()
   fromDate: string;
 
-  @IsNotEmpty()
-  @IsDateString()
   @Matches(REGEX.DATE)
+  @IsDateString()
+  @IsNotEmpty()
   toDate: string;
 
   @IsOptional()

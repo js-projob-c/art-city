@@ -20,10 +20,11 @@ export class DatabaseConfig {
       schema: this.schema,
       logging: this.logging,
       migrationsTableName: this.migrationTableName,
-      migrations: ['dist/server/src/external/database/migrations/*.js'],
+      migrations: ['dist/server/src/database/external/migrations/*.js'],
       autoLoadEntities: true,
       synchronize: false,
       migrationsRun: true,
+      logger: 'simple-console',
       // subscribers: [ProjectSubscriber],
     };
   }

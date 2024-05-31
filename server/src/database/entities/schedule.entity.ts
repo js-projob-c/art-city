@@ -12,7 +12,9 @@ export class ScheduleEntity extends BaseEntity implements ISchedule {
 
   userId: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.schedules)
+  @ManyToOne(() => UserEntity, (user) => user.schedules, {
+    onDelete: 'CASCADE',
+  })
   user: UserEntity;
 
   @Column({ type: 'date' })

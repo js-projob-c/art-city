@@ -151,7 +151,7 @@ const ShiftPage: React.FC<IProps> = () => {
               )}
               name={"toDate"}
               control={control}
-              defaultValue={new Date().toISOString()}
+              defaultValue={undefined}
             />
           </Flex>
           <Controller

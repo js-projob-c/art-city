@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Init1716746339082 implements MigrationInterface {
-    name = 'Init1716746339082'
+export class Init1717165082414 implements MigrationInterface {
+    name = 'Init1717165082414'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "art_city"."customer_source_enum" AS ENUM('FACEBOOK', 'IG', 'TV', 'PHONE', 'OTHER')`);
@@ -21,6 +21,8 @@ export class Init1716746339082 implements MigrationInterface {
         await queryRunner.query(`CREATE TYPE "art_city"."reimburse_status_enum" AS ENUM('PENDING', 'APPROVED', 'REJECTED')`);
         await queryRunner.query(`CREATE TABLE "art_city"."reimburse" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "date" date NOT NULL, "amount" numeric NOT NULL, "description" character varying NOT NULL, "type" "art_city"."reimburse_type_enum" NOT NULL, "status" "art_city"."reimburse_status_enum" NOT NULL, "supportDocument" character varying, "userId" uuid, CONSTRAINT "PK_80e667999362114b4fdb32c9dcd" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "art_city"."schedule" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "date" date NOT NULL, "userId" uuid, CONSTRAINT "PK_1c05e42aec7371641193e180046" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "art_city"."shift_application_status_enum" AS ENUM('PENDING', 'APPROVED', 'REJECTED')`);
+        await queryRunner.query(`CREATE TABLE "art_city"."shift_application" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "fromDate" date NOT NULL, "toDate" date NOT NULL, "reason" character varying, "status" "art_city"."shift_application_status_enum" NOT NULL, "reviewedAt" TIMESTAMP, "userId" uuid, "reviewerId" uuid, CONSTRAINT "PK_3f52a7665723c10c8d62257032c" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "art_city"."user_detail" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "monthlySalary" integer NOT NULL, "annualLeave" smallint NOT NULL, "userId" uuid, CONSTRAINT "REL_455dfebe9344ffecf1c8e8e054" UNIQUE ("userId"), CONSTRAINT "PK_673613c95633d9058a44041794d" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "art_city"."user_role_enum" AS ENUM('GUEST', 'ADMIN', 'MANAGER', 'EMPLOYEE')`);
         await queryRunner.query(`CREATE TYPE "art_city"."user_department_enum" AS ENUM('ADMIN', 'SALES', 'CS', 'HR')`);
@@ -34,8 +36,6 @@ export class Init1716746339082 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "art_city"."purchase" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "description" character varying NOT NULL, "items" jsonb NOT NULL, "status" "art_city"."purchase_status_enum" NOT NULL, "amount" numeric NOT NULL, "externalPartyDetails" jsonb NOT NULL, "externalPartyId" uuid, CONSTRAINT "REL_a8d19b19b5892091a013caa46f" UNIQUE ("externalPartyId"), CONSTRAINT "PK_86cc2ebeb9e17fc9c0774b05f69" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "art_city"."external_party_type_enum" AS ENUM('CUSTOMER', 'SELLER', 'EXTERNAL_PROJECT')`);
         await queryRunner.query(`CREATE TABLE "art_city"."external_party" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "company" character varying NOT NULL, "contactName" character varying NOT NULL, "contactRole" character varying NOT NULL, "email" character varying, "phone" character varying, "type" "art_city"."external_party_type_enum" NOT NULL, "customerSource" character varying, "purchasesId" uuid, "externalProjectsId" uuid, "ordersId" uuid, CONSTRAINT "PK_8a6437722a7c4a0e09d2dcffdfb" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TYPE "art_city"."shift_application_status_enum" AS ENUM('PENDING', 'APPROVED', 'REJECTED')`);
-        await queryRunner.query(`CREATE TABLE "art_city"."shift_application" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "fromDate" date NOT NULL, "toDate" date NOT NULL, "reason" character varying, "status" "art_city"."shift_application_status_enum" NOT NULL, "reviewedAt" TIMESTAMP, "userId" uuid, "reviewerId" uuid, CONSTRAINT "PK_3f52a7665723c10c8d62257032c" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "art_city"."system" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "workHourFrom" TIME NOT NULL, "workHourTo" TIME NOT NULL, CONSTRAINT "PK_6b1e6b6f88da9888fde62379945" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "art_city"."user_task" ("taskId" uuid NOT NULL, "userId" uuid NOT NULL, CONSTRAINT "PK_a0db1c8e3e4e9bb4ddf2523fe42" PRIMARY KEY ("taskId", "userId"))`);
         await queryRunner.query(`CREATE INDEX "IDX_be3c9f1acbe21e0070039b5cf7" ON "art_city"."user_task" ("taskId") `);
@@ -45,11 +45,13 @@ export class Init1716746339082 implements MigrationInterface {
         await queryRunner.query(`CREATE INDEX "IDX_f6567e22a0157abd94a877140f" ON "art_city"."user_customer" ("customerId") `);
         await queryRunner.query(`ALTER TABLE "art_city"."leave" ADD CONSTRAINT "FK_9fb20081bf48840a16e0d33d14e" FOREIGN KEY ("userId") REFERENCES "art_city"."user"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "art_city"."leave" ADD CONSTRAINT "FK_34e0276fce1403a75ac8662e132" FOREIGN KEY ("reviewerId") REFERENCES "art_city"."user"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "art_city"."payroll" ADD CONSTRAINT "FK_542f3c5e009e4502f7c308f33c7" FOREIGN KEY ("userId") REFERENCES "art_city"."user"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "art_city"."payroll" ADD CONSTRAINT "FK_542f3c5e009e4502f7c308f33c7" FOREIGN KEY ("userId") REFERENCES "art_city"."user"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "art_city"."task" ADD CONSTRAINT "FK_3797a20ef5553ae87af126bc2fe" FOREIGN KEY ("projectId") REFERENCES "art_city"."project"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "art_city"."project" ADD CONSTRAINT "FK_9884b2ee80eb70b7db4f12e8aed" FOREIGN KEY ("ownerId") REFERENCES "art_city"."user"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "art_city"."reimburse" ADD CONSTRAINT "FK_8b224c1be1ba2c8c51dd3022ccb" FOREIGN KEY ("userId") REFERENCES "art_city"."user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "art_city"."schedule" ADD CONSTRAINT "FK_d796103491cf0bae197dda59477" FOREIGN KEY ("userId") REFERENCES "art_city"."user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "art_city"."reimburse" ADD CONSTRAINT "FK_8b224c1be1ba2c8c51dd3022ccb" FOREIGN KEY ("userId") REFERENCES "art_city"."user"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "art_city"."schedule" ADD CONSTRAINT "FK_d796103491cf0bae197dda59477" FOREIGN KEY ("userId") REFERENCES "art_city"."user"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "art_city"."shift_application" ADD CONSTRAINT "FK_ff56ef4db03f3995d1e708461e7" FOREIGN KEY ("userId") REFERENCES "art_city"."user"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "art_city"."shift_application" ADD CONSTRAINT "FK_cf04167a80324a279324f463f2a" FOREIGN KEY ("reviewerId") REFERENCES "art_city"."user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "art_city"."user_detail" ADD CONSTRAINT "FK_455dfebe9344ffecf1c8e8e054d" FOREIGN KEY ("userId") REFERENCES "art_city"."user"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "art_city"."attendance" ADD CONSTRAINT "FK_466e85b813d871bfb693f443528" FOREIGN KEY ("userId") REFERENCES "art_city"."user"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "art_city"."external_project" ADD CONSTRAINT "FK_d9d5c67bbc0e22f4c2e54e1e316" FOREIGN KEY ("externalPartyId") REFERENCES "art_city"."external_party"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
@@ -58,12 +60,10 @@ export class Init1716746339082 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "art_city"."external_party" ADD CONSTRAINT "FK_87d90ba689d02da8a990f022078" FOREIGN KEY ("purchasesId") REFERENCES "art_city"."purchase"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "art_city"."external_party" ADD CONSTRAINT "FK_49b5727a92ecd37b16572c4d483" FOREIGN KEY ("externalProjectsId") REFERENCES "art_city"."external_project"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "art_city"."external_party" ADD CONSTRAINT "FK_3d6ef231e90971831520aadf220" FOREIGN KEY ("ordersId") REFERENCES "art_city"."order"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "art_city"."shift_application" ADD CONSTRAINT "FK_ff56ef4db03f3995d1e708461e7" FOREIGN KEY ("userId") REFERENCES "art_city"."user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "art_city"."shift_application" ADD CONSTRAINT "FK_cf04167a80324a279324f463f2a" FOREIGN KEY ("reviewerId") REFERENCES "art_city"."user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "art_city"."user_task" ADD CONSTRAINT "FK_be3c9f1acbe21e0070039b5cf79" FOREIGN KEY ("taskId") REFERENCES "art_city"."task"("id") ON DELETE SET NULL ON UPDATE CASCADE`);
         await queryRunner.query(`ALTER TABLE "art_city"."user_task" ADD CONSTRAINT "FK_4df8c371c74decf9ef093358dad" FOREIGN KEY ("userId") REFERENCES "art_city"."user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "art_city"."user_customer" ADD CONSTRAINT "FK_fa9f2a5f04713f2429fde2d930d" FOREIGN KEY ("userId") REFERENCES "art_city"."user"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
-        await queryRunner.query(`ALTER TABLE "art_city"."user_customer" ADD CONSTRAINT "FK_f6567e22a0157abd94a877140f6" FOREIGN KEY ("customerId") REFERENCES "art_city"."customer"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "art_city"."user_customer" ADD CONSTRAINT "FK_f6567e22a0157abd94a877140f6" FOREIGN KEY ("customerId") REFERENCES "art_city"."customer"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
@@ -71,8 +71,6 @@ export class Init1716746339082 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "art_city"."user_customer" DROP CONSTRAINT "FK_fa9f2a5f04713f2429fde2d930d"`);
         await queryRunner.query(`ALTER TABLE "art_city"."user_task" DROP CONSTRAINT "FK_4df8c371c74decf9ef093358dad"`);
         await queryRunner.query(`ALTER TABLE "art_city"."user_task" DROP CONSTRAINT "FK_be3c9f1acbe21e0070039b5cf79"`);
-        await queryRunner.query(`ALTER TABLE "art_city"."shift_application" DROP CONSTRAINT "FK_cf04167a80324a279324f463f2a"`);
-        await queryRunner.query(`ALTER TABLE "art_city"."shift_application" DROP CONSTRAINT "FK_ff56ef4db03f3995d1e708461e7"`);
         await queryRunner.query(`ALTER TABLE "art_city"."external_party" DROP CONSTRAINT "FK_3d6ef231e90971831520aadf220"`);
         await queryRunner.query(`ALTER TABLE "art_city"."external_party" DROP CONSTRAINT "FK_49b5727a92ecd37b16572c4d483"`);
         await queryRunner.query(`ALTER TABLE "art_city"."external_party" DROP CONSTRAINT "FK_87d90ba689d02da8a990f022078"`);
@@ -81,6 +79,8 @@ export class Init1716746339082 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "art_city"."external_project" DROP CONSTRAINT "FK_d9d5c67bbc0e22f4c2e54e1e316"`);
         await queryRunner.query(`ALTER TABLE "art_city"."attendance" DROP CONSTRAINT "FK_466e85b813d871bfb693f443528"`);
         await queryRunner.query(`ALTER TABLE "art_city"."user_detail" DROP CONSTRAINT "FK_455dfebe9344ffecf1c8e8e054d"`);
+        await queryRunner.query(`ALTER TABLE "art_city"."shift_application" DROP CONSTRAINT "FK_cf04167a80324a279324f463f2a"`);
+        await queryRunner.query(`ALTER TABLE "art_city"."shift_application" DROP CONSTRAINT "FK_ff56ef4db03f3995d1e708461e7"`);
         await queryRunner.query(`ALTER TABLE "art_city"."schedule" DROP CONSTRAINT "FK_d796103491cf0bae197dda59477"`);
         await queryRunner.query(`ALTER TABLE "art_city"."reimburse" DROP CONSTRAINT "FK_8b224c1be1ba2c8c51dd3022ccb"`);
         await queryRunner.query(`ALTER TABLE "art_city"."project" DROP CONSTRAINT "FK_9884b2ee80eb70b7db4f12e8aed"`);
@@ -95,8 +95,6 @@ export class Init1716746339082 implements MigrationInterface {
         await queryRunner.query(`DROP INDEX "art_city"."IDX_be3c9f1acbe21e0070039b5cf7"`);
         await queryRunner.query(`DROP TABLE "art_city"."user_task"`);
         await queryRunner.query(`DROP TABLE "art_city"."system"`);
-        await queryRunner.query(`DROP TABLE "art_city"."shift_application"`);
-        await queryRunner.query(`DROP TYPE "art_city"."shift_application_status_enum"`);
         await queryRunner.query(`DROP TABLE "art_city"."external_party"`);
         await queryRunner.query(`DROP TYPE "art_city"."external_party_type_enum"`);
         await queryRunner.query(`DROP TABLE "art_city"."purchase"`);
@@ -110,6 +108,8 @@ export class Init1716746339082 implements MigrationInterface {
         await queryRunner.query(`DROP TYPE "art_city"."user_department_enum"`);
         await queryRunner.query(`DROP TYPE "art_city"."user_role_enum"`);
         await queryRunner.query(`DROP TABLE "art_city"."user_detail"`);
+        await queryRunner.query(`DROP TABLE "art_city"."shift_application"`);
+        await queryRunner.query(`DROP TYPE "art_city"."shift_application_status_enum"`);
         await queryRunner.query(`DROP TABLE "art_city"."schedule"`);
         await queryRunner.query(`DROP TABLE "art_city"."reimburse"`);
         await queryRunner.query(`DROP TYPE "art_city"."reimburse_status_enum"`);

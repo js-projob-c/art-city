@@ -30,7 +30,7 @@ export class CustomerEntity extends BaseEntity implements ICustomer {
   type: CustomerType;
 
   @ManyToMany(() => UserEntity, (user) => user.customers, {
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
   })
   users: UserEntity[];
 }

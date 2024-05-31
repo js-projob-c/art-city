@@ -19,7 +19,9 @@ export class ReimburseEntity extends BaseEntity implements IReimburse {
 
   userId: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.reimburses)
+  @ManyToOne(() => UserEntity, (user) => user.reimburses, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'userId' })
   user: UserEntity;
 

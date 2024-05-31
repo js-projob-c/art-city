@@ -19,7 +19,9 @@ export class PayrollEntity extends BaseEntity implements IPayroll {
 
   userId: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.payrolls, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserEntity, (user) => user.payrolls, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'userId' })
   user: UserEntity;
 

@@ -22,7 +22,9 @@ export class ShiftApplicationEntity
 
   userId: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.shiftApplications)
+  @ManyToOne(() => UserEntity, (user) => user.shiftApplications, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: UserEntity;
 
