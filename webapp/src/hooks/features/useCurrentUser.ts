@@ -1,3 +1,4 @@
+import { IJwtPayload } from "@art-city/common/types";
 import Cookies from "js-cookie";
 
 import { ACCESS_TOKEN_KEY } from "@/common/constants/variables";
@@ -7,7 +8,7 @@ import { TokenUtil } from "@/common/utils/token";
 const useCurrentUser = () => {
   const encryptedToken = Cookies.get(ACCESS_TOKEN_KEY);
   const token = EncryptionUtil.decrypt(encryptedToken ?? "");
-  const details = TokenUtil.getTokenDetails(token ?? "");
+  const details = TokenUtil.getTokenDetails<IJwtPayload>(token ?? "");
   return details ?? null;
 };
 

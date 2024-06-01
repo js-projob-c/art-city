@@ -4,7 +4,9 @@ import { ACCESS_TOKEN_KEY } from "../constants/variables";
 import { EncryptionUtil } from "./encryption";
 
 export class TokenUtil {
-  static getTokenDetails(token: string) {
+  static getTokenDetails<TokenDetails>(
+    token: string
+  ): TokenDetails | undefined {
     // const token = TokenUtil.getToken();
     if (!token) return undefined;
     const details: any = jwtDecode(token);
