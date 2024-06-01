@@ -1,5 +1,6 @@
 "use client";
 
+import { UserRole } from "@art-city/common/enums";
 import {
   AppShell,
   Avatar,
@@ -14,11 +15,15 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import NextImage from "next/image";
-import React, { ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { ReactNode, useCallback, useEffect } from "react";
 
 import { IMAGES } from "@/common/assets";
 import DashboardSideBar from "@/components/DashboardSideNavbar";
-import { dashboardSideNavbarConfig } from "@/configs/dashboardSideNavbar";
+import {
+  dashboardSideNavbarConfig,
+  SideNavbarConfigType,
+} from "@/configs/dashboardSideNavbar";
 import useCurrentUser from "@/hooks/features/useCurrentUser";
 
 import styles from "./DashboardLayout.module.scss";
@@ -28,10 +33,59 @@ interface IProps {
   children: ReactNode;
 }
 
+function findNested(
+  config: SideNavbarConfigType,
+  pathname: string
+): SideNavbarConfigType | null {
+  if (config.href === pathname) {
+    return config;
+  }
+
+  if (config.children) {
+    for (let i = 0; i < (config.children || []).length; i++) {
+      const result = findNested(config.children[i], pathname);
+      if (result) {
+        return result;
+      }
+    }
+  }
+
+  return null;
+}
+
 const DashboardLayout: React.FC<IProps> = ({ children, pathname }: IProps) => {
+  const path = usePathname();
+  const router = useRouter();
   const user = useCurrentUser();
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+
+  const validateRoleAndRedirect = useCallback(
+    (userRole: UserRole, config: SideNavbarConfigType) => {
+      const matchPath = findNested(config, path);
+      const isRoleValid = !config.roles || config.roles.includes(userRole);
+
+      if (matchPath && !isRoleValid) {
+        router.replace("/dashboard");
+        return;
+      }
+
+      if (config.children) {
+        config.children.forEach((child) => {
+          validateRoleAndRedirect(userRole, child);
+        });
+      }
+    },
+    [path, router]
+  );
+
+  useEffect(() => {
+    if (user?.role && path) {
+      dashboardSideNavbarConfig.forEach((config) => {
+        validateRoleAndRedirect(user.role, config);
+      });
+    }
+  }, [validateRoleAndRedirect, path, user?.role]);
 
   return (
     <div>

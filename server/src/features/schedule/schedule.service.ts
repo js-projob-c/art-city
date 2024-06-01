@@ -75,6 +75,7 @@ export class ScheduleService {
       relations: {
         user: true,
       },
+      order: { date: 'DESC' },
     });
   }
 }

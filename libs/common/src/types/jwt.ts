@@ -1,6 +1,8 @@
+import { UserRole } from '../enums';
+
 export interface IJwtCustomPayload {
   email: string;
-  role: string;
+  role: UserRole;
   department: string;
 }
 

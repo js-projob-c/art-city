@@ -15,7 +15,12 @@ export const dashboardSideNavbarConfig: SideNavbarConfigType[] = [
   {
     href: "",
     label: "員工管理",
+    roles: [UserRole.EMPLOYEE],
     children: [
+      {
+        href: "/dashboard/calendar",
+        label: "月曆",
+      },
       {
         href: "/dashboard/signing",
         label: "簽到/簽出",

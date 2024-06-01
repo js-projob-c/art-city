@@ -1,8 +1,5 @@
 import { jwtDecode } from "jwt-decode";
 
-import { ACCESS_TOKEN_KEY } from "../constants/variables";
-import { EncryptionUtil } from "./encryption";
-
 export class TokenUtil {
   static getTokenDetails<TokenDetails>(
     token: string

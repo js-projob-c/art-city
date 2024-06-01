@@ -7,6 +7,7 @@ import React from "react";
 
 import { SideNavbarConfigType } from "@/configs/dashboardSideNavbar";
 import { logout } from "@/hooks/features/auth/useLogin";
+import useCurrentUser from "@/hooks/features/useCurrentUser";
 
 import styles from "./DashboardSideNavbar.module.scss";
 
@@ -23,12 +24,17 @@ const DashboardSideNavbar: React.FC<IProps> = ({
 }) => {
   const router = useRouter();
 
+  const user = useCurrentUser();
+
   const renderNavLinks: any = (items: SideNavbarConfigType[]) => {
     return items.map((item, i) => {
       const isParent = !!(item.children && item.children?.length > 0);
       // const isExpanded = isParent
       //   ? item?.children?.some((child) => child.href === currentPathname)
       //   : false;
+
+      if (!user?.role || (item.roles && !item.roles.includes(user.role)))
+        return null;
 
       return (
         <NavLink

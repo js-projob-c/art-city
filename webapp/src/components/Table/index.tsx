@@ -1,7 +1,7 @@
 import { DATETIME_FORMAT } from "@art-city/common/constants/datetime";
 import { REGEX } from "@art-city/common/constants/regex";
 import { DatetimeUtil } from "@art-city/common/utils/datetime.util";
-import { Table as MantineTable } from "@mantine/core";
+import { Pagination, Table as MantineTable } from "@mantine/core";
 import React, { useCallback } from "react";
 
 import { TableValueBuilder } from "./TableValueBuilder";
@@ -14,11 +14,18 @@ export interface ITableConfig {
   transform?: (value: any, item: Record<string, any>) => any;
 }
 
+interface IPagination {
+  activePage: number;
+  totalPage: number;
+  onPageChange: (page: number) => void;
+}
+
 interface IProps {
   emptyText?: string;
   defaultDateTimeFormat?: string;
   data: Record<string, any>[];
   configs: ITableConfig[];
+  pagination?: IPagination;
 }
 
 const Table = ({
@@ -26,6 +33,7 @@ const Table = ({
   configs,
   emptyText = "-",
   defaultDateTimeFormat = DATETIME_FORMAT.DATETIME,
+  pagination,
 }: IProps) => {
   const formatDateTime = useCallback(
     (value: string) => {
@@ -64,34 +72,44 @@ const Table = ({
   return (
     <>
       {configs && data && (
-        <MantineTable>
-          <MantineTable.Thead>
-            <MantineTable.Tr>
-              {configs.map((config: any, i: number) => {
+        <>
+          <MantineTable>
+            <MantineTable.Thead>
+              <MantineTable.Tr>
+                {configs.map((config: any, i: number) => {
+                  return (
+                    <MantineTable.Th key={config.name + i}>
+                      {config.label ?? config.name}
+                    </MantineTable.Th>
+                  );
+                })}
+              </MantineTable.Tr>
+            </MantineTable.Thead>
+            <MantineTable.Tbody>
+              {data.map((item: any, i: number) => {
                 return (
-                  <MantineTable.Th key={config.name + i}>
-                    {config.label ?? config.name}
-                  </MantineTable.Th>
+                  <MantineTable.Tr key={i + item?.id}>
+                    {configs.map((config: any, index: number) => {
+                      return (
+                        <MantineTable.Td key={config.name + index}>
+                          {renderElement(item, config)}
+                        </MantineTable.Td>
+                      );
+                    })}
+                  </MantineTable.Tr>
                 );
               })}
-            </MantineTable.Tr>
-          </MantineTable.Thead>
-          <MantineTable.Tbody>
-            {data.map((item: any, i: number) => {
-              return (
-                <MantineTable.Tr key={i + item?.id}>
-                  {configs.map((config: any, index: number) => {
-                    return (
-                      <MantineTable.Td key={config.name + index}>
-                        {renderElement(item, config)}
-                      </MantineTable.Td>
-                    );
-                  })}
-                </MantineTable.Tr>
-              );
-            })}
-          </MantineTable.Tbody>
-        </MantineTable>
+            </MantineTable.Tbody>
+          </MantineTable>
+          {pagination && (
+            <Pagination
+              total={pagination.totalPage}
+              value={pagination.activePage}
+              onChange={pagination.onPageChange}
+              mt="sm"
+            />
+          )}
+        </>
       )}
     </>
   );
