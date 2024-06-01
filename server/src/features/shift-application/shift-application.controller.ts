@@ -73,6 +73,12 @@ export class ShiftApplicationController {
     );
   }
 
+  @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
+  @Get('user/date-options')
+  async getUserSscheduleOptions(@User() user: UserEntity) {
+    return await this.shiftApplicationService.getDateOptions(user.id);
+  }
+
   @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
   @Get()
   async getShiftApplications(@Query('userId') userId: string) {

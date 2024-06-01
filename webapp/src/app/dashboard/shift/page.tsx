@@ -20,11 +20,11 @@ import toast from "react-hot-toast";
 
 import { toastErrorCode } from "@/common/utils/toast";
 import Table, { ITableConfig } from "@/components/Table";
-import { useUserSchedules } from "@/hooks/features/schedules/useUserSchedules";
 import {
   createShiftApplicationResolver,
   useCreateShiftApplication,
 } from "@/hooks/features/shift-applications/useCreateShiftApplication";
+import { useShiftApplicationDateOptions } from "@/hooks/features/shift-applications/useShiftApplicationDateOptions";
 import { useUserShiftApplications } from "@/hooks/features/shift-applications/useUserShiftApplications";
 
 import styles from "./page.module.scss";
@@ -46,7 +46,7 @@ const configs: ITableConfig[] = [
   },
   {
     name: "updatedAt",
-    label: "更新日時",
+    label: "更新日期",
   },
 ];
 
@@ -63,12 +63,12 @@ const ShiftPage: React.FC<IProps> = () => {
 
   const { mutateAsync, isPending } = useCreateShiftApplication();
 
-  const { data: schedules } = useUserSchedules();
+  const { data: options } = useShiftApplicationDateOptions();
   const { data: shiftApplications, refetch: refetchShiftApplications } =
     useUserShiftApplications();
 
   const schedulesOptions = useMemo(() => {
-    return schedules
+    return options
       ?.filter((schedule) => {
         return DatetimeUtil.moment(schedule.date).isAfter(
           DatetimeUtil.moment()
@@ -78,7 +78,7 @@ const ShiftPage: React.FC<IProps> = () => {
         value: schedule.date,
         label: schedule.date,
       }));
-  }, [schedules]);
+  }, [options]);
 
   const onApplyShift = async (data: CreateShiftApplicationRequestDto) => {
     await mutateAsync(
@@ -115,6 +115,7 @@ const ShiftPage: React.FC<IProps> = () => {
               fieldState: { error },
             }) => (
               <Select
+                searchable
                 required
                 label="選擇日期"
                 data={schedulesOptions}

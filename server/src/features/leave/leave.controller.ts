@@ -12,11 +12,11 @@ import {
 import { User } from 'src/common/decorators';
 import { UserEntity } from 'src/database/entities';
 
+import { ApproveLeaveRequestDto } from '../../../../libs/common/src/dto/leave/approveLeaveRequest.dto';
+import { CreateLeaveRequestDto } from '../../../../libs/common/src/dto/leave/createLeaveRequest.dto';
+import { UpdateLeaveRequestDto } from '../../../../libs/common/src/dto/leave/updateLeaveRequest.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserService } from '../user/user.service';
-import { ApproveLeaveRequestDto } from './dto/approveLeaveRequest.dto';
-import { CreateLeaveRequestDto } from './dto/createLeaveRequest.dto';
-import { UpdateLeaveRequestDto } from './dto/updateLeaveRequest.dto';
 import { LeaveService } from './leave.service';
 
 @Controller('leave')
@@ -60,6 +60,7 @@ export class LeaveController {
     await this.leaveService.updateLeave(leaveId, payload);
   }
 
+  @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
   @Get('user')
   async getUserLeaves(
     @User() user: UserEntity,
@@ -67,7 +68,7 @@ export class LeaveController {
     @Query('month') month: string,
   ) {
     await this.userService.validateAndGetUser(user.id);
-    await this.leaveService.getLeavesByUserId(
+    return await this.leaveService.getLeavesByUserId(
       user.id,
       parseInt(year),
       parseInt(month),

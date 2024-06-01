@@ -2,7 +2,9 @@ import { DATETIME_FORMAT, TIMEZONE } from '@art-city/common/constants';
 import { UserDepartment, UserRole } from '@art-city/common/enums';
 import { DatetimeUtil } from '@art-city/common/utils/datetime.util';
 import { Injectable, Logger } from '@nestjs/common';
+import { UserEntity } from 'src/database/entities';
 import {
+  ScheduleRepository,
   SystemRepository,
   UserDetailRepository,
   UserRepository,
@@ -19,6 +21,7 @@ export class SeederService {
     private readonly userRepo: UserRepository,
     private readonly userDetailRepo: UserDetailRepository,
     private readonly systemRepo: SystemRepository,
+    private readonly scheduleRepo: ScheduleRepository,
   ) {}
 
   async resetTables() {
@@ -43,15 +46,46 @@ export class SeederService {
       UserRole.MANAGER,
       UserDepartment.SALES,
     );
-    await this.createUser(
+    const employee = await this.createUser(
       'fb160d84-962f-443e-b3d6-76c1ba353df2',
       'employee@gmail.com',
       'Pa33word',
       UserRole.EMPLOYEE,
       UserDepartment.CS,
     );
+    if (employee?.id) {
+      await this.createSchedules(employee.id);
+    }
     await this.createSystem();
     this.logger.log('Tables seeded');
+  }
+
+  async createSchedules(userId: string) {
+    const startDate = DatetimeUtil.moment('2024-01-01', {
+      timezone: TIMEZONE.HK,
+      format: DATETIME_FORMAT.DATE,
+    });
+    while (
+      startDate.isBefore(
+        DatetimeUtil.moment(undefined, { timezone: TIMEZONE.HK }).endOf('year'),
+      )
+    ) {
+      const exist = await this.scheduleRepo.findOne({
+        where: {
+          user: { id: userId },
+          date: startDate.format(DATETIME_FORMAT.DATE),
+        },
+      });
+      if (!exist && startDate.day() !== 0 && startDate.day() !== 6) {
+        await this.scheduleRepo.save(
+          this.scheduleRepo.create({
+            user: { id: userId },
+            date: startDate.format(DATETIME_FORMAT.DATE),
+          }),
+        );
+      }
+      startDate.add(1, 'days');
+    }
   }
 
   async createUser(
@@ -60,11 +94,11 @@ export class SeederService {
     password: string,
     role: UserRole,
     department: UserDepartment,
-  ) {
+  ): Promise<UserEntity | undefined> {
     const hashedPassword = await this.authService.hashPassword(password);
     const existed = await this.userRepo.findOne({ where: { email } });
     if (existed) return;
-    await this.userRepo.save(
+    const user = await this.userRepo.save(
       this.userRepo.create({
         id,
         email: email,
@@ -75,6 +109,7 @@ export class SeederService {
         department,
       }),
     );
+    return user;
   }
 
   async createSystem() {

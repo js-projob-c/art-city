@@ -2,7 +2,7 @@ import { DATETIME_FORMAT } from "@art-city/common/constants/datetime";
 import { REGEX } from "@art-city/common/constants/regex";
 import { DatetimeUtil } from "@art-city/common/utils/datetime.util";
 import { Table as MantineTable } from "@mantine/core";
-import React, { ReactNode, useCallback } from "react";
+import React, { useCallback } from "react";
 
 import { TableValueBuilder } from "./TableValueBuilder";
 
@@ -10,14 +10,14 @@ export interface ITableConfig {
   name: string;
   label?: string;
   isCustom?: boolean;
-  renderCustomElement?: (value: any, item: any) => JSX.Element;
-  transform?: (value: any) => any;
+  renderCustomElement?: (value: any, item: Record<string, any>) => JSX.Element;
+  transform?: (value: any, item: Record<string, any>) => any;
 }
 
 interface IProps {
   emptyText?: string;
   defaultDateTimeFormat?: string;
-  data: any[];
+  data: Record<string, any>[];
   configs: ITableConfig[];
 }
 
@@ -29,7 +29,7 @@ const Table = ({
 }: IProps) => {
   const formatDateTime = useCallback(
     (value: string) => {
-      if (value?.match(REGEX.DATETIME_ISO)) {
+      if (typeof value === "string" && value?.match(REGEX.DATETIME_ISO)) {
         return DatetimeUtil.moment(value).format(defaultDateTimeFormat);
       }
       return value;
@@ -38,8 +38,8 @@ const Table = ({
   );
 
   const formatValue = useCallback(
-    (value: any, transform?: (value: any) => any) => {
-      return new TableValueBuilder(value)
+    (value: any, item: any, transform?: (value: any) => any) => {
+      return new TableValueBuilder(value, item)
         .transform(formatDateTime)
         .transform(transform)
         .build();
@@ -56,7 +56,7 @@ const Table = ({
       if (config.isCustom)
         return config.renderCustomElement(item[config.name], item);
       const value = getNestedProperty(item, config.name);
-      return value ? formatValue(value, config.transform) : emptyText;
+      return value ? formatValue(value, item, config.transform) : emptyText;
     },
     [emptyText, formatValue]
   );

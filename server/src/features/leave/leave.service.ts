@@ -79,6 +79,7 @@ export class LeaveService {
     year: number = DatetimeUtil.moment().get('year'),
     month: number = DatetimeUtil.moment().get('month'),
   ) {
+    const filterDate = !!year && !!month;
     const fromDate = DatetimeUtil.moment()
       .set('year', year)
       .set('month', month)
@@ -95,9 +96,12 @@ export class LeaveService {
         user: {
           id: userId,
         },
-        from: MoreThanOrEqual(fromDate),
-        to: LessThanOrEqual(toDate),
+        ...(filterDate && { from: MoreThanOrEqual(fromDate) }),
+        ...(filterDate && { to: LessThanOrEqual(toDate) }),
       } as any,
+      order: {
+        createdAt: 'DESC',
+      },
     });
   }
 

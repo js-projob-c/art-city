@@ -11,6 +11,7 @@ import { ScheduleEntity, ShiftApplicationEntity } from 'src/database/entities';
 import {
   ScheduleRepository,
   ShiftApplicationRepository,
+  UserRepository,
 } from 'src/database/repositories';
 import { EntityManager, In } from 'typeorm';
 
@@ -19,6 +20,7 @@ export class ShiftApplicationService {
   constructor(
     private readonly shiftApplicationRepository: ShiftApplicationRepository,
     private readonly scheduleRepository: ScheduleRepository,
+    private readonly userRepository: UserRepository,
     private readonly entityManager: EntityManager,
   ) {}
 
@@ -261,6 +263,15 @@ export class ShiftApplicationService {
     await this.validateAndGetShiftApplication(applicationId);
     return await this.shiftApplicationRepository.softDelete({
       id: applicationId,
+    });
+  }
+
+  async getDateOptions(userId: string) {
+    return await this.scheduleRepository.find({
+      where: { user: { id: userId } },
+      relations: {
+        user: true,
+      },
     });
   }
 }

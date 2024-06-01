@@ -19,18 +19,23 @@ interface IProps {}
 const configs: ITableConfig[] = [
   {
     name: "signInAt",
+    label: "簽到時間",
   },
   {
     name: "signOutAt",
+    label: "簽出時間",
   },
   {
     name: "status",
+    label: "狀態",
   },
   {
     name: "supportDocument",
+    label: "支援文件",
   },
   {
     name: "remarks",
+    label: "備註",
   },
 ];
 
@@ -45,12 +50,12 @@ const SigningPage: React.FC<IProps> = () => {
       {
         async onSuccess(data) {
           console.log("data", data);
-          toast.success("success");
+          toast.success("成功");
           await refetch();
         },
         onError(error) {
           console.error(error);
-          toast.error("failed");
+          toast.error("失敗");
         },
       }
     );

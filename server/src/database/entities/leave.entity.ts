@@ -36,7 +36,7 @@ export class LeaveEntity extends BaseEntity implements ILeave {
   @Column({ enum: LeaveDayType })
   toDayType: LeaveDayType;
 
-  @Column({ type: 'int2' })
+  @Column({ type: 'float', default: 0 })
   days: number;
 
   @Column({ type: 'enum', enum: LeaveStatus })

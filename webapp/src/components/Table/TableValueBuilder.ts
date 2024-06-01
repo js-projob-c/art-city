@@ -1,17 +1,22 @@
 export class TableValueBuilder {
-  private value;
+  private output: any;
 
-  constructor(protected readonly _value: any) {
-    this.value = _value;
+  constructor(
+    protected readonly value: any,
+    protected readonly obj: Record<string, any>
+  ) {
+    this.output = value;
   }
 
   public build() {
-    return this.value;
+    return this.output;
   }
 
-  public transform(transformer?: (value: any) => any): TableValueBuilder {
+  public transform(
+    transformer?: (value: any, obj: Record<string, any>) => any
+  ): TableValueBuilder {
     if (!transformer) return this;
-    this.value = transformer(this.value);
+    this.output = transformer(this.value, this.obj);
     return this;
   }
 }
