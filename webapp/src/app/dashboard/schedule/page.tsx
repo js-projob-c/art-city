@@ -5,7 +5,7 @@ import FullCalendar from "@fullcalendar/react";
 import React, { useMemo } from "react";
 
 import Table, { ITableConfig } from "@/components/Table";
-import { useUserSchedules } from "@/hooks/features/schedules/useUserSchedules";
+import { useSchedules } from "@/hooks/features/schedules/useSchedules";
 
 import styles from "./page.module.scss";
 
@@ -19,7 +19,7 @@ const configs: ITableConfig[] = [
 ];
 
 const SchedulerPage: React.FC<IProps> = () => {
-  const { data: scheduleData = [] } = useUserSchedules();
+  const { data: scheduleData = [] } = useSchedules();
 
   const calendarEvents = useMemo(() => {
     const events: EventSourceInput = scheduleData.map((schedule) => ({

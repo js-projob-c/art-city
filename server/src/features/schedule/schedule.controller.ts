@@ -1,4 +1,5 @@
 import { UserRole } from '@art-city/common/enums';
+import { UserUtil } from '@art-city/common/utils/user.util';
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { User } from 'src/common/decorators';
 import { UserEntity } from 'src/database/entities';
@@ -25,15 +26,19 @@ export class ScheduleController {
     );
   }
 
-  @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
-  @Get('user')
-  async getUserSchedules(@User() user: UserEntity) {
-    return await this.scheduleService.getSchedules(user.id);
-  }
+  // @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
+  // @Get('user')
+  // async getUserSchedules(@User() user: UserEntity) {
+  //   return await this.scheduleService.getSchedules(user.id);
+  // }
 
-  @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
+  @UseGuards(new JwtAuthGuard())
   @Get()
-  async getSchedules(@Query('userId') userId: string) {
-    return await this.scheduleService.getSchedules(userId);
+  async getSchedules(
+    @User() user: UserEntity,
+    @Query('userId') userId: string,
+  ) {
+    const targetUserId = UserUtil.checkRoleAndOverrideUserId(user, userId);
+    return await this.scheduleService.getSchedules(targetUserId);
   }
 }

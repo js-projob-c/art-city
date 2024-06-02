@@ -3,6 +3,7 @@ import "../globals.scss";
 import { ColorSchemeScript } from "@mantine/core";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Head from "next/head";
 
 import Providers from "@/contexts";
 import LayoutWrapper from "@/layouts/LayoutWrapper";
@@ -21,9 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
+      <Head>
         <ColorSchemeScript />
-      </head>
+      </Head>
       <body className={inter.className}>
         <Providers>
           <LayoutWrapper>{children}</LayoutWrapper>

@@ -4,13 +4,21 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import FullCalendar from "@fullcalendar/react";
 import React, { useMemo } from "react";
 
+import Table, { ITableConfig } from "@/components/Table";
 import { useSchedules } from "@/hooks/features/schedules/useSchedules";
 
 import styles from "./page.module.scss";
 
 interface IProps {}
 
-const SchedulerPage: React.FC<IProps> = () => {
+const configs: ITableConfig[] = [
+  {
+    name: "date",
+    label: "日期",
+  },
+];
+
+const ProjectPage: React.FC<IProps> = () => {
   const { data: scheduleData = [] } = useSchedules();
 
   const calendarEvents = useMemo(() => {
@@ -24,13 +32,9 @@ const SchedulerPage: React.FC<IProps> = () => {
 
   return (
     <div className={styles.root}>
-      <FullCalendar
-        plugins={[dayGridPlugin]}
-        initialView="dayGridMonth"
-        events={calendarEvents}
-      />
+      <Table data={scheduleData} configs={configs} />
     </div>
   );
 };
 
-export default SchedulerPage;
+export default ProjectPage;

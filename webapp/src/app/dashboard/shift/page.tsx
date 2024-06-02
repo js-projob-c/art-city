@@ -25,7 +25,7 @@ import {
   useCreateShiftApplication,
 } from "@/hooks/features/shift-applications/useCreateShiftApplication";
 import { useShiftApplicationDateOptions } from "@/hooks/features/shift-applications/useShiftApplicationDateOptions";
-import { useUserShiftApplications } from "@/hooks/features/shift-applications/useUserShiftApplications";
+import { useShiftApplications } from "@/hooks/features/shift-applications/useShiftApplications";
 
 import styles from "./page.module.scss";
 
@@ -65,7 +65,7 @@ const ShiftPage: React.FC<IProps> = () => {
 
   const { data: options } = useShiftApplicationDateOptions();
   const { data: shiftApplications, refetch: refetchShiftApplications } =
-    useUserShiftApplications();
+    useShiftApplications();
 
   const schedulesOptions = useMemo(() => {
     return options

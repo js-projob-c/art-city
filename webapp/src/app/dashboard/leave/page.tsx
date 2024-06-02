@@ -2,13 +2,10 @@
 
 import { DATETIME_FORMAT, TIMEZONE } from "@art-city/common/constants";
 import { CreateLeaveRequestDto } from "@art-city/common/dto/leave/createLeaveRequest.dto";
-import { CreateShiftApplicationRequestDto } from "@art-city/common/dto/shift-application/create-shift-application-request.dto";
 import { LeaveDayType, LeaveType } from "@art-city/common/enums";
 import { DatetimeUtil } from "@art-city/common/utils/datetime.util";
-import { render } from "@fullcalendar/core/preact.js";
 import {
   Button,
-  ButtonGroup,
   Flex,
   InputError,
   InputLabel,
@@ -29,7 +26,7 @@ import {
   createLeaveRequestResolver,
   useApplyLeave,
 } from "@/hooks/features/leave/useApplyLeave";
-import { useUserLeaves } from "@/hooks/features/leave/useUserLeaves";
+import { useLeaves } from "@/hooks/features/leave/useLeaves";
 
 import styles from "./page.module.scss";
 
@@ -109,7 +106,7 @@ const LeavePage: React.FC<IProps> = () => {
   });
 
   const { mutateAsync, isPending } = useApplyLeave();
-  const { data: leaves, refetch: refetchLeaves } = useUserLeaves({
+  const { data: leaves, refetch: refetchLeaves } = useLeaves({
     query: {
       // year: DatetimeUtil.moment(undefined, { timezone: TIMEZONE.HK }).year(),
       // month:

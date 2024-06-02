@@ -1,4 +1,5 @@
 import { ShiftApplicationStatus, UserRole } from '@art-city/common/enums';
+import { UserUtil } from '@art-city/common/utils/user.util';
 import {
   Body,
   Controller,
@@ -65,13 +66,13 @@ export class ShiftApplicationController {
     );
   }
 
-  @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
-  @Get('user')
-  async getUserShiftApplications(@User() user: UserEntity) {
-    return await this.shiftApplicationService.getShiftApplicationsByUserId(
-      user.id,
-    );
-  }
+  // @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
+  // @Get('user')
+  // async getUserShiftApplications(@User() user: UserEntity) {
+  //   return await this.shiftApplicationService.getShiftApplicationsByUserId(
+  //     user.id,
+  //   );
+  // }
 
   @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
   @Get('user/date-options')
@@ -79,11 +80,15 @@ export class ShiftApplicationController {
     return await this.shiftApplicationService.getDateOptions(user.id);
   }
 
-  @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
+  @UseGuards(new JwtAuthGuard())
   @Get()
-  async getShiftApplications(@Query('userId') userId: string) {
+  async getShiftApplications(
+    @User() user: UserEntity,
+    @Query('userId') userId: string,
+  ) {
+    const targetUserId = UserUtil.checkRoleAndOverrideUserId(user, userId);
     return await this.shiftApplicationService.getShiftApplications({
-      ...(userId && { user: { id: userId } as UserEntity }),
+      ...(userId && { user: { id: targetUserId } as UserEntity }),
     });
   }
 

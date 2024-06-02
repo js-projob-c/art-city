@@ -1,4 +1,5 @@
 import { LeaveStatus, UserRole } from '@art-city/common/enums';
+import { UserUtil } from '@art-city/common/utils/user.util';
 import {
   Body,
   Controller,
@@ -60,30 +61,33 @@ export class LeaveController {
     await this.leaveService.updateLeave(leaveId, payload);
   }
 
-  @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
-  @Get('user')
-  async getUserLeaves(
-    @User() user: UserEntity,
-    @Query('year') year: string,
-    @Query('month') month: string,
-  ) {
-    await this.userService.validateAndGetUser(user.id);
-    return await this.leaveService.getLeavesByUserId(
-      user.id,
-      parseInt(year),
-      parseInt(month),
-    );
-  }
+  // @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
+  // @Get('user')
+  // async getUserLeaves(
+  //   @User() user: UserEntity,
+  //   @Query('year') year: string,
+  //   @Query('month') month: string,
+  // ) {
+  //   await this.userService.validateAndGetUser(user.id);
+  //   return await this.leaveService.getLeavesByUserId(
+  //     user.id,
+  //     parseInt(year),
+  //     parseInt(month),
+  //   );
+  // }
 
-  @Get('/:userId')
-  async getAllLeavesByUserId(
-    @Param('userId') userId: string,
+  @UseGuards(new JwtAuthGuard())
+  @Get()
+  async getLeaves(
+    @User() user: UserEntity,
+    @Query('userId') userId: string,
     @Query('year') year: string,
     @Query('month') month: string,
   ) {
-    await this.userService.validateAndGetUser(userId);
+    const targetUserId = UserUtil.checkRoleAndOverrideUserId(user, userId);
+    await this.userService.validateAndGetUser(targetUserId);
     await this.leaveService.getLeavesByUserId(
-      userId,
+      targetUserId,
       parseInt(year),
       parseInt(month),
     );
