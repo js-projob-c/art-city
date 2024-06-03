@@ -40,6 +40,7 @@ const AuthPage: React.FC<IProps> = ({}) => {
         },
         onError(error) {
           toastErrorCode(error);
+          toast.error("Login failed");
         },
       }
     );

@@ -1,6 +1,5 @@
 import { ERROR_CODES, PLACEHOLDERS } from '@art-city/common/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectEntityManager } from '@nestjs/typeorm';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { UserDetailEntity, UserEntity } from 'src/database/entities';
 import { UserRepository } from 'src/database/repositories/user.repository';
@@ -12,11 +11,12 @@ export class UserService {
   constructor(
     private userRepo: UserRepository,
     private userDetailRepo: UserDetailRepository,
-    @InjectEntityManager() private readonly entityManager: EntityManager,
+    private readonly entityManager: EntityManager,
   ) {}
 
-  async findAll() {
-    const res = await this.entityManager.find(UserEntity, {
+  async findAll(filter: Partial<UserEntity> = {}) {
+    const res = await this.userRepo.find({
+      where: { ...filter },
       relations: {
         detail: true,
       },

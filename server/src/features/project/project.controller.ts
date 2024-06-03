@@ -1,4 +1,4 @@
-import { UserRole } from '@art-city/common/enums';
+import { UserUtil } from '@art-city/common/utils/user.util';
 import {
   Body,
   Controller,
@@ -12,9 +12,9 @@ import {
 import { User } from 'src/common/decorators';
 import { UserEntity } from 'src/database/entities';
 
+import { CreateProjectRequestDto } from '../../../../libs/common/src/dto/project/create-project-request.dto';
+import { UpdateProjectRequestDto } from '../../../../libs/common/src/dto/project/update-project-request.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CreateProjectRequestDto } from './dto/create-project-request.dto';
-import { UpdateProjectRequestDto } from './dto/update-project-request.dto';
 import { ProjectService } from './project.service';
 
 @Controller('project')
@@ -37,19 +37,20 @@ export class ProjectController {
     return await this.projectService.validateAndGetProjectById(projectId);
   }
 
-  @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
+  @UseGuards(new JwtAuthGuard())
   @Get()
-  async getProjects(@Query('userId') userId: string) {
+  async getProjects(@User() user: UserEntity, @Query('userId') userId: string) {
+    const targetUserId = UserUtil.checkRoleAndOverrideUserId(user, userId);
     return await this.projectService.getProjects({
-      ...(userId && { owner: { id: userId } as UserEntity }),
+      ...(userId && { owner: { id: targetUserId } as UserEntity }),
     });
   }
 
-  @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE, UserRole.MANAGER]))
-  @Get('user')
-  async getUserProjects(@User() user: UserEntity) {
-    return await this.projectService.getProjects({
-      owner: { id: user.id } as UserEntity,
-    });
-  }
+  // @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE, UserRole.MANAGER]))
+  // @Get('user')
+  // async getUserProjects(@User() user: UserEntity) {
+  //   return await this.projectService.getProjects({
+  //     owner: { id: user.id } as UserEntity,
+  //   });
+  // }
 }

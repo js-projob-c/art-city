@@ -51,5 +51,8 @@
         "<rootDir>/common/src/$1"
       ]
     }
+  },
+  "dependencies": {
+    "@nestjs/swagger": "^7.3.1"
   }
 }

@@ -1,5 +1,13 @@
 import { UserRole } from '@art-city/common/enums';
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { UserEntity } from 'src/database/entities';
@@ -16,8 +24,8 @@ export class UserController {
 
   @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Query('role') role: UserRole) {
+    return this.userService.findAll({ ...(role && { role }) });
   }
 
   @UseGuards(
