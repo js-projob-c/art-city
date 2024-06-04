@@ -1,13 +1,19 @@
-import { ProjectStatus } from '@art-city/common/enums';
-import { PartialType } from '@nestjs/swagger';
-import { IsIn, IsOptional } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
-import { CreateProjectRequestDto } from './create-project-request.dto';
+// import { CreateProjectRequestDto } from './create-project-request.dto';
 
-export class UpdateProjectRequestDto extends PartialType(
-  CreateProjectRequestDto,
-) {
+export class UpdateProjectRequestDto {
+  @IsString()
+  name: string;
+
+  @IsString()
+  description: string;
+
+  @IsString()
   @IsOptional()
-  @IsIn([ProjectStatus.ABANDONED])
-  status: ProjectStatus;
+  ownerId: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isAbandoned?: boolean;
 }

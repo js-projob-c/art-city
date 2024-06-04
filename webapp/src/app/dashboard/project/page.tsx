@@ -1,17 +1,39 @@
 "use client";
 import { CreateProjectRequestDto } from "@art-city/common/dto/project/create-project-request.dto";
-import { UserRole } from "@art-city/common/enums";
-import { Button, Flex, Modal, Stack, TextInput } from "@mantine/core";
+import { UpdateProjectRequestDto } from "@art-city/common/dto/project/update-project-request.dto";
+import { ProjectStatus, UserRole } from "@art-city/common/enums";
+import { IProject } from "@art-city/common/types";
+import {
+  ActionIcon,
+  Button,
+  Flex,
+  Group,
+  Modal,
+  Select,
+  Stack,
+  Switch,
+  TextInput,
+  Tooltip,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { modals } from "@mantine/modals";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
+import React, { useMemo, useState } from "react";
+import { Controller, useForm, useWatch } from "react-hook-form";
+import toast from "react-hot-toast";
 
+import { toastErrorCode } from "@/common/utils/toast";
 import Table, { ITableConfig } from "@/components/Table";
 import {
   createProjectResolver,
   useCreateProject,
 } from "@/hooks/features/projects/useCreateProject";
+import { useDeleteProject } from "@/hooks/features/projects/useDeleteProject";
 import { useProjects } from "@/hooks/features/projects/useGetProjects";
+import {
+  updateProjectResolver,
+  useUpdateProject,
+} from "@/hooks/features/projects/useUpdateProject";
 import useCurrentUser from "@/hooks/features/useCurrentUser";
 import { useUsers } from "@/hooks/features/users/useUsers";
 
@@ -19,54 +41,217 @@ import styles from "./page.module.scss";
 
 interface IProps {}
 
-const configs: ITableConfig[] = [
-  {
-    name: "id",
-    label: "日期",
-  },
-];
+const DELETE_PROJECT_MODAL_ID = "DELETE_PROJECT_MODAL_ID";
 
 const ProjectPage: React.FC<IProps> = () => {
   const currentUser = useCurrentUser();
-  const [opened, { open: openModal, close: closeModal }] = useDisclosure(false);
+  const showCreateBtn = currentUser?.role === UserRole.ADMIN;
+
+  const [
+    createModalOpened,
+    { open: openCreateModal, close: closeCreateModal },
+  ] = useDisclosure(false);
+
+  const [editModalOpened, { open: openEditModal, close: closeEditModal }] =
+    useDisclosure(false);
+
   const {
-    control,
-    register,
-    handleSubmit,
+    control: createControl,
+    handleSubmit: createHandleSubmit,
     formState: { errors },
-    watch,
+    reset: createReset,
   } = useForm<CreateProjectRequestDto>({
     resolver: createProjectResolver,
   });
+  const {
+    control: updateControl,
+    handleSubmit: updateHandleSubmit,
+    formState: { errors: updateErrors },
+    reset: updateReset,
+    resetField: updateResetField,
+    setValue: updateSetValue,
+  } = useForm<UpdateProjectRequestDto>({
+    resolver: updateProjectResolver,
+  });
 
-  const { mutateAsync, isPending } = useCreateProject();
+  const { mutateAsync: createMutateAsync, isPending: isCreatePending } =
+    useCreateProject();
+  const { mutateAsync: updateMutateAsync, isPending: isUpdatePending } =
+    useUpdateProject();
+  const { mutateAsync: deleteMutateAsync, isPending: isDeletePending } =
+    useDeleteProject();
 
   const { data: users = [] } = useUsers();
-  const { data: projects = [] } = useProjects();
+  const { data: projects = [], refetch: refetchProjects } = useProjects();
 
-  const showCreateBtn = currentUser?.role === UserRole.ADMIN;
+  const watchUpdateValues = useWatch({
+    control: updateControl,
+  });
+
+  const [editProjectId, setEditProjectId] = useState("");
+
+  const userOptions = useMemo(() => {
+    return users.map((user) => ({
+      value: user.id,
+      label: user.email,
+    }));
+  }, [users]);
 
   const onCreateProject = async (data: CreateProjectRequestDto) => {
-    await mutateAsync({ body: data });
+    await createMutateAsync(
+      { body: data },
+      {
+        onSuccess: async () => {
+          toast.success("Success");
+          closeCreateModal();
+          await refetchProjects();
+        },
+        onError: (error) => {
+          toastErrorCode(error);
+        },
+      }
+    );
   };
 
-  const onOpenModal = () => {
-    openModal();
+  const onEditProject = async (data: UpdateProjectRequestDto) => {
+    await updateMutateAsync(
+      {
+        body: data,
+        param: { projectId: editProjectId },
+      },
+      {
+        onSuccess: async () => {
+          toast.success("Success");
+          closeEditModal();
+          await refetchProjects();
+        },
+        onError: (error) => {
+          toastErrorCode(error);
+        },
+      }
+    );
   };
 
-  console.log("users", users);
+  const onDeleteProject = async (projectId: string) => {
+    await deleteMutateAsync(
+      { param: { projectId } },
+      {
+        onSuccess: async () => {
+          toast.success("Success");
+          modals.close(DELETE_PROJECT_MODAL_ID);
+          await refetchProjects();
+        },
+        onError: (error) => {
+          toastErrorCode(error);
+        },
+      }
+    );
+  };
+
+  const onOpenCreateModal = () => {
+    createReset({});
+    openCreateModal();
+  };
+
+  const onOpenEditModal = (project: IProject) => {
+    setEditProjectId(project.id);
+    updateReset({
+      name: project.name,
+      description: project.description,
+      ownerId: project.ownerId,
+      isAbandoned: project.status === ProjectStatus.ABANDONED,
+    });
+    openEditModal();
+  };
+
+  const onCloseEditModal = () => {
+    setEditProjectId("");
+    closeEditModal();
+  };
+
+  const openDeleteModal = (id: string) =>
+    modals.openConfirmModal({
+      id: DELETE_PROJECT_MODAL_ID,
+      title: "刪除項目?",
+      centered: true,
+      children: <></>,
+      labels: { confirm: "刪除", cancel: "取消" },
+      onCancel: () => {},
+      onConfirm: () => onDeleteProject(id),
+      confirmProps: { color: "red", loading: isDeletePending },
+      cancelProps: { loading: isDeletePending },
+      closeOnClickOutside: !isDeletePending,
+    });
+
+  const onAbandonProject = (checked: boolean) => {
+    updateSetValue("isAbandoned", checked);
+  };
+
+  const configs: ITableConfig[] = [
+    {
+      name: "name",
+      label: "名稱",
+    },
+    {
+      name: "description",
+      label: "描述",
+    },
+    {
+      name: "status",
+      label: "狀態",
+    },
+    {
+      name: "owner.email",
+      label: "負責人",
+    },
+    {
+      name: "completedAt",
+      label: "完成時間",
+    },
+    {
+      name: "actionBtn",
+      label: "",
+      isCustom: true,
+      renderCustomElement(value, item) {
+        return (
+          <Group>
+            <Tooltip label="編輯">
+              <ActionIcon
+                variant="subtle"
+                onClick={() => onOpenEditModal(item as IProject)}
+              >
+                <IconEdit />
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label="刪除">
+              <ActionIcon
+                variant="subtle"
+                onClick={() => openDeleteModal(item.id)}
+              >
+                <IconTrash />
+              </ActionIcon>
+            </Tooltip>
+          </Group>
+        );
+      },
+    },
+  ];
 
   return (
     <>
       <div className={styles.root}>
         {showCreateBtn && (
           <Flex direction={"row-reverse"} mb={50}>
-            <Button onClick={onOpenModal}>創建</Button>
+            <Button onClick={onOpenCreateModal}>{"創建"}</Button>
           </Flex>
         )}
         <Table data={projects} configs={configs} />
       </div>
-      <Modal opened={opened} onClose={closeModal} title="創建項目">
+      <Modal
+        opened={createModalOpened}
+        onClose={closeCreateModal}
+        title={`創建項目`}
+      >
         <Stack gap={"lg"}>
           <Controller
             render={({
@@ -83,7 +268,7 @@ const ProjectPage: React.FC<IProps> = () => {
               />
             )}
             name={"name"}
-            control={control}
+            control={createControl}
             defaultValue={""}
           />
           <Controller
@@ -101,14 +286,125 @@ const ProjectPage: React.FC<IProps> = () => {
               />
             )}
             name={"description"}
-            control={control}
+            control={createControl}
             defaultValue={""}
           />
+          <Controller
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <Select
+                clearable
+                searchable
+                label="負責人"
+                data={userOptions}
+                onBlur={onBlur}
+                error={error?.message}
+                onChange={onChange}
+                value={value}
+              />
+            )}
+            name={"ownerId"}
+            control={createControl}
+            defaultValue={undefined}
+          />
           <Flex gap={"md"} justify={"flex-end"}>
-            <Button variant="outline" onClick={closeModal} loading={isPending}>
+            <Button
+              variant="outline"
+              onClick={closeCreateModal}
+              loading={isCreatePending}
+            >
               取消
             </Button>
-            <Button onClick={handleSubmit(onCreateProject)} loading={isPending}>
+            <Button
+              onClick={createHandleSubmit(onCreateProject)}
+              loading={isCreatePending}
+            >
+              確認
+            </Button>
+          </Flex>
+        </Stack>
+      </Modal>
+      <Modal
+        opened={editModalOpened}
+        onClose={onCloseEditModal}
+        title={`修改項目`}
+      >
+        <Stack gap={"lg"}>
+          <Controller
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <TextInput
+                label="名稱"
+                onBlur={onBlur}
+                error={error?.message}
+                onChange={onChange}
+                value={value}
+                required={true}
+              />
+            )}
+            name={"name"}
+            control={updateControl}
+            defaultValue={""}
+          />
+          <Controller
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <TextInput
+                label="描述"
+                onBlur={onBlur}
+                error={error?.message}
+                onChange={onChange}
+                value={value}
+                required={true}
+              />
+            )}
+            name={"description"}
+            control={updateControl}
+            defaultValue={""}
+          />
+          <Controller
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <Select
+                clearable
+                searchable
+                label="負責人"
+                data={userOptions}
+                onBlur={onBlur}
+                error={error?.message}
+                onChange={onChange}
+                value={value}
+              />
+            )}
+            name={"ownerId"}
+            control={updateControl}
+            defaultValue={undefined}
+          />
+          <Switch
+            label="丟棄"
+            defaultChecked={watchUpdateValues.isAbandoned}
+            onChange={(e) => onAbandonProject(e.target.checked)}
+          />
+          <Flex gap={"md"} justify={"flex-end"}>
+            <Button
+              variant="outline"
+              onClick={closeEditModal}
+              loading={isUpdatePending}
+            >
+              取消
+            </Button>
+            <Button
+              onClick={updateHandleSubmit(onEditProject)}
+              loading={isUpdatePending}
+            >
               確認
             </Button>
           </Flex>

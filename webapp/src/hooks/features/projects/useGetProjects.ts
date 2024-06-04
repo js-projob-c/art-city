@@ -1,3 +1,4 @@
+import { IProject } from "@art-city/common/types";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -6,10 +7,6 @@ import {
   axiosClient,
   UseRequestPayload,
 } from "@/services/axios";
-
-export type IProject = {
-  date: string;
-};
 
 export type IProjectsResponse = IProject[];
 

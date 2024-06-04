@@ -30,6 +30,6 @@ export const createProject = async (
 
 export const useCreateProject = () =>
   useMutation({
-    mutationKey: ["create-shift-application"],
+    mutationKey: ["create-project"],
     mutationFn: (payload?: UseRequestPayload<any>) => createProject(payload),
   });

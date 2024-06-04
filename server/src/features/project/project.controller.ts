@@ -1,7 +1,9 @@
+import { UserRole } from '@art-city/common/enums';
 import { UserUtil } from '@art-city/common/utils/user.util';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -33,7 +35,8 @@ export class ProjectController {
     @Param('projectId') projectId: string,
     @Body() dto: UpdateProjectRequestDto,
   ) {
-    await this.projectService.updateProject(projectId, dto);
+    const { isAbandoned = false, ...reset } = dto;
+    await this.projectService.updateProject(projectId, reset, isAbandoned);
     return await this.projectService.validateAndGetProjectById(projectId);
   }
 
@@ -44,6 +47,12 @@ export class ProjectController {
     return await this.projectService.getProjects({
       ...(userId && { owner: { id: targetUserId } as UserEntity }),
     });
+  }
+
+  @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
+  @Delete(':projectId')
+  async deleteProject(@Param('projectId') projectId: string) {
+    await this.projectService.deleteProject(projectId);
   }
 
   // @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE, UserRole.MANAGER]))

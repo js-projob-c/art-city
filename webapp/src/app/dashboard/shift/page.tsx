@@ -53,10 +53,8 @@ const configs: ITableConfig[] = [
 const ShiftPage: React.FC<IProps> = () => {
   const {
     control,
-    register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<CreateShiftApplicationRequestDto>({
     resolver: createShiftApplicationResolver,
   });

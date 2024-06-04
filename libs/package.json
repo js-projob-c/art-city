@@ -27,7 +27,9 @@
   "peerDependencies": {
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
-    "moment-timezone": "^0.5.45"
+    "moment-timezone": "^0.5.45",
+    "@nestjs/common": "^10.3.9",
+    "@nestjs/swagger": "^7.3.1"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -52,7 +54,5 @@
       ]
     }
   },
-  "dependencies": {
-    "@nestjs/swagger": "^7.3.1"
-  }
+  "dependencies": {}
 }

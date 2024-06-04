@@ -1,3 +1,4 @@
+import { IUser } from "@art-city/common/types";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -6,10 +7,6 @@ import {
   axiosClient,
   UseRequestPayload,
 } from "@/services/axios";
-
-export type IUser = {
-  date: string;
-};
 
 export type IUsersResponse = IUser[];
 

@@ -4,7 +4,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { ProjectEntity, TaskEntity, UserEntity } from 'src/database/entities';
 import { ProjectRepository, UserRepository } from 'src/database/repositories';
-import { EntityManager } from 'typeorm';
+import { EntityManager, In } from 'typeorm';
 
 @Injectable()
 export class ProjectService {
@@ -17,14 +17,14 @@ export class ProjectService {
   async getProjects(filter: Partial<ProjectEntity> = {}) {
     return await this.projectRepository.find({
       where: filter,
-      relations: ['tasks'],
+      relations: ['tasks', 'owner'],
     });
   }
 
   async validateAndGetProjectById(projectId: string, em?: EntityManager) {
     const manager = em || this.projectRepository.manager;
     const project = await manager.findOne(ProjectEntity, {
-      where: { id: projectId },
+      where: { id: projectId || PLACEHOLDERS.INCORRECT_ID },
       relations: ['tasks', 'owner'],
       select: {
         owner: {
@@ -55,7 +55,11 @@ export class ProjectService {
     return await this.projectRepository.save(projectEntity);
   }
 
-  async updateProject(projectId: string, payload: Partial<ProjectEntity>) {
+  async updateProject(
+    projectId: string,
+    payload: Partial<ProjectEntity>,
+    isAbandoned: boolean,
+  ) {
     return await this.entityManager.transaction(async (em) => {
       const project = await this.validateAndGetProjectById(projectId, em);
       const { ownerId, ...rest } = payload;
@@ -63,12 +67,13 @@ export class ProjectService {
         await this.validateAndGetOwner(ownerId, em);
       }
       let status = payload.status || project.status;
-      if (status !== ProjectStatus.ABANDONED) {
+      if (!isAbandoned) {
         const tasks = await em.find(TaskEntity, {
           where: { project: { id: project.id } },
         });
         status = this.getProjectStatusByTasksProgress(tasks);
       } else {
+        status = ProjectStatus.ABANDONED;
         await this.updateAllTaskToAbandoned(projectId, em);
       }
       await this.projectRepository.save({
@@ -77,6 +82,17 @@ export class ProjectService {
         status,
         ...(ownerId && { owner: { id: ownerId } }),
       });
+    });
+  }
+
+  async deleteProject(projectId: string) {
+    await this.entityManager.transaction(async (em: EntityManager) => {
+      const project = await this.validateAndGetProjectById(projectId, em);
+      const tasks = project.tasks ?? [];
+      await em.delete(ProjectEntity, { id: projectId });
+      for (const task of tasks) {
+        await em.delete(TaskEntity, { id: task.id });
+      }
     });
   }
 
@@ -130,7 +146,7 @@ export class ProjectService {
     });
     await manager.update(
       TaskEntity,
-      tasks.map((task) => task.id),
+      { id: In(tasks.map((task) => task.id)) },
       { status: TaskStatus.ABANDONED },
     );
     return tasks;
