@@ -388,11 +388,11 @@ const ProjectPage: React.FC<IProps> = () => {
             control={updateControl}
             defaultValue={undefined}
           />
-          <Switch
+          {/* <Switch
             label="丟棄"
             defaultChecked={watchUpdateValues.isAbandoned}
             onChange={(e) => onAbandonProject(e.target.checked)}
-          />
+          /> */}
           <Flex gap={"md"} justify={"flex-end"}>
             <Button
               variant="outline"
