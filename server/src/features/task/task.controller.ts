@@ -1,8 +1,8 @@
 import { Body, Controller, Param, Post, Put } from '@nestjs/common';
 
+import { CreateTaskRequestDto } from '../../../../libs/common/src/dto/task/create-task-request.dto';
+import { UpdateTaskRequestDto } from '../../../../libs/common/src/dto/task/update-task-request.dto';
 import { ProjectService } from '../project/project.service';
-import { CreateTaskRequestDto } from './dto/create-task-request.dto';
-import { UpdateTaskRequestDto } from './dto/update-task-request.dto';
 import { TaskService } from './task.service';
 
 @Controller('task')

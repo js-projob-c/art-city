@@ -1,8 +1,17 @@
+"use client";
+
 import { DATETIME_FORMAT } from "@art-city/common/constants/datetime";
 import { REGEX } from "@art-city/common/constants/regex";
 import { DatetimeUtil } from "@art-city/common/utils/datetime.util";
-import { Pagination, Table as MantineTable } from "@mantine/core";
-import React, { useCallback } from "react";
+import {
+  ActionIcon,
+  Collapse,
+  Pagination,
+  Stack,
+  Table as MantineTable,
+} from "@mantine/core";
+import { IconMinus, IconPlus } from "@tabler/icons-react";
+import React, { useCallback, useEffect } from "react";
 
 import { TableValueBuilder } from "./TableValueBuilder";
 
@@ -24,17 +33,25 @@ interface IProps {
   emptyText?: string;
   defaultDateTimeFormat?: string;
   data: Record<string, any>[];
+  subData?: Record<string, any>[];
   configs: ITableConfig[];
   pagination?: IPagination;
 }
 
 const Table = ({
   data,
+  subData,
   configs,
   emptyText = "-",
   defaultDateTimeFormat = DATETIME_FORMAT.DATETIME,
   pagination,
 }: IProps) => {
+  const [expanded, setExpanded] = React.useState<Record<number, boolean>>({});
+
+  const toggleExpand = (index: number) => {
+    setExpanded((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
+
   const formatDateTime = useCallback(
     (value: string) => {
       if (typeof value === "string" && value?.match(REGEX.DATETIME_ISO)) {
@@ -69,6 +86,16 @@ const Table = ({
     [emptyText, formatValue]
   );
 
+  useEffect(() => {
+    if (data) {
+      const newExpanded: Record<number, boolean> = {};
+      data.forEach((_, index) => {
+        newExpanded[index] = false;
+      });
+      setExpanded(newExpanded);
+    }
+  }, [data]);
+
   return (
     <>
       {configs && data && (
@@ -88,15 +115,54 @@ const Table = ({
             <MantineTable.Tbody>
               {data.map((item: any, i: number) => {
                 return (
-                  <MantineTable.Tr key={i + item?.id}>
-                    {configs.map((config: any, index: number) => {
-                      return (
-                        <MantineTable.Td key={config.name + index}>
-                          {renderElement(item, config)}
-                        </MantineTable.Td>
-                      );
-                    })}
-                  </MantineTable.Tr>
+                  <Stack key={i + item.id} w={"100%"}>
+                    <MantineTable.Tr>
+                      <MantineTable.Tr>
+                        {subData && (
+                          <MantineTable.Td>
+                            <ActionIcon onClick={() => toggleExpand(i)}>
+                              {!expanded[i] ? <IconPlus /> : <IconMinus />}
+                            </ActionIcon>
+                          </MantineTable.Td>
+                        )}
+                        {configs.map((config: any, index: number) => {
+                          return (
+                            <>
+                              <MantineTable.Td>
+                                {renderElement(item, config)}
+                              </MantineTable.Td>
+                            </>
+                          );
+                        })}
+                      </MantineTable.Tr>
+                      {subData && (
+                        <MantineTable.Tr>
+                          <MantineTable.Td colSpan={configs.length}>
+                            <Collapse in={!!expanded[i]} w={"100%"}>
+                              <MantineTable withColumnBorders>
+                                <MantineTable.Thead>
+                                  <MantineTable.Tr>
+                                    <MantineTable.Th>Test</MantineTable.Th>
+                                    <MantineTable.Th>Test</MantineTable.Th>
+                                    <MantineTable.Th>Test</MantineTable.Th>
+                                    <MantineTable.Th>Test</MantineTable.Th>
+                                  </MantineTable.Tr>
+                                </MantineTable.Thead>
+                                <MantineTable.Tbody>
+                                  <MantineTable.Tr>
+                                    <MantineTable.Td>Test</MantineTable.Td>
+                                    <MantineTable.Td>Test</MantineTable.Td>
+                                    <MantineTable.Td>Test</MantineTable.Td>
+                                    <MantineTable.Td>Test</MantineTable.Td>
+                                  </MantineTable.Tr>
+                                </MantineTable.Tbody>
+                              </MantineTable>
+                            </Collapse>
+                          </MantineTable.Td>
+                        </MantineTable.Tr>
+                      )}
+                    </MantineTable.Tr>
+                  </Stack>
                 );
               })}
             </MantineTable.Tbody>

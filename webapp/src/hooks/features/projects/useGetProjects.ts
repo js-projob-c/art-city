@@ -1,3 +1,5 @@
+"use client";
+
 import { IProject } from "@art-city/common/types";
 import { useQuery } from "@tanstack/react-query";
 

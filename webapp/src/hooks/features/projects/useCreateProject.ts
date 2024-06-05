@@ -1,3 +1,5 @@
+"use client";
+
 import { CreateProjectRequestDto } from "@art-city/common/dto/project/create-project-request.dto";
 import { classValidatorResolver } from "@hookform/resolvers/class-validator";
 import { useMutation } from "@tanstack/react-query";

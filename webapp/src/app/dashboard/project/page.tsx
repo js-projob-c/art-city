@@ -1,4 +1,5 @@
 "use client";
+
 import { CreateProjectRequestDto } from "@art-city/common/dto/project/create-project-request.dto";
 import { UpdateProjectRequestDto } from "@art-city/common/dto/project/update-project-request.dto";
 import { ProjectStatus, UserRole } from "@art-city/common/enums";
@@ -17,7 +18,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconFilePlus, IconTrash } from "@tabler/icons-react";
 import React, { useMemo, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -37,6 +38,7 @@ import {
 import useCurrentUser from "@/hooks/features/useCurrentUser";
 import { useUsers } from "@/hooks/features/users/useUsers";
 
+import CreateTaskBtn from "./CreateTaskBtn";
 import styles from "./page.module.scss";
 
 interface IProps {}
@@ -183,9 +185,11 @@ const ProjectPage: React.FC<IProps> = () => {
       closeOnClickOutside: !isDeletePending,
     });
 
-  const onAbandonProject = (checked: boolean) => {
-    updateSetValue("isAbandoned", checked);
-  };
+  // const onAbandonProject = (checked: boolean) => {
+  //   updateSetValue("isAbandoned", checked);
+  // };
+
+  const onOpenCreateTaskModal = (project: IProject) => {};
 
   const configs: ITableConfig[] = [
     {
@@ -235,6 +239,27 @@ const ProjectPage: React.FC<IProps> = () => {
         );
       },
     },
+    // {
+    //   name: "createTaskBtn",
+    //   label: "",
+    //   isCustom: true,
+    //   renderCustomElement(value, item) {
+    //     return (
+    //       <Group>
+    //         <CreateTaskBtn project={item as IProject} />
+    //         {/* <Tooltip label="創建任務"> */}
+    //         {/* <ActionIcon
+    //             variant="subtle"
+    //             onClick={() => onOpenCreateTaskModal(item as IProject)}
+    //           >
+    //             <IconFilePlus />
+    //           </ActionIcon> */}
+    //         {/* <CreateTaskBtn project={item as IProject} /> */}
+    //         {/* </Tooltip> */}
+    //       </Group>
+    //     );
+    //   },
+    // },
   ];
 
   return (
@@ -245,7 +270,7 @@ const ProjectPage: React.FC<IProps> = () => {
             <Button onClick={onOpenCreateModal}>{"創建"}</Button>
           </Flex>
         )}
-        <Table data={projects} configs={configs} />
+        <Table data={projects} configs={configs} subData={[]} />
       </div>
       <Modal
         opened={createModalOpened}
