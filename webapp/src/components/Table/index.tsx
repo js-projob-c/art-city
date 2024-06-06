@@ -100,9 +100,10 @@ const Table = ({
     <>
       {configs && data && (
         <>
-          <MantineTable>
+          <MantineTable highlightOnHover striped={subData ? "even" : false}>
             <MantineTable.Thead>
               <MantineTable.Tr>
+                {subData && <MantineTable.Th />}
                 {configs.map((config: any, i: number) => {
                   return (
                     <MantineTable.Th key={config.name + i}>
@@ -115,54 +116,61 @@ const Table = ({
             <MantineTable.Tbody>
               {data.map((item: any, i: number) => {
                 return (
-                  <Stack key={i + item.id} w={"100%"}>
+                  <React.Fragment key={item.id + i}>
                     <MantineTable.Tr>
-                      <MantineTable.Tr>
-                        {subData && (
-                          <MantineTable.Td>
-                            <ActionIcon onClick={() => toggleExpand(i)}>
-                              {!expanded[i] ? <IconPlus /> : <IconMinus />}
-                            </ActionIcon>
-                          </MantineTable.Td>
-                        )}
-                        {configs.map((config: any, index: number) => {
-                          return (
-                            <>
-                              <MantineTable.Td>
-                                {renderElement(item, config)}
-                              </MantineTable.Td>
-                            </>
-                          );
-                        })}
-                      </MantineTable.Tr>
                       {subData && (
-                        <MantineTable.Tr>
-                          <MantineTable.Td colSpan={configs.length}>
-                            <Collapse in={!!expanded[i]} w={"100%"}>
-                              <MantineTable withColumnBorders>
-                                <MantineTable.Thead>
-                                  <MantineTable.Tr>
-                                    <MantineTable.Th>Test</MantineTable.Th>
-                                    <MantineTable.Th>Test</MantineTable.Th>
-                                    <MantineTable.Th>Test</MantineTable.Th>
-                                    <MantineTable.Th>Test</MantineTable.Th>
-                                  </MantineTable.Tr>
-                                </MantineTable.Thead>
-                                <MantineTable.Tbody>
-                                  <MantineTable.Tr>
-                                    <MantineTable.Td>Test</MantineTable.Td>
-                                    <MantineTable.Td>Test</MantineTable.Td>
-                                    <MantineTable.Td>Test</MantineTable.Td>
-                                    <MantineTable.Td>Test</MantineTable.Td>
-                                  </MantineTable.Tr>
-                                </MantineTable.Tbody>
-                              </MantineTable>
-                            </Collapse>
-                          </MantineTable.Td>
-                        </MantineTable.Tr>
+                        <MantineTable.Td>
+                          <ActionIcon onClick={() => toggleExpand(i)}>
+                            {!expanded[i] ? <IconPlus /> : <IconMinus />}
+                          </ActionIcon>
+                        </MantineTable.Td>
                       )}
+                      {configs.map((config: any, index: number) => {
+                        return (
+                          <MantineTable.Td key={config.name + index}>
+                            {renderElement(item, config)}
+                          </MantineTable.Td>
+                        );
+                      })}
                     </MantineTable.Tr>
-                  </Stack>
+                    {subData && (
+                      <MantineTable.Tr w={"100%"}>
+                        <MantineTable.Td p={0} colSpan={1}></MantineTable.Td>
+                        <MantineTable.Td p={0} colSpan={configs.length}>
+                          <Collapse in={!!expanded[i]}>
+                            <MantineTable
+                              withColumnBorders
+                              withRowBorders
+                              withTableBorder
+                            >
+                              <MantineTable.Thead>
+                                <MantineTable.Tr>
+                                  <MantineTable.Th>head</MantineTable.Th>
+                                  <MantineTable.Th>head</MantineTable.Th>
+                                  <MantineTable.Th>head</MantineTable.Th>
+                                  <MantineTable.Th>head</MantineTable.Th>
+                                </MantineTable.Tr>
+                              </MantineTable.Thead>
+                              <MantineTable.Tbody>
+                                <MantineTable.Tr>
+                                  <MantineTable.Td>Test</MantineTable.Td>
+                                  <MantineTable.Td>Test</MantineTable.Td>
+                                  <MantineTable.Td>Test</MantineTable.Td>
+                                  <MantineTable.Td>Test</MantineTable.Td>
+                                </MantineTable.Tr>
+                                <MantineTable.Tr>
+                                  <MantineTable.Td>Test</MantineTable.Td>
+                                  <MantineTable.Td>Test</MantineTable.Td>
+                                  <MantineTable.Td>Test</MantineTable.Td>
+                                  <MantineTable.Td>Test</MantineTable.Td>
+                                </MantineTable.Tr>
+                              </MantineTable.Tbody>
+                            </MantineTable>
+                          </Collapse>
+                        </MantineTable.Td>
+                      </MantineTable.Tr>
+                    )}
+                  </React.Fragment>
                 );
               })}
             </MantineTable.Tbody>
