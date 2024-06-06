@@ -11,6 +11,7 @@ import {
   Table as MantineTable,
 } from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
+import { isNil } from "lodash";
 import React, { useCallback, useEffect } from "react";
 
 import { TableValueBuilder } from "./TableValueBuilder";
@@ -33,14 +34,16 @@ interface IProps {
   emptyText?: string;
   defaultDateTimeFormat?: string;
   data: Record<string, any>[];
-  subData?: Record<string, any>[];
+  subDataField?: string;
+  subDataConfigs?: ITableConfig[];
   configs: ITableConfig[];
   pagination?: IPagination;
 }
 
 const Table = ({
   data,
-  subData,
+  subDataField,
+  subDataConfigs,
   configs,
   emptyText = "-",
   defaultDateTimeFormat = DATETIME_FORMAT.DATETIME,
@@ -62,51 +65,81 @@ const Table = ({
     [defaultDateTimeFormat]
   );
 
-  const formatValue = useCallback(
-    (value: any, item: any, transform?: (value: any) => any) => {
-      return new TableValueBuilder(value, item)
-        .transform(formatDateTime)
-        .transform(transform)
-        .build();
-    },
-    [formatDateTime]
-  );
+  const formatValue = (
+    value: any,
+    item: any,
+    transform?: (value: any) => any
+  ) => {
+    return new TableValueBuilder(value, item)
+      .transform(formatDateTime)
+      .transform(transform)
+      .build();
+  };
+  // const formatValue = useCallback(
+  //   (value: any, item: any, transform?: (value: any) => any) => {
+  //     return new TableValueBuilder(value, item)
+  //       .transform(formatDateTime)
+  //       .transform(transform)
+  //       .build();
+  //   },
+  //   [formatDateTime]
+  // );
 
   function getNestedProperty(obj: Record<string, any>, path: string) {
     return path.split(".").reduce((o, p) => (o ? o[p] : undefined), obj);
   }
 
-  const renderElement = useCallback(
-    (item: any, config: any) => {
-      if (config.isCustom)
-        return config.renderCustomElement(item[config.name], item);
-      const value = getNestedProperty(item, config.name);
-      return value ? formatValue(value, item, config.transform) : emptyText;
-    },
-    [emptyText, formatValue]
-  );
+  // const renderElement = useCallback(
+  //   (item: any, config: any) => {
+  //     if (config.isCustom)
+  //       return config.renderCustomElement(item[config.name], item);
+  //     const value = getNestedProperty(item, config.name);
+  //     return !isNil(value)
+  //       ? formatValue(value, item, config.transform)
+  //       : emptyText;
+  //   },
+  //   [emptyText, formatValue]
+  // );
+
+  const renderElement = (item: any, config: any) => {
+    if (config.isCustom)
+      return config.renderCustomElement(item[config.name], item);
+    const value = getNestedProperty(item, config.name);
+    return !isNil(value)
+      ? formatValue(value, item, config.transform)
+      : emptyText;
+  };
 
   useEffect(() => {
     if (data) {
-      const newExpanded: Record<number, boolean> = {};
-      data.forEach((_, index) => {
-        newExpanded[index] = false;
+      setExpanded((prev) => {
+        const newExpanded: Record<number, boolean> = { ...prev };
+        data.forEach((_, index) => {
+          newExpanded[index] = prev[index] ?? false;
+        });
+        return newExpanded;
       });
-      setExpanded(newExpanded);
     }
   }, [data]);
+
+  useEffect(() => {
+    setExpanded({});
+  }, [pagination?.activePage]);
 
   return (
     <>
       {configs && data && (
         <>
-          <MantineTable highlightOnHover striped={subData ? "even" : false}>
+          <MantineTable
+            highlightOnHover
+            striped={subDataConfigs ? "even" : false}
+          >
             <MantineTable.Thead>
               <MantineTable.Tr>
-                {subData && <MantineTable.Th />}
+                {subDataConfigs && <MantineTable.Th />}
                 {configs.map((config: any, i: number) => {
                   return (
-                    <MantineTable.Th key={config.name + i}>
+                    <MantineTable.Th key={`header-${i}-${config.name}`}>
                       {config.label ?? config.name}
                     </MantineTable.Th>
                   );
@@ -115,25 +148,31 @@ const Table = ({
             </MantineTable.Thead>
             <MantineTable.Tbody>
               {data.map((item: any, i: number) => {
+                const subDataItems =
+                  subDataField && item[subDataField]
+                    ? item[subDataField]
+                    : null;
                 return (
                   <React.Fragment key={item.id + i}>
                     <MantineTable.Tr>
-                      {subData && (
+                      {subDataConfigs && (
                         <MantineTable.Td>
-                          <ActionIcon onClick={() => toggleExpand(i)}>
-                            {!expanded[i] ? <IconPlus /> : <IconMinus />}
-                          </ActionIcon>
+                          {subDataItems?.length > 0 && (
+                            <ActionIcon onClick={() => toggleExpand(i)}>
+                              {!expanded[i] ? <IconPlus /> : <IconMinus />}
+                            </ActionIcon>
+                          )}
                         </MantineTable.Td>
                       )}
-                      {configs.map((config: any, index: number) => {
+                      {configs.map((config: any, i: number) => {
                         return (
-                          <MantineTable.Td key={config.name + index}>
+                          <MantineTable.Td key={`data-${i}-${config.name}`}>
                             {renderElement(item, config)}
                           </MantineTable.Td>
                         );
                       })}
                     </MantineTable.Tr>
-                    {subData && (
+                    {subDataConfigs && subDataItems?.length > 0 && (
                       <MantineTable.Tr w={"100%"}>
                         <MantineTable.Td p={0} colSpan={1}></MantineTable.Td>
                         <MantineTable.Td p={0} colSpan={configs.length}>
@@ -145,25 +184,31 @@ const Table = ({
                             >
                               <MantineTable.Thead>
                                 <MantineTable.Tr>
-                                  <MantineTable.Th>head</MantineTable.Th>
-                                  <MantineTable.Th>head</MantineTable.Th>
-                                  <MantineTable.Th>head</MantineTable.Th>
-                                  <MantineTable.Th>head</MantineTable.Th>
+                                  {subDataConfigs.map((config, i) => (
+                                    <MantineTable.Th
+                                      key={`subheader-${i}-${config.name}`}
+                                    >
+                                      {config.label ?? config.name}
+                                    </MantineTable.Th>
+                                  ))}
                                 </MantineTable.Tr>
                               </MantineTable.Thead>
                               <MantineTable.Tbody>
-                                <MantineTable.Tr>
-                                  <MantineTable.Td>Test</MantineTable.Td>
-                                  <MantineTable.Td>Test</MantineTable.Td>
-                                  <MantineTable.Td>Test</MantineTable.Td>
-                                  <MantineTable.Td>Test</MantineTable.Td>
-                                </MantineTable.Tr>
-                                <MantineTable.Tr>
-                                  <MantineTable.Td>Test</MantineTable.Td>
-                                  <MantineTable.Td>Test</MantineTable.Td>
-                                  <MantineTable.Td>Test</MantineTable.Td>
-                                  <MantineTable.Td>Test</MantineTable.Td>
-                                </MantineTable.Tr>
+                                {subDataItems.map((subItem: any, i: number) => {
+                                  return (
+                                    <MantineTable.Tr key={subItem.id + i}>
+                                      {subDataConfigs.map((config, index) => {
+                                        return (
+                                          <MantineTable.Td
+                                            key={`subdata-${index}-${config.name}`}
+                                          >
+                                            {renderElement(subItem, config)}
+                                          </MantineTable.Td>
+                                        );
+                                      })}
+                                    </MantineTable.Tr>
+                                  );
+                                })}
                               </MantineTable.Tbody>
                             </MantineTable>
                           </Collapse>

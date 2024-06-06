@@ -35,8 +35,8 @@ export class ProjectController {
     @Param('projectId') projectId: string,
     @Body() dto: UpdateProjectRequestDto,
   ) {
-    const { isAbandoned = false, ...reset } = dto;
-    await this.projectService.updateProject(projectId, reset, isAbandoned);
+    const { isAbandoned = false, ...rest } = dto;
+    await this.projectService.updateProject(projectId, rest, isAbandoned);
     return await this.projectService.validateAndGetProjectById(projectId);
   }
 

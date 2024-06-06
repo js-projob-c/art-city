@@ -1,7 +1,17 @@
-import { Body, Controller, Param, Post, Put } from '@nestjs/common';
+import { UserRole } from '@art-city/common/enums';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 
 import { CreateTaskRequestDto } from '../../../../libs/common/src/dto/task/create-task-request.dto';
 import { UpdateTaskRequestDto } from '../../../../libs/common/src/dto/task/update-task-request.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ProjectService } from '../project/project.service';
 import { TaskService } from './task.service';
 
@@ -22,6 +32,13 @@ export class TaskController {
     @Param('taskId') taskId: string,
     @Body() dto: UpdateTaskRequestDto,
   ) {
-    return await this.taskService.updateTask(taskId, dto);
+    const { isAbandoned = false, ...rest } = dto;
+    return await this.taskService.updateTask(taskId, rest, isAbandoned);
+  }
+
+  @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
+  @Delete(':taskId')
+  async deleteTask(@Param('taskId') taskId: string) {
+    await this.taskService.deleteTask(taskId);
   }
 }

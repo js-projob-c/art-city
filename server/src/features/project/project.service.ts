@@ -1,23 +1,24 @@
 import { ERROR_CODES, PLACEHOLDERS } from '@art-city/common/constants';
 import { ProjectStatus, TaskStatus } from '@art-city/common/enums';
+import { DatetimeUtil } from '@art-city/common/utils';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { ProjectEntity, TaskEntity, UserEntity } from 'src/database/entities';
-import { ProjectRepository, UserRepository } from 'src/database/repositories';
+import { ProjectRepository } from 'src/database/repositories';
 import { EntityManager, In } from 'typeorm';
 
 @Injectable()
 export class ProjectService {
   constructor(
     private readonly projectRepository: ProjectRepository,
-    private readonly userRepository: UserRepository,
     private readonly entityManager: EntityManager,
   ) {}
 
   async getProjects(filter: Partial<ProjectEntity> = {}) {
     return await this.projectRepository.find({
       where: filter,
-      relations: ['tasks', 'owner'],
+      relations: ['tasks', 'owner', 'tasks.users'],
+      order: { createdAt: 'ASC', tasks: { createdAt: 'ASC' } },
     });
   }
 
@@ -26,12 +27,6 @@ export class ProjectService {
     const project = await manager.findOne(ProjectEntity, {
       where: { id: projectId || PLACEHOLDERS.INCORRECT_ID },
       relations: ['tasks', 'owner'],
-      select: {
-        owner: {
-          id: true,
-          email: true,
-        },
-      },
     });
     if (!project) {
       throw new NotFoundException(
@@ -74,7 +69,7 @@ export class ProjectService {
         status = this.getProjectStatusByTasksProgress(tasks);
       } else {
         status = ProjectStatus.ABANDONED;
-        await this.updateAllTaskToAbandoned(projectId, em);
+        // await this.updateAllTaskToAbandoned(projectId, em);
       }
       await this.projectRepository.save({
         ...rest,
@@ -134,7 +129,15 @@ export class ProjectService {
 
     const status = this.getProjectStatusByTasksProgress(tasks);
 
-    await manager.save(ProjectEntity, { id: projectId, status });
+    const isCompleted =
+      projectStatus !== ProjectStatus.COMPLETED &&
+      status === ProjectStatus.COMPLETED;
+
+    await manager.save(ProjectEntity, {
+      id: projectId,
+      status,
+      ...(isCompleted && { completedAt: DatetimeUtil.moment().toISOString() }),
+    });
 
     return projectStatus;
   }

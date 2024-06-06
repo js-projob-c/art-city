@@ -46,7 +46,7 @@ export class TaskEntity extends BaseEntity implements ITask {
   @Column({ type: 'timestamp', nullable: true })
   completedAt: string;
 
-  @ManyToMany(() => UserEntity, (user) => user.tasks, { onDelete: 'SET NULL' })
+  @ManyToMany(() => UserEntity, (user) => user.tasks, { onDelete: 'CASCADE' })
   @JoinTable({ name: DB_TABLE_NAMES.userTask })
   users: UserEntity[];
 }

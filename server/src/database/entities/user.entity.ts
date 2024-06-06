@@ -77,6 +77,6 @@ export class UserEntity extends BaseEntity implements IUser {
   @JoinTable({ name: DB_TABLE_NAMES.userCustomer })
   customers: CustomerEntity[];
 
-  @ManyToMany(() => TaskEntity, (task) => task.users)
+  @ManyToMany(() => TaskEntity, (task) => task.users, { onDelete: 'CASCADE' })
   tasks: TaskEntity[];
 }

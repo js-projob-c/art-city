@@ -2,8 +2,9 @@
 
 import { CreateProjectRequestDto } from "@art-city/common/dto/project/create-project-request.dto";
 import { UpdateProjectRequestDto } from "@art-city/common/dto/project/update-project-request.dto";
+import { UpdateTaskRequestDto } from "@art-city/common/dto/task/update-task-request.dto";
 import { ProjectStatus, UserRole } from "@art-city/common/enums";
-import { IProject } from "@art-city/common/types";
+import { IProject, ITask } from "@art-city/common/types";
 import {
   ActionIcon,
   Button,
@@ -11,6 +12,7 @@ import {
   Group,
   Modal,
   Select,
+  Spoiler,
   Stack,
   Switch,
   TextInput,
@@ -39,7 +41,9 @@ import useCurrentUser from "@/hooks/features/useCurrentUser";
 import { useUsers } from "@/hooks/features/users/useUsers";
 
 import CreateTaskBtn from "./CreateTaskBtn";
+import DeleteTaskBtn from "./DeleteTaskBtn";
 import styles from "./page.module.scss";
+import UpdateTaskBtn from "./UpdateTaskBtn";
 
 interface IProps {}
 
@@ -85,7 +89,7 @@ const ProjectPage: React.FC<IProps> = () => {
 
   const { data: users = [] } = useUsers();
   const { data: projects = [], refetch: refetchProjects } = useProjects();
-
+  console.log("projects", projects);
   const watchUpdateValues = useWatch({
     control: updateControl,
   });
@@ -185,9 +189,9 @@ const ProjectPage: React.FC<IProps> = () => {
       closeOnClickOutside: !isDeletePending,
     });
 
-  // const onAbandonProject = (checked: boolean) => {
-  //   updateSetValue("isAbandoned", checked);
-  // };
+  const onAbandonProject = (checked: boolean) => {
+    updateSetValue("isAbandoned", checked);
+  };
 
   const onOpenCreateTaskModal = (project: IProject) => {};
 
@@ -235,31 +239,64 @@ const ProjectPage: React.FC<IProps> = () => {
                 <IconTrash />
               </ActionIcon>
             </Tooltip>
+            <CreateTaskBtn
+              project={item as IProject}
+              onSuccess={refetchProjects}
+            />
           </Group>
         );
       },
     },
-    // {
-    //   name: "createTaskBtn",
-    //   label: "",
-    //   isCustom: true,
-    //   renderCustomElement(value, item) {
-    //     return (
-    //       <Group>
-    //         <CreateTaskBtn project={item as IProject} />
-    //         {/* <Tooltip label="創建任務"> */}
-    //         {/* <ActionIcon
-    //             variant="subtle"
-    //             onClick={() => onOpenCreateTaskModal(item as IProject)}
-    //           >
-    //             <IconFilePlus />
-    //           </ActionIcon> */}
-    //         {/* <CreateTaskBtn project={item as IProject} /> */}
-    //         {/* </Tooltip> */}
-    //       </Group>
-    //     );
-    //   },
-    // },
+  ];
+
+  const subDataConfigs: ITableConfig[] = [
+    {
+      name: "name",
+      label: "名稱",
+    },
+    {
+      name: "description",
+      label: "描述",
+    },
+    {
+      name: "status",
+      label: "狀態",
+    },
+    {
+      name: "users",
+      label: "負責人",
+      transform(value, item) {
+        return (
+          <Spoiler hideLabel={"Hide"} showLabel={"Show"} maxHeight={25}>
+            {value?.length > 0
+              ? value.map((user: any) => user.email).join(", ")
+              : "-"}
+          </Spoiler>
+        );
+      },
+    },
+    {
+      name: "progress",
+      label: "進度 (%)",
+    },
+    {
+      name: "completedAt",
+      label: "完成時間",
+    },
+    {
+      name: "actionBtn",
+      label: "",
+      isCustom: true,
+      renderCustomElement(value, item) {
+        console.log("itemitemitem", item);
+        return (
+          <Group>
+            <UpdateTaskBtn task={item as any} onSuccess={refetchProjects} />
+            <DeleteTaskBtn task={item as ITask} onSuccess={refetchProjects} />
+          </Group>
+        );
+      },
+    },
   ];
 
   return (
@@ -270,7 +307,12 @@ const ProjectPage: React.FC<IProps> = () => {
             <Button onClick={onOpenCreateModal}>{"創建"}</Button>
           </Flex>
         )}
-        <Table data={projects} configs={configs} subData={[]} />
+        <Table
+          data={projects}
+          configs={configs}
+          subDataConfigs={subDataConfigs}
+          subDataField="tasks"
+        />
       </div>
       <Modal
         opened={createModalOpened}
@@ -413,11 +455,11 @@ const ProjectPage: React.FC<IProps> = () => {
             control={updateControl}
             defaultValue={undefined}
           />
-          {/* <Switch
-            label="丟棄"
+          <Switch
+            label="棄置"
             defaultChecked={watchUpdateValues.isAbandoned}
             onChange={(e) => onAbandonProject(e.target.checked)}
-          /> */}
+          />
           <Flex gap={"md"} justify={"flex-end"}>
             <Button
               variant="outline"

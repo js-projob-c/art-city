@@ -1,5 +1,6 @@
 import { ERROR_CODES } from '@art-city/common/constants';
 import { TaskStatus } from '@art-city/common/enums';
+import { DatetimeUtil } from '@art-city/common/utils';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { TaskEntity, UserEntity } from 'src/database/entities';
@@ -36,13 +37,13 @@ export class TaskService {
   async createTask(payload: Partial<TaskEntity> & { ownerIds?: string[] }) {
     const { projectId, ownerIds = [] } = payload;
     return await this.entityManager.transaction(async (em) => {
+      const users = ownerIds.map((id) => ({ id }));
       const taskEntity = this.taskRepository.create({
         status: TaskStatus.PENDING,
         ...payload,
         project: { id: projectId },
-        users: ownerIds.map((id) => ({ id })),
+        users,
       });
-      await em.save(UserEntity, { id: ownerIds[0], tasks: [] });
       return await em.save(TaskEntity, taskEntity);
     });
   }
@@ -50,17 +51,25 @@ export class TaskService {
   async updateTask(
     taskId: string,
     payload: Partial<TaskEntity> & { ownerIds?: string[] },
+    isAbandoned: boolean,
   ) {
     return await this.entityManager.transaction(async (em) => {
       delete payload['projectId'];
       const { ownerIds = [], ...rest } = payload;
       const taskRecord = await this.validateAndGetTaskById(taskId, em);
 
-      const upcomingStatus = rest.status || taskRecord.status;
       const upcomingProgress = rest.progress || taskRecord.progress || 0;
 
-      if (upcomingStatus !== TaskStatus.ABANDONED) {
+      if (!isAbandoned) {
         rest.status = this.getTaskStatusByProgress(upcomingProgress);
+        if (
+          taskRecord.status !== TaskStatus.COMPLETED &&
+          rest.status === TaskStatus.COMPLETED
+        ) {
+          rest.completedAt = DatetimeUtil.moment().toISOString();
+        }
+      } else {
+        rest.status = TaskStatus.ABANDONED;
       }
 
       if (ownerIds) {
@@ -79,6 +88,13 @@ export class TaskService {
       );
 
       return task;
+    });
+  }
+
+  async deleteTask(taskId: string) {
+    await this.entityManager.transaction(async (em: EntityManager) => {
+      const task = await this.validateAndGetTaskById(taskId, em);
+      await em.delete(TaskEntity, { id: task.id });
     });
   }
 
