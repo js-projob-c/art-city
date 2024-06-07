@@ -65,50 +65,31 @@ const Table = ({
     [defaultDateTimeFormat]
   );
 
-  const formatValue = (
-    value: any,
-    item: any,
-    transform?: (value: any) => any
-  ) => {
-    return new TableValueBuilder(value, item)
-      .transform(formatDateTime)
-      .transform(transform)
-      .build();
-  };
-  // const formatValue = useCallback(
-  //   (value: any, item: any, transform?: (value: any) => any) => {
-  //     return new TableValueBuilder(value, item)
-  //       .transform(formatDateTime)
-  //       .transform(transform)
-  //       .build();
-  //   },
-  //   [formatDateTime]
-  // );
+  const formatValue = useCallback(
+    (value: any, item: any, transform?: (value: any) => any) => {
+      return new TableValueBuilder(value, item)
+        .transform(formatDateTime)
+        .transform(transform)
+        .build();
+    },
+    [formatDateTime]
+  );
 
   function getNestedProperty(obj: Record<string, any>, path: string) {
     return path.split(".").reduce((o, p) => (o ? o[p] : undefined), obj);
   }
 
-  // const renderElement = useCallback(
-  //   (item: any, config: any) => {
-  //     if (config.isCustom)
-  //       return config.renderCustomElement(item[config.name], item);
-  //     const value = getNestedProperty(item, config.name);
-  //     return !isNil(value)
-  //       ? formatValue(value, item, config.transform)
-  //       : emptyText;
-  //   },
-  //   [emptyText, formatValue]
-  // );
-
-  const renderElement = (item: any, config: any) => {
-    if (config.isCustom)
-      return config.renderCustomElement(item[config.name], item);
-    const value = getNestedProperty(item, config.name);
-    return !isNil(value)
-      ? formatValue(value, item, config.transform)
-      : emptyText;
-  };
+  const renderElement = useCallback(
+    (item: any, config: any) => {
+      if (config.isCustom)
+        return config.renderCustomElement(item[config.name], item);
+      const value = getNestedProperty(item, config.name);
+      return !isNil(value)
+        ? formatValue(value, item, config.transform)
+        : emptyText;
+    },
+    [emptyText, formatValue]
+  );
 
   useEffect(() => {
     if (data) {

@@ -20,7 +20,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEdit } from "@tabler/icons-react";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -36,9 +36,16 @@ interface IProps {
   onSuccess?: () => void;
 }
 
-const UpdateTaskBtn: React.FC<IProps> = ({ task, onSuccess }) => {
-  const defaultIsAbandoned = useMemo(() => {
-    return task.status === TaskStatus.ABANDONED;
+const UpdateTaskButton: React.FC<IProps> = ({ task, onSuccess }) => {
+  const defaultFormValues = useMemo(() => {
+    return {
+      name: task.name,
+      description: task.description,
+      progress: task.progress,
+      visibleTo: task.visibleTo,
+      ownerIds: task.users.map((user) => user.id),
+      isAbandoned: task.status === TaskStatus.ABANDONED,
+    };
   }, [task]);
 
   const [opened, { open: openModal, close: closeModal }] = useDisclosure(false);
@@ -55,13 +62,6 @@ const UpdateTaskBtn: React.FC<IProps> = ({ task, onSuccess }) => {
     }));
   }, [users]);
 
-  console.log(
-    "task.status === TaskStatus.ABANDONED",
-    task.name,
-    task.status,
-    task.status === TaskStatus.ABANDONED
-  );
-
   const {
     control: updateTaskControl,
     handleSubmit: updateTaskHandleSubmit,
@@ -71,14 +71,6 @@ const UpdateTaskBtn: React.FC<IProps> = ({ task, onSuccess }) => {
     setValue: updateTaskSetValue,
   } = useForm<UpdateTaskRequestDto>({
     resolver: updateTaskResolver,
-    defaultValues: {
-      name: task.name,
-      description: task.description,
-      progress: task.progress,
-      visibleTo: task.visibleTo,
-      ownerIds: task.users.map((user) => user.id),
-      isAbandoned: defaultIsAbandoned,
-    },
   });
 
   const onCloseModal = () => {
@@ -104,6 +96,11 @@ const UpdateTaskBtn: React.FC<IProps> = ({ task, onSuccess }) => {
       }
     );
   };
+
+  useEffect(() => {
+    updateTaskReset(defaultFormValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultFormValues]);
 
   return (
     <>
@@ -237,9 +234,8 @@ const UpdateTaskBtn: React.FC<IProps> = ({ task, onSuccess }) => {
             }}
             name={"isAbandoned"}
             control={updateTaskControl}
-            defaultValue={defaultIsAbandoned}
+            defaultValue={task.status === TaskStatus.ABANDONED}
           />
-
           <Flex gap={"md"} justify={"flex-end"}>
             <Button
               variant="outline"
@@ -261,4 +257,4 @@ const UpdateTaskBtn: React.FC<IProps> = ({ task, onSuccess }) => {
   );
 };
 
-export default UpdateTaskBtn;
+export default UpdateTaskButton;

@@ -15,11 +15,11 @@ interface IProps {
 
 const MODAL_ID = "delete-task-modal";
 
-const DeleteTaskBtn: React.FC<IProps> = ({ task, onSuccess }) => {
+const DeleteTaskButton: React.FC<IProps> = ({ task, onSuccess }) => {
   const { mutateAsync: deleteMutateAsync, isPending: isDeletePending } =
     useDeleteTask();
 
-  const onDeleteProject = async (taskId: string) => {
+  const onDeleteTask = async (taskId: string) => {
     await deleteMutateAsync(
       { param: { taskId } },
       {
@@ -38,12 +38,12 @@ const DeleteTaskBtn: React.FC<IProps> = ({ task, onSuccess }) => {
   const openDeleteModal = (id: string) =>
     modals.openConfirmModal({
       id: MODAL_ID,
-      title: "刪除項目?",
+      title: "刪除任務?",
       centered: true,
       children: <></>,
       labels: { confirm: "刪除", cancel: "取消" },
       onCancel: () => {},
-      onConfirm: () => onDeleteProject(id),
+      onConfirm: () => onDeleteTask(id),
       confirmProps: { color: "red", loading: isDeletePending },
       cancelProps: { loading: isDeletePending },
       closeOnClickOutside: !isDeletePending,
@@ -58,4 +58,4 @@ const DeleteTaskBtn: React.FC<IProps> = ({ task, onSuccess }) => {
   );
 };
 
-export default DeleteTaskBtn;
+export default DeleteTaskButton;

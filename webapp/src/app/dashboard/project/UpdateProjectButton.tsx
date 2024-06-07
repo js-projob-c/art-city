@@ -1,42 +1,52 @@
 "use client";
 
-import { CreateTaskRequestDto } from "@art-city/common/dto/task/create-task-request.dto";
-import { TaskVisibleTo } from "@art-city/common/enums";
-import { IProject } from "@art-city/common/types";
+import { UpdateProjectRequestDto } from "@art-city/common/dto/project/update-project-request.dto";
+import { ProjectStatus } from "@art-city/common/enums";
+import { IProject, IUser } from "@art-city/common/types";
 import {
   ActionIcon,
   Button,
   Flex,
+  InputLabel,
   Modal,
-  MultiSelect,
   Select,
   Stack,
+  Switch,
   TextInput,
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconFilePlus } from "@tabler/icons-react";
-import React, { useMemo } from "react";
+import { IconEdit } from "@tabler/icons-react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 import { toastErrorCode } from "@/common/utils/toast";
 import {
-  createTaskResolver,
-  useCreateTask,
-} from "@/hooks/features/task/useCreateTask";
+  updateProjectResolver,
+  useUpdateProject,
+} from "@/hooks/features/projects/useUpdateProject";
 import { useUsers } from "@/hooks/features/users/useUsers";
 
 interface IProps {
-  project: IProject;
+  project: IProject & { users: IUser[] };
   onSuccess?: () => void;
 }
 
-const CreateTaskBtn: React.FC<IProps> = ({ project, onSuccess }) => {
+const UpdateProjectButton: React.FC<IProps> = ({ project, onSuccess }) => {
+  const defaultFormValues = useMemo(() => {
+    return {
+      name: project.name,
+      description: project.description,
+      ownerId: project.ownerId,
+      isAbandoned: project.status === ProjectStatus.ABANDONED,
+    };
+  }, [project]);
+
   const [opened, { open: openModal, close: closeModal }] = useDisclosure(false);
 
-  const { mutateAsync: createTaskMutateAsync, isPending: createTaskIsPending } =
-    useCreateTask();
+  const { mutateAsync: updateMutateAsync, isPending: isUpdatePending } =
+    useUpdateProject();
 
   const { data: users = [], isPending: userIsPending } = useUsers({});
 
@@ -48,29 +58,31 @@ const CreateTaskBtn: React.FC<IProps> = ({ project, onSuccess }) => {
   }, [users]);
 
   const {
-    control: createTaskControl,
-    handleSubmit: createTaskHandleSubmit,
-    formState: { errors: createTaskErrors },
-    reset: createTaskReset,
-    resetField: createTaskResetField,
-    setValue: createTaskSetValue,
-  } = useForm<CreateTaskRequestDto>({
-    resolver: createTaskResolver,
-    defaultValues: {
-      projectId: project.id,
-    },
+    control: updateControl,
+    handleSubmit: updateHandleSubmit,
+    formState: { errors: updateErrors },
+    reset: updateReset,
+    resetField: updateResetField,
+    setValue: updateSetValue,
+  } = useForm<UpdateProjectRequestDto>({
+    resolver: updateProjectResolver,
   });
 
-  const onSubmitCreateTask = async (data: CreateTaskRequestDto) => {
-    await createTaskMutateAsync(
+  const onCloseModal = () => {
+    closeModal();
+    updateReset();
+  };
+
+  const onSubmitUpdateProject = async (data: UpdateProjectRequestDto) => {
+    await updateMutateAsync(
       {
         body: data,
+        param: { projectId: project.id },
       },
       {
-        onSuccess: () => {
-          closeModal();
+        onSuccess: async () => {
           toast.success("成功");
-          createTaskReset();
+          onCloseModal();
           onSuccess && onSuccess();
         },
         onError: (error) => {
@@ -80,14 +92,19 @@ const CreateTaskBtn: React.FC<IProps> = ({ project, onSuccess }) => {
     );
   };
 
+  useEffect(() => {
+    updateReset(defaultFormValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultFormValues]);
+
   return (
     <>
-      <Tooltip label={"創建任務"}>
+      <Tooltip label={"編輯項目"}>
         <ActionIcon variant="subtle" onClick={openModal}>
-          <IconFilePlus />
+          <IconEdit />
         </ActionIcon>
       </Tooltip>
-      <Modal opened={opened} onClose={closeModal} title={`創建任務`}>
+      <Modal opened={opened} onClose={onCloseModal} title={`編輯項目`}>
         <Stack gap={"lg"}>
           <Controller
             render={({
@@ -104,7 +121,7 @@ const CreateTaskBtn: React.FC<IProps> = ({ project, onSuccess }) => {
               />
             )}
             name={"name"}
-            control={createTaskControl}
+            control={updateControl}
             defaultValue={""}
           />
           <Controller
@@ -122,7 +139,7 @@ const CreateTaskBtn: React.FC<IProps> = ({ project, onSuccess }) => {
               />
             )}
             name={"description"}
-            control={createTaskControl}
+            control={updateControl}
             defaultValue={""}
           />
           <Controller
@@ -130,7 +147,7 @@ const CreateTaskBtn: React.FC<IProps> = ({ project, onSuccess }) => {
               field: { onChange, onBlur, value },
               fieldState: { error },
             }) => (
-              <MultiSelect
+              <Select
                 clearable
                 searchable
                 label="負責人"
@@ -141,45 +158,42 @@ const CreateTaskBtn: React.FC<IProps> = ({ project, onSuccess }) => {
                 value={value}
               />
             )}
-            name={"ownerIds"}
-            control={createTaskControl}
-            defaultValue={[]}
+            name={"ownerId"}
+            control={updateControl}
+            defaultValue={undefined}
           />
           <Controller
             render={({
               field: { onChange, onBlur, value },
               fieldState: { error },
-            }) => (
-              <Select
-                required
-                clearable
-                searchable
-                label="可見對象"
-                data={Object.values(TaskVisibleTo).map((value) => ({
-                  value,
-                  label: value,
-                }))}
-                onBlur={onBlur}
-                error={error?.message}
-                onChange={onChange}
-                value={value}
-              />
-            )}
-            name={"visibleTo"}
-            control={createTaskControl}
-            defaultValue={undefined}
+            }) => {
+              console.log("valuevaluevalue", value);
+              return (
+                <Stack>
+                  <InputLabel required>棄置</InputLabel>
+                  <Switch
+                    onBlur={onBlur}
+                    checked={value}
+                    onChange={(e) => onChange(e.target.checked)}
+                  />
+                </Stack>
+              );
+            }}
+            name={"isAbandoned"}
+            control={updateControl}
+            defaultValue={project.status === ProjectStatus.ABANDONED}
           />
           <Flex gap={"md"} justify={"flex-end"}>
             <Button
               variant="outline"
-              onClick={closeModal}
-              loading={createTaskIsPending}
+              onClick={onCloseModal}
+              loading={isUpdatePending}
             >
               取消
             </Button>
             <Button
-              onClick={createTaskHandleSubmit(onSubmitCreateTask)}
-              loading={createTaskIsPending}
+              onClick={updateHandleSubmit(onSubmitUpdateProject)}
+              loading={isUpdatePending}
             >
               確認
             </Button>
@@ -190,4 +204,4 @@ const CreateTaskBtn: React.FC<IProps> = ({ project, onSuccess }) => {
   );
 };
 
-export default CreateTaskBtn;
+export default UpdateProjectButton;
