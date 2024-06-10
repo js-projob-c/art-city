@@ -1,4 +1,4 @@
-import { IProject } from "@art-city/common/types";
+import { IExternalParty, IProject } from "@art-city/common/types";
 import { ActionIcon, Tooltip } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconTrash } from "@tabler/icons-react";
@@ -6,22 +6,25 @@ import React from "react";
 import toast from "react-hot-toast";
 
 import { toastErrorCode } from "@/common/utils/toast";
-import { useDeleteProject } from "@/hooks/features/projects/useDeleteProject";
+import { useDeleteExternalParty } from "@/hooks/features/external-parties/useDeleteExternalParty";
 
 interface IProps {
-  project: IProject;
+  externalParty: IExternalParty;
   onSuccess?: () => void;
 }
 
-const MODAL_ID = "delete-project-modal";
+const MODAL_ID = "delete-external-party-modal";
 
-const DeleteProjectButton: React.FC<IProps> = ({ project, onSuccess }) => {
+const DeleteExternalPartyButton: React.FC<IProps> = ({
+  externalParty,
+  onSuccess,
+}) => {
   const { mutateAsync: deleteMutateAsync, isPending: isDeletePending } =
-    useDeleteProject();
+    useDeleteExternalParty();
 
-  const onDeleteProject = async (projectId: string) => {
+  const onDeleteProject = async (externalPartyId: string) => {
     await deleteMutateAsync(
-      { param: { projectId } },
+      { param: { externalPartyId } },
       {
         onSuccess: async () => {
           toast.success("成功");
@@ -38,7 +41,7 @@ const DeleteProjectButton: React.FC<IProps> = ({ project, onSuccess }) => {
   const openDeleteModal = (id: string) =>
     modals.openConfirmModal({
       id: MODAL_ID,
-      title: "刪除項目?",
+      title: "刪除外判第三方項目?",
       centered: true,
       children: <></>,
       labels: { confirm: "刪除", cancel: "取消" },
@@ -51,11 +54,14 @@ const DeleteProjectButton: React.FC<IProps> = ({ project, onSuccess }) => {
 
   return (
     <Tooltip label="刪除">
-      <ActionIcon variant="subtle" onClick={() => openDeleteModal(project.id)}>
+      <ActionIcon
+        variant="subtle"
+        onClick={() => openDeleteModal(externalParty.id)}
+      >
         <IconTrash />
       </ActionIcon>
     </Tooltip>
   );
 };
 
-export default DeleteProjectButton;
+export default DeleteExternalPartyButton;

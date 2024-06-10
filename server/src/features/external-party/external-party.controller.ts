@@ -1,7 +1,10 @@
+import { CreateExternalPartyRequestDto } from '@art-city/common/dto/dto/create-external-party-request.dto';
+import { UpdateExternalPartyRequestDto } from '@art-city/common/dto/dto/update-external-party-request.dto';
 import { ExternalPartyType, UserRole } from '@art-city/common/enums';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -9,10 +12,8 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ExternalPartyEntity } from 'src/database/entities';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { UpdateExternalPartyRequestDto } from './dto/update-external-party-request.dto';
 import { ExternalPartyService } from './external-party.service';
 
 @UseGuards(new JwtAuthGuard())
@@ -22,8 +23,8 @@ export class ExternalPartyController {
 
   @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
   @Post()
-  async createExternalParty(payload: Partial<ExternalPartyEntity>) {
-    await this.externalPartyService.createExternalParty(payload);
+  async createExternalParty(@Body() dto: CreateExternalPartyRequestDto) {
+    await this.externalPartyService.createExternalParty(dto);
   }
 
   @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
@@ -41,5 +42,11 @@ export class ExternalPartyController {
   @Get()
   async getExternalParties(@Query('type') type: ExternalPartyType) {
     return await this.externalPartyService.getExternalParties({ type });
+  }
+
+  @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
+  @Delete(':externalPartyId')
+  async deleteProject(@Param('externalPartyId') externalPartyId: string) {
+    await this.externalPartyService.softDelete(externalPartyId);
   }
 }

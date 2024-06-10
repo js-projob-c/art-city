@@ -5,6 +5,7 @@ import {
   IsNumberString,
   IsOptional,
   IsString,
+  ValidateIf,
 } from 'class-validator';
 
 export class CreateExternalPartyRequestDto {
@@ -14,12 +15,13 @@ export class CreateExternalPartyRequestDto {
   contactName: string;
   @IsString()
   contactRole: string;
-  @IsOptional()
   @IsEmail()
-  email: string;
+  @ValidateIf((_, value) => !!value)
+  @IsOptional()
+  email?: string;
   @IsOptional()
   @IsNumberString()
-  phone: string;
+  phone?: string;
   @IsEnum(ExternalPartyType)
   type: ExternalPartyType;
 }

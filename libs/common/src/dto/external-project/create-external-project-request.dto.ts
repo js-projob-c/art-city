@@ -1,16 +1,16 @@
 import { ExternalProjectStatus } from '@art-city/common/enums/external-project';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsString, IsUUID } from 'class-validator';
 
-export class UpdateExternalProjectRequestDto {
-  @IsOptional()
+export class CreateExternalProjectRequestDto {
+  @IsUUID()
+  externalPartyId: string;
+
   @IsString()
   name: string;
 
-  @IsOptional()
   @IsString()
   description: string;
 
-  @IsOptional()
   @IsEnum(ExternalProjectStatus)
   status: ExternalProjectStatus;
 }

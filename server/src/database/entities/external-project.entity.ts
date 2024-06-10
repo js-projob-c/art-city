@@ -15,7 +15,9 @@ import {
 
 import { ExternalPartyEntity } from './external-party.entity';
 
-export class ExternalProjectParty implements IExternalProjectPartyDetails {
+export class ExternalProjectPartyDetails
+  implements IExternalProjectPartyDetails
+{
   id: string;
   company: string;
   contactName: string;
@@ -41,7 +43,7 @@ export class ExternalProjectEntity
   externalParty: ExternalPartyEntity;
 
   @Column({ type: 'jsonb' })
-  externalPartyDetails: ExternalProjectParty;
+  externalPartyDetails: ExternalProjectPartyDetails;
 
   @Column({ type: 'varchar' })
   name: string;

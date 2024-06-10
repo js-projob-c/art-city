@@ -20,7 +20,7 @@ export interface ITableConfig {
   name: string;
   label?: string;
   isCustom?: boolean;
-  renderCustomElement?: (value: any, item: Record<string, any>) => JSX.Element;
+  renderCustomElement?: (value: any, item: IProps["data"][0]) => JSX.Element;
   transform?: (value: any, item: Record<string, any>) => any;
 }
 
@@ -33,7 +33,7 @@ interface IPagination {
 interface IProps {
   emptyText?: string;
   defaultDateTimeFormat?: string;
-  data: Record<string, any>[];
+  data: any[];
   subDataField?: string;
   subDataConfigs?: ITableConfig[];
   configs: ITableConfig[];

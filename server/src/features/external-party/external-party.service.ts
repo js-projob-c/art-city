@@ -1,12 +1,22 @@
 import { ERROR_CODES, PLACEHOLDERS } from '@art-city/common/constants';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ExternalPartyEntity } from 'src/database/entities';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
+import {
+  ExternalPartyEntity,
+  ExternalProjectEntity,
+} from 'src/database/entities';
 import { ExternalPartyRepository } from 'src/database/repositories';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class ExternalPartyService {
   constructor(
     private readonly externalPartyRepository: ExternalPartyRepository,
+    private readonly entityManager: EntityManager,
   ) {}
 
   async createExternalParty(
@@ -23,6 +33,22 @@ export class ExternalPartyService {
     return await this.externalPartyRepository.save({
       ...payload,
       id: externalPartyId,
+    });
+  }
+
+  async softDelete(externalPartyId: string) {
+    await this.entityManager.transaction(async (em) => {
+      const externalProjects = await em.find(ExternalProjectEntity, {
+        where: { externalParty: { id: externalPartyId } },
+      });
+      if (externalProjects.length > 0) {
+        throw new BadRequestException(
+          new ErrorResponseEntity({
+            code: ERROR_CODES.EXTERNAL_PARTY.EXTERNAL_PROJECTS_EXIST,
+          }),
+        );
+      }
+      await em.softDelete(ExternalPartyEntity, { id: externalPartyId });
     });
   }
 
