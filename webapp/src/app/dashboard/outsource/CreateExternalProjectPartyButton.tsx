@@ -1,6 +1,6 @@
 "use client";
 
-import { CreateExternalPartyRequestDto } from "@art-city/common/dto/dto/create-external-party-request.dto";
+import { CreateExternalPartyRequestDto } from "@art-city/common/dto/external-party/create-external-party-request.dto";
 import { ExternalPartyType } from "@art-city/common/enums";
 import { ExternalProjectStatus } from "@art-city/common/enums/external-project";
 import {

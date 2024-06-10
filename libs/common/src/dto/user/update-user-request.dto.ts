@@ -1,37 +1,41 @@
-import { UserRole } from '@art-city/common/enums';
+import { UserDepartment, UserRole } from '@art-city/common/enums';
 import {
   IsEmail,
   IsEnum,
   IsInt,
   IsOptional,
-  IsPositive,
   IsString,
+  Min,
 } from 'class-validator';
 
 export class UpdateUserRequestDto {
   @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
   @IsOptional()
   @IsString()
-  firstName: string;
+  firstName?: string;
 
   @IsOptional()
   @IsString()
-  lastName: string;
+  lastName?: string;
 
   @IsOptional()
   @IsEnum(UserRole)
-  role: UserRole;
+  role?: UserRole;
+
+  @IsOptional()
+  @IsEnum(UserDepartment)
+  department?: UserDepartment;
 
   @IsOptional()
   @IsInt()
-  @IsPositive()
-  monthlySalary: number;
+  @Min(0)
+  monthlySalary?: number;
 
   @IsOptional()
   @IsInt()
-  @IsPositive()
-  annualLeave: number;
+  @Min(0)
+  annualLeave?: number;
 }

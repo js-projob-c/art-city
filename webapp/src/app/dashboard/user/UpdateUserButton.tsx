@@ -1,8 +1,13 @@
 "use client";
 
 import { UpdateExternalPartyRequestDto } from "@art-city/common/dto/external-party/update-external-party-request.dto";
-import { ExternalPartyType } from "@art-city/common/enums";
-import { IExternalParty } from "@art-city/common/types";
+import { UpdateUserRequestDto } from "@art-city/common/dto/user/update-user-request.dto";
+import {
+  ExternalPartyType,
+  UserDepartment,
+  UserRole,
+} from "@art-city/common/enums";
+import { IExternalParty, IUser, IUserDetail } from "@art-city/common/types";
 import {
   ActionIcon,
   Button,
@@ -10,6 +15,7 @@ import {
   InputError,
   InputLabel,
   Modal,
+  Select,
   Stack,
   TextInput,
   Tooltip,
@@ -22,21 +28,18 @@ import toast from "react-hot-toast";
 import { defaultCountries, parseCountry } from "react-international-phone";
 
 import { toastErrorCode } from "@/common/utils/toast";
-import InternationalPhoneInput from "@/components/Forms/InternationalPhoneInput";
 import {
   updateExternalPartyResolver,
   useUpdateExternalParty,
 } from "@/hooks/features/external-parties/useUpdateExternalParty";
+import { useUpdateUser } from "@/hooks/features/users/useUpdateUser";
 
 interface IProps {
-  externalParty: IExternalParty;
+  user: IUser & { detail: IUserDetail };
   onSuccess?: () => void;
 }
 
-const UpdateExternalPartyButton: React.FC<IProps> = ({
-  externalParty,
-  onSuccess,
-}) => {
+const UpdateUserButton: React.FC<IProps> = ({ user, onSuccess }) => {
   const [opened, { open: openModal, close: closeModal }] = useDisclosure(false);
 
   const countries = defaultCountries.filter((country) => {
@@ -45,24 +48,25 @@ const UpdateExternalPartyButton: React.FC<IProps> = ({
   });
 
   const { mutateAsync: updateMutateAsync, isPending: isUpdatePending } =
-    useUpdateExternalParty();
+    useUpdateUser();
 
   const defaultFormValues = useMemo(() => {
     return {
-      company: externalParty.company,
-      contactName: externalParty.contactName,
-      contactRole: externalParty.contactRole,
-      email: externalParty.email,
-      phone: externalParty.phone,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      role: user?.role,
+      department: user?.department,
+      monthlySalary: user?.detail?.monthlySalary,
+      annualLeave: user?.detail?.annualLeave,
     };
-  }, [externalParty]);
+  }, [user]);
 
   const {
     control: updateControl,
     handleSubmit: updateHandleSubmit,
     formState: { errors },
     reset: updateReset,
-  } = useForm<UpdateExternalPartyRequestDto>({
+  } = useForm<UpdateUserRequestDto>({
     resolver: updateExternalPartyResolver,
     defaultValues: defaultFormValues,
   });
@@ -72,9 +76,9 @@ const UpdateExternalPartyButton: React.FC<IProps> = ({
     updateReset();
   };
 
-  const onSubmitForm = async (data: UpdateExternalPartyRequestDto) => {
+  const onSubmitForm = async (data: UpdateUserRequestDto) => {
     await updateMutateAsync(
-      { param: { externalPartyId: externalParty.id }, body: data },
+      { param: { userId: user.id }, body: data },
       {
         onSuccess: async () => {
           toast.success("成功");
@@ -95,12 +99,12 @@ const UpdateExternalPartyButton: React.FC<IProps> = ({
 
   return (
     <>
-      <Tooltip label={"編輯外判公司"}>
+      <Tooltip label={"編輯用戶"}>
         <ActionIcon variant="subtle" onClick={openModal}>
           <IconEdit />
         </ActionIcon>
       </Tooltip>
-      <Modal opened={opened} onClose={onCloseModal} title={`編輯外判公司`}>
+      <Modal opened={opened} onClose={onCloseModal} title={`編輯用戶`}>
         <Stack gap={"lg"}>
           <Controller
             render={({
@@ -108,7 +112,7 @@ const UpdateExternalPartyButton: React.FC<IProps> = ({
               fieldState: { error },
             }) => (
               <TextInput
-                label="公司名稱"
+                label="姓"
                 onBlur={onBlur}
                 error={error?.message}
                 onChange={onChange}
@@ -116,7 +120,7 @@ const UpdateExternalPartyButton: React.FC<IProps> = ({
                 required
               />
             )}
-            name={"company"}
+            name={"lastName"}
             control={updateControl}
             defaultValue={""}
           />
@@ -126,7 +130,7 @@ const UpdateExternalPartyButton: React.FC<IProps> = ({
               fieldState: { error },
             }) => (
               <TextInput
-                label="聯絡人名稱"
+                label="名"
                 onBlur={onBlur}
                 error={error?.message}
                 onChange={onChange}
@@ -134,7 +138,7 @@ const UpdateExternalPartyButton: React.FC<IProps> = ({
                 required
               />
             )}
-            name={"contactName"}
+            name={"firstName"}
             control={updateControl}
             defaultValue={""}
           />
@@ -143,8 +147,12 @@ const UpdateExternalPartyButton: React.FC<IProps> = ({
               field: { onChange, onBlur, value },
               fieldState: { error },
             }) => (
-              <TextInput
-                label="聯絡人職位"
+              <Select
+                data={Object.values(UserRole).map((role) => ({
+                  label: role,
+                  value: role,
+                }))}
+                label="職位"
                 onBlur={onBlur}
                 error={error?.message}
                 onChange={onChange}
@@ -152,24 +160,7 @@ const UpdateExternalPartyButton: React.FC<IProps> = ({
                 required
               />
             )}
-            name={"contactRole"}
-            control={updateControl}
-            defaultValue={""}
-          />
-          <Controller
-            render={({
-              field: { onChange, onBlur, value },
-              fieldState: { error },
-            }) => (
-              <TextInput
-                label="聯絡人電郵"
-                onBlur={onBlur}
-                error={error?.message}
-                onChange={(value) => onChange(value || undefined)}
-                value={value}
-              />
-            )}
-            name={"email"}
+            name={"role"}
             control={updateControl}
             defaultValue={undefined}
           />
@@ -178,30 +169,64 @@ const UpdateExternalPartyButton: React.FC<IProps> = ({
               field: { onChange, onBlur, value },
               fieldState: { error },
             }) => (
-              <>
-                <InputLabel>電話</InputLabel>
-                <InternationalPhoneInput
-                  inputStyle={{
-                    margin: 0,
-                    width: "100%",
-                  }}
-                  hideDropdown
-                  disableCountryGuess
-                  forceDialCode
-                  countries={countries}
-                  defaultCountry="hk"
-                  value={value}
-                  onChange={(phone, { country }) => {
-                    // const mask = getActiveFormattingMask({ phone, country });
-                    onChange(phone);
-                  }}
-                />
-                <InputError>{error?.message}</InputError>
-              </>
+              <Select
+                data={Object.values(UserDepartment).map((role) => ({
+                  label: role,
+                  value: role,
+                }))}
+                label="部門"
+                onBlur={onBlur}
+                error={error?.message}
+                onChange={onChange}
+                value={value}
+                required
+              />
             )}
-            name={"phone"}
+            name={"department"}
             control={updateControl}
-            defaultValue={""}
+            defaultValue={undefined}
+          />
+          <Controller
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <TextInput
+                label="月薪"
+                onBlur={onBlur}
+                error={error?.message}
+                onChange={(e) =>
+                  onChange(parseFloat(e.target.value) ?? undefined)
+                }
+                value={value}
+                required
+                type="number"
+              />
+            )}
+            name={"monthlySalary"}
+            control={updateControl}
+            defaultValue={undefined}
+          />
+          <Controller
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <TextInput
+                label="年假"
+                onBlur={onBlur}
+                error={error?.message}
+                onChange={(e) =>
+                  onChange(parseInt(e.target.value) ?? undefined)
+                }
+                value={value}
+                required
+                type="number"
+              />
+            )}
+            name={"annualLeave"}
+            control={updateControl}
+            defaultValue={undefined}
           />
           <Flex gap={"md"} justify={"flex-end"}>
             <Button
@@ -224,4 +249,4 @@ const UpdateExternalPartyButton: React.FC<IProps> = ({
   );
 };
 
-export default UpdateExternalPartyButton;
+export default UpdateUserButton;

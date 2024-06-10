@@ -22,9 +22,9 @@ export class UserDetailEntity extends BaseEntity implements IUserDetail {
   @OneToOne(() => UserEntity, (user) => user.detail, { onDelete: 'CASCADE' })
   user: UserEntity;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   monthlySalary: number;
 
-  @Column({ type: 'smallint' })
+  @Column({ type: 'smallint', default: 0 })
   annualLeave: number;
 }

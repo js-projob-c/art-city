@@ -1,6 +1,6 @@
 "use client";
 
-import { UpdateExternalPartyRequestDto } from "@art-city/common/dto/dto/update-external-party-request.dto";
+import { UpdateExternalPartyRequestDto } from "@art-city/common/dto/external-party/update-external-party-request.dto";
 import { classValidatorResolver } from "@hookform/resolvers/class-validator";
 import { useMutation } from "@tanstack/react-query";
 

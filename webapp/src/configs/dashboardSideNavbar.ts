@@ -15,27 +15,36 @@ export const dashboardSideNavbarConfig: SideNavbarConfigType[] = [
   {
     href: "",
     label: "員工管理",
-    roles: [UserRole.EMPLOYEE],
     children: [
       {
         href: "/dashboard/calendar",
         label: "月曆",
+        // roles: [UserRole.EMPLOYEE],
       },
       {
         href: "/dashboard/signing",
         label: "簽到/簽出",
+        // roles: [UserRole.EMPLOYEE],
       },
       {
         href: "/dashboard/schedule",
         label: "排班",
+        // roles: [UserRole.EMPLOYEE],
       },
       {
         href: "/dashboard/shift",
         label: "換班",
+        // roles: [UserRole.EMPLOYEE],
       },
       {
         href: "/dashboard/leave",
         label: "休假",
+        // roles: [UserRole.EMPLOYEE],
+      },
+      {
+        href: "/dashboard/user",
+        label: "員工資料",
+        roles: [UserRole.ADMIN],
       },
     ],
   },
@@ -50,10 +59,6 @@ export const dashboardSideNavbarConfig: SideNavbarConfigType[] = [
       {
         href: "/dashboard/outsource",
         label: "外判第三方任務",
-      },
-      {
-        href: "/dashboard/time",
-        label: "項目時間表",
       },
     ],
   },

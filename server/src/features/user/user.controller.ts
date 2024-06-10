@@ -10,11 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
-import { UserEntity } from 'src/database/entities';
 import { JwtAuthGuard } from 'src/features/auth/guards/jwt-auth.guard';
 
-import { GetUserResponseDto } from './dto/get-user-response.dto';
-import { UpdateUserRequestDto } from './dto/update-user-request.dto';
+import { GetUserResponseDto } from '../../../../libs/common/src/dto/user/get-user-response.dto';
+import { UpdateUserRequestDto } from '../../../../libs/common/src/dto/user/update-user-request.dto';
 import { UserService } from './user.service';
 
 @ApiTags('user')
@@ -23,8 +22,18 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
+  @Get('search')
+  async search(
+    @Query('role') role: UserRole,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.userService.search({ ...(role && { role }) }, { page, limit });
+  }
+
+  @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
   @Get()
-  findAll(@Query('role') role: UserRole) {
+  async findAll(@Query('role') role: UserRole) {
     return this.userService.findAll({ ...(role && { role }) });
   }
 
@@ -44,13 +53,11 @@ export class UserController {
   async updateUser(
     @Param('userId') userId: string,
     @Body() dto: UpdateUserRequestDto,
-  ): Promise<UserEntity | null> {
+  ) {
     const { monthlySalary, annualLeave, ...userPayload } = dto;
-    await this.userService.createOrUpdateUserDetails(userId, {
+    await this.userService.updateUser(userId, userPayload, {
       monthlySalary,
       annualLeave,
     });
-    const user = await this.userService.updateOneUserById(userId, userPayload);
-    return user;
   }
 }

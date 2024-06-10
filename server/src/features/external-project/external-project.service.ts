@@ -1,6 +1,6 @@
 import { ERROR_CODES } from '@art-city/common/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ExternalPartyDetailsBuilder } from 'src/common/class/builders/externalPartyDetailsBuilder';
+import { ExternalPartyDetailsBuilder } from 'src/common/class/builders/externalPartyDetails.builder';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import {
   ExternalPartyEntity,

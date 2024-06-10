@@ -1,5 +1,5 @@
-import { CreateExternalPartyRequestDto } from '@art-city/common/dto/dto/create-external-party-request.dto';
-import { UpdateExternalPartyRequestDto } from '@art-city/common/dto/dto/update-external-party-request.dto';
+import { CreateExternalPartyRequestDto } from '@art-city/common/dto/external-party/create-external-party-request.dto';
+import { UpdateExternalPartyRequestDto } from '@art-city/common/dto/external-party/update-external-party-request.dto';
 import { ExternalPartyType, UserRole } from '@art-city/common/enums';
 import {
   Body,

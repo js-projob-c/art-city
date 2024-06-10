@@ -7,7 +7,6 @@ import {
   ActionIcon,
   Collapse,
   Pagination,
-  Stack,
   Table as MantineTable,
 } from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
