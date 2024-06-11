@@ -1,7 +1,9 @@
 "use client";
 
-import { Group } from "@mantine/core";
+import { ActionIcon, Group, Tooltip } from "@mantine/core";
 import { usePagination } from "@mantine/hooks";
+import { IconEye } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 import Table, { ITableConfig } from "@/components/Table";
@@ -31,6 +33,7 @@ const configs: ITableConfig[] = [
 const LIMIT = 10;
 
 const UserPage: React.FC<IProps> = () => {
+  const router = useRouter();
   const { active, setPage } = usePagination({ total: LIMIT, initialPage: 1 });
   const { data, refetch: refetchUsers } = useSearchUsers({
     query: { page: active, limit: 10 },
@@ -45,6 +48,16 @@ const UserPage: React.FC<IProps> = () => {
       return (
         <Group>
           <UpdateUserButton user={item} onSuccess={refetchUsers} />
+          <Tooltip label="查看">
+            <ActionIcon
+              variant="subtle"
+              onClick={() =>
+                router.push(`/dashboard/user-attend-details/${item.id}`)
+              }
+            >
+              <IconEye />
+            </ActionIcon>
+          </Tooltip>
         </Group>
       );
     },

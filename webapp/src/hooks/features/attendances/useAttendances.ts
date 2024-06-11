@@ -9,7 +9,7 @@ import {
   UseRequestPayload,
 } from "@/services/axios";
 
-export type IUserAttendance = {
+export type IAttendance = {
   id: string;
   signInAt: string | null;
   signOutAt: string | null;
@@ -22,23 +22,23 @@ export type IUserAttendance = {
   remarks: string | null;
 };
 
-export type IUserAttendancesResponse = IUserAttendance[];
+export type IAttendancesResponse = IAttendance[];
 
-export const getUserAttendancesApi: ApiObject = {
-  url: "/attendance/user",
+export const getAttendancesApi: ApiObject = {
+  url: "/attendance",
   method: ApiMethod.GET,
 };
 
-export const getUserAttendances = async (
+export const getAttendances = async (
   payload?: UseRequestPayload
-): Promise<IUserAttendancesResponse> => {
-  const res = await axiosClient.use(getUserAttendancesApi, payload);
+): Promise<IAttendancesResponse> => {
+  const res = await axiosClient.use(getAttendancesApi, payload);
   const data = res.data.data;
   return data;
 };
 
-export const useUserAttendances = (payload?: UseRequestPayload<any>) =>
+export const useAttendances = (payload?: UseRequestPayload<any>) =>
   useQuery({
     queryKey: [QUERY_KEY.ATTENDANCES_SIGN_IN_OR_OUT],
-    queryFn: () => getUserAttendances(payload),
+    queryFn: () => getAttendances(payload),
   });

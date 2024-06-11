@@ -4,6 +4,8 @@ import {
   PLACEHOLDERS,
   TIMEZONE,
 } from '@art-city/common/constants';
+import { PaginationRequestDto } from '@art-city/common/dto/pagination/pagination-request.dto';
+import { PaginationResponseDto } from '@art-city/common/dto/pagination/pagination-response.dto';
 import { AttendanceStatus } from '@art-city/common/enums';
 import { DatetimeUtil } from '@art-city/common/utils/datetime.util';
 import {
@@ -14,6 +16,7 @@ import {
 } from '@nestjs/common';
 import moment from 'moment-timezone';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
+import { PaginationUtil } from 'src/common/utils/pagination-util';
 import { AttendanceEntity, UserEntity } from 'src/database/entities';
 import { AttendanceRepository } from 'src/database/repositories';
 
@@ -128,6 +131,27 @@ export class AttendanceService {
       order: { signInAt: 'DESC' },
     });
     return attendances;
+  }
+
+  async searchByUser(
+    userId: string,
+    filter: Partial<AttendanceEntity>,
+    paginationDto: PaginationRequestDto,
+  ): Promise<PaginationResponseDto<AttendanceEntity[]>> {
+    const user = await this.userService.validateAndGetUser(userId);
+    const [attendances, total] = await this.attendanceRepo.findAndCount({
+      where: {
+        ...filter,
+        user: { id: user.id },
+      },
+      order: { signInAt: 'DESC' },
+      ...PaginationUtil.getTypeOrmQuery(paginationDto),
+    });
+    return PaginationUtil.getPaginationResponse(
+      attendances,
+      paginationDto,
+      total,
+    );
   }
 
   getAttendanceStatus(

@@ -10,14 +10,18 @@ export class PaginationUtil {
   }
 
   static getPaginationResponse(
+    data: any[],
     paginationRequestDto: PaginationRequestDto,
     total: number,
   ): PaginationResponseDto {
     return {
-      limit: paginationRequestDto.limit,
-      page: paginationRequestDto.page,
-      total,
-      totalPages: Math.ceil(total / paginationRequestDto.limit),
+      data,
+      pagination: {
+        limit: paginationRequestDto.limit,
+        page: paginationRequestDto.page,
+        total,
+        totalPages: Math.ceil(total / paginationRequestDto.limit),
+      },
     };
   }
 }

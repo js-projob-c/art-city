@@ -7,11 +7,11 @@ import React, { useCallback } from "react";
 import toast from "react-hot-toast";
 
 import Table, { ITableConfig } from "@/components/Table";
-import { useSignInOrOut } from "@/hooks/features/attendances/useSignInOrOut";
 import {
-  IUserAttendance,
-  useUserAttendances,
-} from "@/hooks/features/attendances/useUserAttendances";
+  IAttendance,
+  useAttendances,
+} from "@/hooks/features/attendances/useAttendances";
+import { useSignInOrOut } from "@/hooks/features/attendances/useSignInOrOut";
 import { useGetWorkingHours } from "@/hooks/features/system/useWorkingHours";
 
 interface IProps {}
@@ -41,7 +41,7 @@ const configs: ITableConfig[] = [
 
 const SigningPage: React.FC<IProps> = () => {
   const { mutateAsync, isPending: isSigning } = useSignInOrOut();
-  const { data, refetch, isLoading } = useUserAttendances();
+  const { data = [], refetch, isLoading } = useAttendances();
   const { data: workingHoursData } = useGetWorkingHours();
 
   const onSignInOrOut = useCallback(async () => {
@@ -62,7 +62,7 @@ const SigningPage: React.FC<IProps> = () => {
   }, [mutateAsync, refetch]);
 
   const renderSignButton = useCallback(() => {
-    const sortedData = data?.sort((a: IUserAttendance, b: IUserAttendance) => {
+    const sortedData = data?.sort((a: IAttendance, b: IAttendance) => {
       if (!a.signInAt || !b.signInAt) return 0;
       return new Date(b.signInAt).getTime() - new Date(a.signInAt).getTime();
     });
@@ -128,7 +128,9 @@ const SigningPage: React.FC<IProps> = () => {
           </Stack>
           {renderSignButton()}
         </Flex>
-        <Box>{data && <Table configs={configs} data={data} />}</Box>
+        <Box>
+          <Table configs={configs} data={data} />
+        </Box>
       </Stack>
     </>
   );

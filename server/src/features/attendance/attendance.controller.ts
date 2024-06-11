@@ -1,4 +1,6 @@
+import { PaginationRequestDto } from '@art-city/common/dto/pagination/pagination-request.dto';
 import { UserRole } from '@art-city/common/enums';
+import { UserUtil } from '@art-city/common/utils/user.util';
 import {
   Body,
   Controller,
@@ -6,12 +8,13 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   SerializeOptions,
   UseGuards,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { User } from 'src/common/decorators';
+import { Pagination, User } from 'src/common/decorators';
 import { UserEntity } from 'src/database/entities';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -31,14 +34,15 @@ export class AttendanceController {
   }
 
   @SerializeOptions({ excludeExtraneousValues: true })
-  @UseGuards(new JwtAuthGuard([UserRole.EMPLOYEE]))
-  @Get('user')
+  @UseGuards(new JwtAuthGuard())
+  @Get()
   async getUserAttendances(
     @User() user: UserEntity,
+    @Query('userId') userId: string,
   ): Promise<GetAttendanceResponseDto[]> {
-    const attendances = await this.attendanceService.getAttendanceByUser(
-      user.id,
-    );
+    const targetUserId = UserUtil.checkRoleAndOverrideUserId(user, userId);
+    const attendances =
+      await this.attendanceService.getAttendanceByUser(targetUserId);
     const attendancesWithStatus = attendances.map((attendance) => {
       const status = this.attendanceService.getAttendanceStatus(attendance);
       return { ...attendance, status };
@@ -47,19 +51,43 @@ export class AttendanceController {
   }
 
   @SerializeOptions({ excludeExtraneousValues: true })
-  @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
-  @Get('/:userId')
-  async getAttendancesByUserId(
-    @Param('userId') userId: string,
-  ): Promise<GetAttendanceResponseDto[]> {
-    const attendances =
-      await this.attendanceService.getAttendanceByUser(userId);
-    const attendancesWithStatus = attendances.map((attendance) => {
+  @UseGuards(new JwtAuthGuard())
+  @Get('search')
+  async searchUserAttendances(
+    @User() user: UserEntity,
+    @Query('userId') userId: string,
+    @Pagination() paginationDto: PaginationRequestDto,
+  ) {
+    const targetUserId = UserUtil.checkRoleAndOverrideUserId(user, userId);
+    const { data, pagination } = await this.attendanceService.searchByUser(
+      targetUserId,
+      {},
+      paginationDto,
+    );
+    const attendancesWithStatus = data.map((attendance) => {
       const status = this.attendanceService.getAttendanceStatus(attendance);
       return { ...attendance, status };
     });
-    return plainToInstance(GetAttendanceResponseDto, attendancesWithStatus);
+    return {
+      data: plainToInstance(GetAttendanceResponseDto, attendancesWithStatus),
+      pagination,
+    };
   }
+
+  // @SerializeOptions({ excludeExtraneousValues: true })
+  // @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
+  // @Get('/:userId')
+  // async getAttendancesByUserId(
+  //   @Param('userId') userId: string,
+  // ): Promise<GetAttendanceResponseDto[]> {
+  //   const attendances =
+  //     await this.attendanceService.getAttendanceByUser(userId);
+  //   const attendancesWithStatus = attendances.map((attendance) => {
+  //     const status = this.attendanceService.getAttendanceStatus(attendance);
+  //     return { ...attendance, status };
+  //   });
+  //   return plainToInstance(GetAttendanceResponseDto, attendancesWithStatus);
+  // }
 
   @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
   @Put(':attendanceId')

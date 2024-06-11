@@ -1,12 +1,18 @@
 import { ERROR_CODES, PLACEHOLDERS } from '@art-city/common/constants';
 import { PaginationRequestDto } from '@art-city/common/dto/pagination/pagination-request.dto';
+import { PaginationResponseDto } from '@art-city/common/dto/pagination/pagination-response.dto';
+import { DatetimeUtil } from '@art-city/common/utils';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { PaginationUtil } from 'src/common/utils/pagination-util';
-import { UserDetailEntity, UserEntity } from 'src/database/entities';
+import {
+  AttendanceEntity,
+  UserDetailEntity,
+  UserEntity,
+} from 'src/database/entities';
 import { UserRepository } from 'src/database/repositories/user.repository';
 import { UserDetailRepository } from 'src/database/repositories/user-detail.repository';
-import { EntityManager } from 'typeorm';
+import { And, EntityManager, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -19,7 +25,7 @@ export class UserService {
   async search(
     filter: Partial<UserEntity> = {},
     pagination: PaginationRequestDto,
-  ) {
+  ): Promise<PaginationResponseDto<UserEntity[]>> {
     const [res, total] = await this.userRepo.findAndCount({
       where: { ...filter },
       relations: {
@@ -31,10 +37,7 @@ export class UserService {
       ...PaginationUtil.getTypeOrmQuery(pagination),
     });
 
-    return {
-      data: res,
-      pagination: PaginationUtil.getPaginationResponse(pagination, total),
-    };
+    return PaginationUtil.getPaginationResponse(res, pagination, total);
   }
 
   async findAll(filter: Partial<UserEntity> = {}) {
@@ -116,6 +119,40 @@ export class UserService {
         id: userId,
       },
       ...payload,
+    });
+  }
+
+  async getAttendanceDetails(
+    userId: string,
+    year: number = DatetimeUtil.moment().get('year'),
+    month: number = DatetimeUtil.moment().get('month'),
+  ) {
+    const fromDate = DatetimeUtil.moment()
+      .set('year', year)
+      .set('month', month)
+      .startOf('month')
+      .toDate();
+    const toDate = DatetimeUtil.moment()
+      .set('year', year)
+      .set('month', month)
+      .endOf('month')
+      .toDate();
+    return await this.entityManager.transaction(async (em: EntityManager) => {
+      await this.validateAndGetUser(userId, em);
+      const attendances = await em.find(AttendanceEntity, {
+        where: {
+          user: {
+            id: userId,
+          },
+          signOutAt: And(MoreThanOrEqual(fromDate), LessThanOrEqual(toDate)),
+        } as any,
+      });
+      return attendances.reduce((acc, cur) => {
+        const status = this.attendanceService.getAttendanceStatus(cur);
+        if (!status) return acc;
+        const prev = acc[status] ?? 0;
+        return { ...acc, [status]: prev + 1 };
+      }, {});
     });
   }
 }

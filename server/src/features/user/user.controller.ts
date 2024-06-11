@@ -1,4 +1,6 @@
+import { PaginationRequestDto } from '@art-city/common/dto/pagination/pagination-request.dto';
 import { UserRole } from '@art-city/common/enums';
+import { UserUtil } from '@art-city/common/utils/user.util';
 import {
   Body,
   Controller,
@@ -10,6 +12,8 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
+import { Pagination, User } from 'src/common/decorators';
+import { UserEntity } from 'src/database/entities';
 import { JwtAuthGuard } from 'src/features/auth/guards/jwt-auth.guard';
 
 import { GetUserResponseDto } from '../../../../libs/common/src/dto/user/get-user-response.dto';
@@ -25,10 +29,9 @@ export class UserController {
   @Get('search')
   async search(
     @Query('role') role: UserRole,
-    @Query('page') page: number,
-    @Query('limit') limit: number,
+    @Pagination() paginationDto: PaginationRequestDto,
   ) {
-    return this.userService.search({ ...(role && { role }) }, { page, limit });
+    return this.userService.search({ ...(role && { role }) }, paginationDto);
   }
 
   @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
@@ -44,6 +47,22 @@ export class UserController {
   async findOne(@Param('userId') userId: string): Promise<GetUserResponseDto> {
     const user = await this.userService.getOneUserById(userId);
     return plainToInstance(GetUserResponseDto, user);
+  }
+
+  @UseGuards(new JwtAuthGuard())
+  @Get('attendance-details')
+  async getAttendanceDetails(
+    @User() user: UserEntity,
+    @Query('userId') userId: string,
+    @Query('year') year: string,
+    @Query('month') month: string,
+  ) {
+    const targetUserId = UserUtil.checkRoleAndOverrideUserId(user, userId);
+    return await this.userService.getAttendanceDetails(
+      targetUserId,
+      year ? parseInt(year) : undefined,
+      month ? parseInt(month) : undefined,
+    );
   }
 
   @UseGuards(

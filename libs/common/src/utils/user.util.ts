@@ -17,7 +17,7 @@ export class UserUtil {
     userId: string,
     overrideRoles: UserRole[] = [UserRole.EMPLOYEE],
   ) {
-    if (overrideRoles.includes(user.role)) {
+    if (!userId || overrideRoles.includes(user.role)) {
       return user.id;
     }
     return userId;

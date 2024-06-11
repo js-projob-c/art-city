@@ -9,25 +9,25 @@ import {
   UseRequestPayload,
 } from "@/services/axios";
 
-export type IUsersResponse = PaginationResponseDto<
+export type IUserAttendanceDetailsResponse = PaginationResponseDto<
   (IUser & { detail: IUserDetail })[]
 >;
 
 export const getUsersApi: ApiObject = {
-  url: "/user/search",
+  url: "/user/attendance-details",
   method: ApiMethod.GET,
 };
 
-export const searchUsers = async (
+export const getUserAttendanceDetails = async (
   payload?: UseRequestPayload
-): Promise<IUsersResponse> => {
+): Promise<IUserAttendanceDetailsResponse> => {
   const res = await axiosClient.use(getUsersApi, payload);
   const data = res.data.data;
   return data;
 };
 
-export const useSearchUsers = (payload?: UseRequestPayload<any>) =>
+export const useUserAttendanceDetails = (payload?: UseRequestPayload<any>) =>
   useQuery({
     queryKey: ["users"],
-    queryFn: () => searchUsers(payload),
+    queryFn: () => getUserAttendanceDetails(payload),
   });
