@@ -1,5 +1,4 @@
-import { PaginationResponseDto } from "@art-city/common/dto/pagination/pagination-response.dto";
-import { IUser, IUserDetail } from "@art-city/common/types";
+import { AttendanceStatus } from "@art-city/common/enums";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -9,8 +8,9 @@ import {
   UseRequestPayload,
 } from "@/services/axios";
 
-export type IUserAttendanceDetailsResponse = PaginationResponseDto<
-  (IUser & { detail: IUserDetail })[]
+export type IUserAttendanceDetailsResponse = Record<
+  keyof typeof AttendanceStatus,
+  number
 >;
 
 export const getUsersApi: ApiObject = {
@@ -28,6 +28,6 @@ export const getUserAttendanceDetails = async (
 
 export const useUserAttendanceDetails = (payload?: UseRequestPayload<any>) =>
   useQuery({
-    queryKey: ["users"],
+    queryKey: ["user-attendance-details", payload?.query?.userId],
     queryFn: () => getUserAttendanceDetails(payload),
   });

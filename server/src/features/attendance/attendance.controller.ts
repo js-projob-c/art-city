@@ -14,6 +14,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+import { AttendanceStatusCreator } from 'src/common/class/misc/attendanceStatusCreator';
 import { Pagination, User } from 'src/common/decorators';
 import { UserEntity } from 'src/database/entities';
 
@@ -44,7 +45,7 @@ export class AttendanceController {
     const attendances =
       await this.attendanceService.getAttendanceByUser(targetUserId);
     const attendancesWithStatus = attendances.map((attendance) => {
-      const status = this.attendanceService.getAttendanceStatus(attendance);
+      const status = new AttendanceStatusCreator(attendance).createStatus();
       return { ...attendance, status };
     });
     return plainToInstance(GetAttendanceResponseDto, attendancesWithStatus);
@@ -65,7 +66,7 @@ export class AttendanceController {
       paginationDto,
     );
     const attendancesWithStatus = data.map((attendance) => {
-      const status = this.attendanceService.getAttendanceStatus(attendance);
+      const status = new AttendanceStatusCreator(attendance).createStatus();
       return { ...attendance, status };
     });
     return {

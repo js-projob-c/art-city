@@ -1,17 +1,16 @@
 "use client";
 
 import { PLACEHOLDERS } from "@art-city/common/constants";
-import { ActionIcon, Group, Tooltip } from "@mantine/core";
+import { DatetimeUtil } from "@art-city/common/utils";
+import { Stack } from "@mantine/core";
 import { usePagination } from "@mantine/hooks";
-import { IconEye } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import Table, { ITableConfig } from "@/components/Table";
-import { useAttendances } from "@/hooks/features/attendances/useAttendances";
 import { useSearchAttendances } from "@/hooks/features/attendances/useSearchAttendances";
-import { useUserAttendanceDetails } from "@/hooks/features/users/useUserAttendanceDetails";
 
+import AttendanceDetailsTable from "./AttendanceDetailsTable";
 import styles from "./page.module.scss";
 
 interface IProps {
@@ -49,6 +48,11 @@ const UserDetailsPage: React.FC<IProps> = ({ params }) => {
   const router = useRouter();
   const { active, setPage } = usePagination({ total: LIMIT, initialPage: 1 });
 
+  const [date, setDate] = useState({
+    year: DatetimeUtil.moment().get("year"),
+    month: DatetimeUtil.moment().get("month"),
+  });
+
   const { data, refetch: refetchAttendances } = useSearchAttendances({
     query: {
       userId: userId || PLACEHOLDERS.INCORRECT_ID,
@@ -57,12 +61,6 @@ const UserDetailsPage: React.FC<IProps> = ({ params }) => {
     },
   });
   const { data: attendances = [], pagination } = data ?? {};
-
-  const { data: attendanceDetails } = useUserAttendanceDetails({
-    query: { userId },
-  });
-
-  console.log("attendanceDetails", attendanceDetails);
 
   useEffect(() => {
     if (active === pagination?.page) return;
@@ -76,15 +74,23 @@ const UserDetailsPage: React.FC<IProps> = ({ params }) => {
 
   return (
     <div className={styles.root}>
-      <Table
-        configs={configs}
-        data={attendances}
-        pagination={{
-          activePage: active,
-          onPageChange: setPage,
-          totalPage: pagination?.totalPages ?? 0,
-        }}
-      />
+      <Stack>
+        <AttendanceDetailsTable
+          userId={userId}
+          year={date.year}
+          month={date.month}
+          scheduleCount={pagination?.total ?? 0}
+        />
+        <Table
+          configs={configs}
+          data={attendances}
+          pagination={{
+            activePage: active,
+            onPageChange: setPage,
+            totalPage: pagination?.totalPages ?? 0,
+          }}
+        />
+      </Stack>
     </div>
   );
 };

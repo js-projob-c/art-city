@@ -58,11 +58,12 @@ export class UserController {
     @Query('month') month: string,
   ) {
     const targetUserId = UserUtil.checkRoleAndOverrideUserId(user, userId);
-    return await this.userService.getAttendanceDetails(
+    const attendanceDetails = await this.userService.getAttendanceDetails(
       targetUserId,
       year ? parseInt(year) : undefined,
       month ? parseInt(month) : undefined,
     );
+    return attendanceDetails;
   }
 
   @UseGuards(

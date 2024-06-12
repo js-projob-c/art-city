@@ -1,8 +1,10 @@
 import { ERROR_CODES, PLACEHOLDERS } from '@art-city/common/constants';
 import { PaginationRequestDto } from '@art-city/common/dto/pagination/pagination-request.dto';
 import { PaginationResponseDto } from '@art-city/common/dto/pagination/pagination-response.dto';
+import { AttendanceStatus } from '@art-city/common/enums';
 import { DatetimeUtil } from '@art-city/common/utils';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { AttendanceStatusCreator } from 'src/common/class/misc/attendanceStatusCreator';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
 import { PaginationUtil } from 'src/common/utils/pagination-util';
 import {
@@ -126,7 +128,7 @@ export class UserService {
     userId: string,
     year: number = DatetimeUtil.moment().get('year'),
     month: number = DatetimeUtil.moment().get('month'),
-  ) {
+  ): Promise<Record<keyof typeof AttendanceStatus, number>> {
     const fromDate = DatetimeUtil.moment()
       .set('year', year)
       .set('month', month)
@@ -137,22 +139,30 @@ export class UserService {
       .set('month', month)
       .endOf('month')
       .toDate();
-    return await this.entityManager.transaction(async (em: EntityManager) => {
-      await this.validateAndGetUser(userId, em);
-      const attendances = await em.find(AttendanceEntity, {
-        where: {
-          user: {
-            id: userId,
-          },
-          signOutAt: And(MoreThanOrEqual(fromDate), LessThanOrEqual(toDate)),
-        } as any,
-      });
-      return attendances.reduce((acc, cur) => {
-        const status = this.attendanceService.getAttendanceStatus(cur);
-        if (!status) return acc;
-        const prev = acc[status] ?? 0;
-        return { ...acc, [status]: prev + 1 };
-      }, {});
-    });
+    const result = await this.entityManager.transaction(
+      async (em: EntityManager) => {
+        await this.validateAndGetUser(userId, em);
+        const attendances = await em.find(AttendanceEntity, {
+          where: {
+            user: {
+              id: userId,
+            },
+            signOutAt: And(MoreThanOrEqual(fromDate), LessThanOrEqual(toDate)),
+          } as any,
+        });
+        const initialValue = Object.values(AttendanceStatus).reduce(
+          (acc, status) => ({ ...acc, [status]: 0 }),
+          {} as Record<keyof typeof AttendanceStatus, number>,
+        );
+        return attendances.reduce((acc, cur) => {
+          const status = new AttendanceStatusCreator(cur).createStatus();
+          if (!status) return acc;
+          const prev = acc[status] ?? 0;
+          return { ...acc, [status]: prev + 1 };
+        }, initialValue);
+      },
+    );
+
+    return result;
   }
 }

@@ -1,7 +1,7 @@
+import { IUserDetail } from '@art-city/common/types';
 import { Exclude, Type } from 'class-transformer';
-import { UserDetailEntity } from 'src/database/entities';
 
-export class GetUserResponseDetailDto implements Partial<UserDetailEntity> {
+export class GetUserResponseDetailDto implements Partial<IUserDetail> {
   @Exclude()
   deletedAt: string;
 }
