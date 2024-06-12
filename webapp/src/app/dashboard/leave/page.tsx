@@ -106,7 +106,7 @@ const LeavePage: React.FC<IProps> = () => {
   });
 
   const { mutateAsync, isPending } = useApplyLeave();
-  const { data: leaves, refetch: refetchLeaves } = useLeaves({
+  const { data: leaves = [], refetch: refetchLeaves } = useLeaves({
     query: {
       // year: DatetimeUtil.moment(undefined, { timezone: TIMEZONE.HK }).year(),
       // month:
@@ -227,7 +227,7 @@ const LeavePage: React.FC<IProps> = () => {
         <Flex direction={"row-reverse"} mb={50}>
           <Button onClick={onOpenModal}>申請</Button>
         </Flex>
-        {leaves && <Table configs={configs} data={leaves} />}
+        <Table configs={configs} data={leaves} />
       </div>
       <Modal opened={opened} onClose={closeModal} title="申請休假">
         <Stack gap={"lg"}>
