@@ -13,7 +13,7 @@ export type IUsersResponse = PaginationResponseDto<
   (IUser & { detail: IUserDetail })[]
 >;
 
-export const getUsersApi: ApiObject = {
+export const searchUsersApi: ApiObject = {
   url: "/user/search",
   method: ApiMethod.GET,
 };
@@ -21,7 +21,7 @@ export const getUsersApi: ApiObject = {
 export const searchUsers = async (
   payload?: UseRequestPayload
 ): Promise<IUsersResponse> => {
-  const res = await axiosClient.use(getUsersApi, payload);
+  const res = await axiosClient.use(searchUsersApi, payload);
   const data = res.data.data;
   return data;
 };

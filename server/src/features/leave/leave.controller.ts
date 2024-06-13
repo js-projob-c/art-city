@@ -1,3 +1,4 @@
+import { PaginationRequestDto } from '@art-city/common/dto/pagination/pagination-request.dto';
 import { LeaveStatus, UserRole } from '@art-city/common/enums';
 import { UserUtil } from '@art-city/common/utils/user.util';
 import {
@@ -10,7 +11,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { User } from 'src/common/decorators';
+import { Pagination, User } from 'src/common/decorators';
 import { UserEntity } from 'src/database/entities';
 
 import { ApproveLeaveRequestDto } from '../../../../libs/common/src/dto/leave/approveLeaveRequest.dto';
@@ -76,6 +77,15 @@ export class LeaveController {
   //   );
   // }
 
+  @UseGuards(new JwtAuthGuard([UserRole.ADMIN]))
+  @Get('search')
+  async search(
+    @Query('role') role: UserRole,
+    @Pagination() paginationDto: PaginationRequestDto,
+  ) {
+    return this.leaveService.search({}, paginationDto);
+  }
+
   @UseGuards(new JwtAuthGuard())
   @Get()
   async getLeaves(
@@ -86,7 +96,7 @@ export class LeaveController {
   ) {
     const targetUserId = UserUtil.checkRoleAndOverrideUserId(user, userId);
     await this.userService.validateAndGetUser(targetUserId);
-    await this.leaveService.getLeavesByUserId(
+    return await this.leaveService.getLeavesByUserId(
       targetUserId,
       parseInt(year),
       parseInt(month),

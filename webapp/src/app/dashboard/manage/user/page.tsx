@@ -52,7 +52,7 @@ const UserPage: React.FC<IProps> = () => {
             <ActionIcon
               variant="subtle"
               onClick={() =>
-                router.push(`/dashboard/user-attend-details/${item.id}`)
+                router.push(`/dashboard/manage/user-attend-details/${item.id}`)
               }
             >
               <IconEye />

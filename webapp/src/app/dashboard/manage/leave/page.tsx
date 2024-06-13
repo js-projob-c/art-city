@@ -16,7 +16,7 @@ import {
 import { Select } from "@mantine/core";
 import { DatePicker, DatesRangeValue } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -26,7 +26,7 @@ import {
   createLeaveRequestResolver,
   useApplyLeave,
 } from "@/hooks/features/leave/useApplyLeave";
-import { useLeaves } from "@/hooks/features/leave/useLeaves";
+import { useSearchLeaves } from "@/hooks/features/leave/useSearchLeaves";
 
 import styles from "./page.module.scss";
 
@@ -106,13 +106,14 @@ const LeavePage: React.FC<IProps> = () => {
   });
 
   const { mutateAsync, isPending } = useApplyLeave();
-  const { data: leaves = [], refetch: refetchLeaves } = useLeaves({
+  const { data, refetch: refetchLeaves } = useSearchLeaves({
     query: {
       // year: DatetimeUtil.moment(undefined, { timezone: TIMEZONE.HK }).year(),
       // month:
       //   DatetimeUtil.moment(undefined, { timezone: TIMEZONE.HK }).month() + 1,
     },
   });
+  const { data: leaves = [] } = data ?? {};
 
   console.log("leaves", leaves);
 

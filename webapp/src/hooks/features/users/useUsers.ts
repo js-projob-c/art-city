@@ -25,6 +25,6 @@ export const getUsers = async (
 
 export const useUsers = (payload?: UseRequestPayload<any>) =>
   useQuery({
-    queryKey: ["users"],
+    queryKey: ["search-users"],
     queryFn: () => getUsers(payload),
   });

@@ -1,8 +1,11 @@
 import { ERROR_CODES, PLACEHOLDERS } from '@art-city/common/constants';
+import { PaginationRequestDto } from '@art-city/common/dto/pagination/pagination-request.dto';
+import { PaginationResponseDto } from '@art-city/common/dto/pagination/pagination-response.dto';
 import { LeaveStatus } from '@art-city/common/enums';
 import { DatetimeUtil } from '@art-city/common/utils/datetime.util';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ErrorResponseEntity } from 'src/common/exceptions/ErrorResponseEntity';
+import { PaginationUtil } from 'src/common/utils/pagination-util';
 import { LeaveEntity } from 'src/database/entities';
 import { LeaveRepository } from 'src/database/repositories';
 import { In, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
@@ -144,5 +147,21 @@ export class LeaveService {
     const leaves = await this.leaveRepo.query(query, [userId, year]);
     const numOfDays = leaves[0]?.days || 0;
     return numOfDays;
+  }
+
+  async search(
+    filter: Partial<LeaveEntity> = {},
+    pagination: PaginationRequestDto,
+  ): Promise<PaginationResponseDto<LeaveEntity[]>> {
+    const [res, total] = await this.leaveRepo.findAndCount({
+      where: { ...filter },
+      relations: {},
+      order: {
+        createdAt: 'DESC',
+      },
+      ...PaginationUtil.getTypeOrmQuery(pagination),
+    });
+
+    return PaginationUtil.getPaginationResponse(res, pagination, total);
   }
 }

@@ -14,7 +14,7 @@ export const dashboardSideNavbarConfig: SideNavbarConfigType[] = [
   },
   {
     href: "",
-    label: "員工管理",
+    label: "我的",
     children: [
       {
         href: "/dashboard/calendar",
@@ -41,9 +41,20 @@ export const dashboardSideNavbarConfig: SideNavbarConfigType[] = [
         label: "休假",
         // roles: [UserRole.EMPLOYEE],
       },
+    ],
+  },
+  {
+    href: "",
+    label: "員工管理",
+    children: [
       {
-        href: "/dashboard/user",
+        href: "/dashboard/manage/user",
         label: "員工資料",
+        roles: [UserRole.ADMIN],
+      },
+      {
+        href: "/dashboard/manage/leave",
+        label: "員工休假",
         roles: [UserRole.ADMIN],
       },
     ],
