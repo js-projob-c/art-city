@@ -10,7 +10,7 @@ import {
 
 import { ILeave } from "./useLeaves";
 
-export type ILeavesResponse = PaginationResponseDto<ILeave>;
+export type ILeavesResponse = PaginationResponseDto<ILeave[]>;
 
 export const searchLeavesApi: ApiObject = {
   url: "/leave/search",

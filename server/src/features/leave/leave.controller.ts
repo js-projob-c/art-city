@@ -14,7 +14,7 @@ import {
 import { Pagination, User } from 'src/common/decorators';
 import { UserEntity } from 'src/database/entities';
 
-import { ApproveLeaveRequestDto } from '../../../../libs/common/src/dto/leave/approveLeaveRequest.dto';
+import { ApproveOrRejectLeaveRequestDto } from '../../../../libs/common/src/dto/leave/approveOrRejectLeaveRequest.dto';
 import { CreateLeaveRequestDto } from '../../../../libs/common/src/dto/leave/createLeaveRequest.dto';
 import { UpdateLeaveRequestDto } from '../../../../libs/common/src/dto/leave/updateLeaveRequest.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -43,7 +43,7 @@ export class LeaveController {
   @Put('approval/:leaveId')
   async approveOrRejectLeave(
     @Param('leaveId') leaveId: string,
-    @Body() dto: ApproveLeaveRequestDto,
+    @Body() dto: ApproveOrRejectLeaveRequestDto,
   ) {
     await this.leaveService.validateLeaveStatus(leaveId, [LeaveStatus.PENDING]);
     await this.leaveService.approveOrRejectLeaveApplication(

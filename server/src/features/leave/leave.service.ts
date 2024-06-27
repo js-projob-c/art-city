@@ -73,7 +73,7 @@ export class LeaveService {
   async approveOrRejectLeaveApplication(leaveId: string, isApprove: boolean) {
     await this.leaveRepo.save({
       id: leaveId,
-      status: isApprove ? LeaveStatus.APPROVED : LeaveStatus.CANCELLED,
+      status: isApprove ? LeaveStatus.APPROVED : LeaveStatus.REJECTED,
     });
   }
 
